@@ -14,7 +14,7 @@ plot_violin <- function(
     lwd = 1,
     cex = 1,
     size = cex,
-    cex_main = 17 * cex,
+    cex_main = 21 * cex,
     cex_sub = 15 * cex,
     cex_axis = 17 * cex,
     alpha = 0.3,
@@ -38,21 +38,24 @@ plot_violin <- function(
     method_adjust = "BH",
     wrap = 20,
     ratio_y = 7,
-    dec = 0,
-    stat = TRUE,
-    wrap_subtitle = wrap) {
+    digits = 0,
+    stat = TRUE) {
     set.seed(1)
     if (is.null(title)) {
         title <- paste0(deparse(substitute(x)))
     }
     if (isFALSE(subtitle)) {
         if (!(class(x) %in% c("data.frame", "tibble"))) {
-            subtitle <- paste0(print_stats0(x, dec = dec), ", N=", length(na.omit(x)))
+            subtitle <- paste0(
+                print_stats(x, digits = digits),
+                ", N=",
+                length(na.omit(x))
+            )
         } else {
             if (stat) {
                 subtitle <- get_melt(x) %>%
                     get(paste0(method, "_test"))(value ~ name) %>%
-                    print_mean_test(dec_p = 3)
+                    print_mean_test(digits_p = 3)
             } else {
                 subtitle <- NULL
             }
@@ -73,9 +76,20 @@ plot_violin <- function(
             colour[.]
         colour <- factor(df$name, labels = colour)
         sub_labs <- group_by(df, name) %>%
-            dplyr::summarise(label = paste0(print_stats0(value, dec = dec, wrap = wrap))) %>%
-            # dplyr::summarise(label = paste0(print_stats0(value, dec = dec), ", N=", length(na.omit(value)))) %>%
-            # mutate(label = paste(name, label, sep = "\n") %>% str_wrap(wrap_subtitle)) %>%
+            dplyr::summarise(
+                label = paste0(
+                    print_stats(value, digits = digits),
+                    ", N=",
+                    length(na.omit(value))
+                )
+            ) %>%
+            mutate(
+                label = paste(
+                    name, label,
+                    sep = "\n"
+                ) %>%
+                    str_wrap(wrap)
+            ) %>%
             pull(label)
         sub_labs <- sort(colnames(x)) %>%
             match(colnames(x), .) %>%
@@ -146,9 +160,18 @@ plot_violin <- function(
         scale_y_continuous(breaks = pretty_breaks(n = 3)) +
         xlab("")
     if ((class(x) %in% c("data.frame", "tibble")) && ncol(x) > 2 && stat) {
-        stats <- dunn_test(df, value ~ name, p.adjust.method = method_adjust) %>%
+        stats <- dunn_test(
+            df,
+            value ~ name,
+            p.adjust.method = method_adjust
+        ) %>%
             filter(p.adj.signif <= 0.05) %>%
-            mutate(y.position = max(value, na.rm = TRUE) + (as.numeric(rownames(.)) * max(value, na.rm = TRUE) / ratio_y))
+            mutate(
+                y.position = max(value, na.rm = TRUE) +
+                    as.numeric(rownames(.)) *
+                        max(value, na.rm = TRUE) /
+                        ratio_y
+            )
         p <- p + ggpubr::stat_pvalue_manual(
             stats,
             label = "p.adj.signif",
@@ -164,11 +187,12 @@ plot_violin <- function(
         }
     }
     # p <- p + scale_y_continuous(limits = c(lim1, lim2))
-    if (length(na.omit(df$value)) > 3) {
-        p <- p + geom_sina(size = size, colour = pch_colour, alpha = pch_alpha, seed = 1)
-    } else {
-        p <- p + geom_point(size = size, colour = pch_colour, alpha = pch_alpha)
-    }
+    p <- p + geom_sina(
+        size = size,
+        colour = pch_colour,
+        alpha = pch_alpha,
+        seed = 1
+    )
     theme_violin(
         p,
         cex = cex,

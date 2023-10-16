@@ -38,19 +38,19 @@ theme_violin <- function(
     if (!x_axis) {
         p <- p + theme(axis.title.x = element_blank())
     }
-    if (!isTRUE(guide)) {
-        p <- p + guides(x = "none")
-    } else {
-        p <- p +
-            theme(
-                axis.text.x = element_text(
-                    hjust = title_center,
-                    size = cex * 15,
-                    color = color_subtitle,
-                    angle = 45, vjust = 1
-                )
+    # if (!isTRUE(guide)) {
+    #     p <- p + guides(x = "none")
+    # } else {
+    p <- p +
+        theme(
+            axis.text.x = element_text(
+                hjust = title_center,
+                size = cex * 15,
+                color = color_subtitle,
+                angle = 45, vjust = 1
             )
-    }
+        )
+    # }
     if (!isTRUE(grid)) {
         p <- p + theme(
             panel.grid.major.x = element_blank(),
