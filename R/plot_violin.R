@@ -3,10 +3,32 @@
 #' Ditribution of one or more variables in the form of violin plot, boxplot and sina plot.
 #'
 #' @examples
-#' library(magrittr)
-#' plot_violin(runif(10))
-#' data.frame()
-#' lapply(seq(2), function(x) runif(10)) %>% as.data.frame() %>% plot_violin()
+#' # Default plot
+#' x <- runif(10)
+#' plot_violin(x)
+#'
+#' # Advanced parameters
+#' df <- lapply(seq(2), function(x) runif(10))
+#' df <- as.data.frame(df)
+#' df[, 3] <- runif(10, 1, 2)
+#' colnames(df) <- paste0("X", seq(3))
+#' plot_violin(
+#'   df,
+#'   title = "Some random variables",
+#'   color_title = brewer.pal(9, "Set1")[5],
+#'   ylab = "Y-values",
+#'   colour = brewer.pal(9, "Set1")[seq(3)],
+#'   method = "kruskal",
+#'   method_adjust = "none",
+#'   cex = 1.2,
+#'   size = 3,
+#'   wrap = 5,
+#'   pch_colour = "gray30",
+#'   pch_alpha = 0.5,
+#'   wrap_title = 30,
+#'   lwd = 1.25,
+#'   digits = 2
+#' )
 #' @export
 plot_violin <- function(
     x,
