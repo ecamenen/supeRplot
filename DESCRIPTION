@@ -13,8 +13,17 @@ Description: The supeRplot package simplifies the process of creating
     quick visual summaries, this package provides a streamlined solution
     for fundamental graphics in R.
 License: GPL-3
-Imports: 
-    magrittr
+Imports:
+    dplyr,
+    ggforce,
+    ggplot2,
+    ggpubr,
+    magrittr,
+    RColorBrewer,
+    rstatix,
+    scales,
+    stringr,
+    tidyr
 Suggests: 
     covr,
     knitr,
