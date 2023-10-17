@@ -1,8 +1,47 @@
 #' Violin plot
 #'
-#' Ditribution of one or more variables in the form of violin plot, boxplot and sina plot.
+#' Visualize the distribution of single or multiple variables using violin
+#' plots, boxplots, and sina plots
+#'
+#' @param colour color or vector of colors for the violin and boxplot
+#' @param lwd integer for the line width
+#' @param cex integer for the amount by which plotting text should be magnified
+#' relative to the default
+#' @param pch_size integer for the amount by which the points should be magnified
+#' relative to the default
+#' @param cex_main integer value for the amount by which sub-titles plotting
+#' should be magnified relative to the default
+#' @param cex_sub integer value for the amount by which main plotting
+#' title should be magnified relative to the default
+#' @param cex_axis integer value for the amount by which axis plotting
+#' labels should be magnified relative to the default
+#' @param alpha integer for the transparency of the violin plot
+#' (from 0 to 1 for the highest opacity)
+#' @param title character for the title of the plot
+#' @param width_title integer for the maximal length of the title
+#' @param coef integer for the coefficient to multiply the quantiles
+#' @param pch_colour color for the sina points
+#' @param pch_alpha integer for the transparency of the points
+#' (from 0 to 1 for the highest opacity)
+#' @param subtitle character for the subtitle of the plot
+#' @param color_title color for the title
+#' @param hjust integer for the horizontal justification (in \[0,1\])
+#' @param probs integer vector of probabilities (in \[0,1\])
+#' @param lim1 integer for the minimal value viewed on the plot
+#' @param lim2 integer for the maximal value viewed on the plot
+#' @param method character for the test method
+#' (among 'anova', 'kruskal' or 'wilcox')
+#' @param ylab character for the title of the Y-axis
+#' @param method_adjust character for the multiple correction test
+#' among `r paste0("'", paste0(sort(p.adjust.methods), collapse = "', '"), "'")`
+#' @param width_text integer for the maximal length of the subtitle(s)
+#' @param digits integer for the number of decimals in textual information
+#' @param stat boolean to add the result of the statistic tests to the plots
+#' @param x vector or data.frame of numerical values visualized on the plot
 #'
 #' @examples
+#' library(RColorBrewer)
+#'
 #' # Default plot
 #' x <- runif(10)
 #' plot_violin(x)
@@ -13,22 +52,23 @@
 #' df[, 3] <- runif(10, 1, 2)
 #' colnames(df) <- paste0("X", seq(3))
 #' plot_violin(
-#'   df,
-#'   title = "Some random variables",
-#'   color_title = brewer.pal(9, "Set1")[5],
-#'   ylab = "Y-values",
-#'   colour = brewer.pal(9, "Set1")[seq(3)],
-#'   method = "kruskal",
-#'   method_adjust = "none",
-#'   cex = 1.2,
-#'   size = 3,
-#'   wrap = 5,
-#'   pch_colour = "gray30",
-#'   pch_alpha = 0.5,
-#'   wrap_title = 30,
-#'   lwd = 1.25,
-#'   digits = 2
+#'     df,
+#'     title = "Some random variables",
+#'     color_title = brewer.pal(9, "Set1")[5],
+#'     ylab = "Y-values",
+#'     colour = brewer.pal(9, "Set1")[seq(3)],
+#'     method = "kruskal",
+#'     method_adjust = "none",
+#'     cex = 1.2,
+#'     pch_size = 3,
+#'     width_text = 5,
+#'     pch_colour = "gray30",
+#'     pch_alpha = 0.5,
+#'     width_title = 30,
+#'     lwd = 1.25,
+#'     digits = 2
 #' )
+#'
 #' @export
 plot_violin <- function(
     x,
@@ -204,5 +244,5 @@ plot_violin <- function(
         color_title = color_title,
         hjust = hjust,
         color_subtitle = color_subtitle
-    ) %>% suppressMessages()
+    ) %>% suppressMessages() # %>% suppressWarnings()
 }
