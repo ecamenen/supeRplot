@@ -3,41 +3,41 @@
 #' Visualize the distribution of single or multiple variables using violin
 #' plots, boxplots, and sina plots
 #'
-#' @param colour color or vector of colors for the violin and boxplot
-#' @param lwd integer for the line width
-#' @param cex integer for the amount by which plotting text should be magnified
-#' relative to the default
-#' @param pch_size integer for the amount by which the points should be magnified
-#' relative to the default
-#' @param cex_main integer value for the amount by which sub-titles plotting
-#' should be magnified relative to the default
-#' @param cex_sub integer value for the amount by which main plotting
-#' title should be magnified relative to the default
-#' @param cex_axis integer value for the amount by which axis plotting
-#' labels should be magnified relative to the default
-#' @param alpha integer for the transparency of the violin plot
-#' (from 0 to 1 for the highest opacity)
-#' @param title character for the title of the plot
-#' @param width_title integer for the maximal length of the title
-#' @param coef integer for the coefficient to multiply the quantiles
-#' @param pch_colour color for the sina points
-#' @param pch_alpha integer for the transparency of the points
-#' (from 0 to 1 for the highest opacity)
-#' @param subtitle character for the subtitle of the plot
-#' @param color_title color for the title
-#' @param hjust integer for the horizontal justification (in \[0,1\])
-#' @param probs integer vector of probabilities (in \[0,1\])
-#' @param lim1 integer for the minimal value viewed on the plot
-#' @param lim2 integer for the maximal value viewed on the plot
-#' @param method character for the test method
-#' (among 'anova', 'kruskal' or 'wilcox')
-#' @param ylab character for the title of the Y-axis
-#' @param method_adjust character for the multiple correction test
-#' among `r paste0("'", paste0(sort(p.adjust.methods), collapse = "', '"), "'")`
-#' @param width_text integer for the maximal length of the subtitle(s)
-#' @param digits integer for the number of decimals in textual information
-#' @param stat boolean to add the result of the statistic tests to the plots
-#' @param x vector or data.frame of numerical values visualized on the plot
+#' @param x Vector or data.frame of numerical values visualized on the plot.
+#' @param method Character for the test method ('anova', 'kruskal', or
+#' 'wilcox').
+#' @param method_adjust Character for the multiple correction test among
+#' `r paste0("'", paste0(sort(p.adjust.methods), collapse = "', '"), "'")`
+#' @param title Character for the title.
+#' @param width_text Integer for the maximum length of the subtitle(s).
+#' @param width_title Integer for the maximum length of the title.
+#' @param color_title Color for the title.
+#' @param colour Color or vector of colors for the violin and boxplot.
+#' @param alpha Integer for the transparency of the violin plot (ranging from 0
+#' to 1 for maximum opacity).
+#' @param pch_alpha Integer for the transparency of the points (ranging from 0
+#' to 1 for maximum opacity).
+#' @param pch_colour Color for the sina points.
+#' @param pch_size Integer for the magnification factor for the points relative
+#' to the default.
+#' @param cex Integer for the magnification factor for the text relative to the
+#' default.
+#' @param cex_axis Integer for the magnification factor for the axis labels
+#' relative to the default.
+#' @param cex_main Integer for the magnification factor for the subtitles
+#' relative to the default.
+#' @param cex_sub Integer for the magnification factor for the main title
+#' relative to the default.
+#' @param stats Boolean to display the results of statistical tests.
+#' @param digits Integer for the number of decimals.
+#' @param alpha Integer for the transparency of the violin plot
+#' (ranging from 0 to 1 for maximum opacity)
+#' @param coef Integer to multiply the quantiles by.
+#' @param hjust Integer for the horizontal justification (in \[0,1\]).
+#' @param lwd Integer for the line width.
+#' @param probs Integer vector of probabilities (in \[0,1\]).
+#' @param subtitle Character for the subtitle.
+#' @param ylab Character for the title of the Y-axis.
 #'
 #' @examples
 #' library(RColorBrewer)
@@ -72,29 +72,29 @@
 #' @export
 plot_violin <- function(
     x,
+    method = "anova",
+    method_adjust = "BH",
+    title = NULL,
+    width_text = 20,
+    width_title = 20,
     colour = "red",
-    lwd = 1,
-    cex = 1,
+    color_title = colour,
+    pch_alpha = 1,
+    pch_colour = "gray50",
     pch_size = cex,
+    cex = 1,
+    cex_axis = 17 * cex,
     cex_main = 21 * cex,
     cex_sub = 15 * cex,
-    cex_axis = 17 * cex,
-    alpha = 0.3,
-    title = NULL,
-    width_title = 20,
-    probs = c(.25, .75),
-    coef = 1.5,
-    pch_colour = "gray50",
-    pch_alpha = 1,
-    subtitle = FALSE,
-    color_title = colour,
-    hjust = 0.5,
-    method = "anova",
-    ylab = NULL,
-    method_adjust = "BH",
-    width_text = 20,
+    stats = TRUE,
     digits = 0,
-    stat = TRUE) {
+    alpha = 0.3,
+    coef = 1.5,
+    hjust = 0.5,
+    lwd = 1,
+    probs = c(.25, .75),
+    subtitle = FALSE,
+    ylab = NULL) {
     set.seed(1)
     if (is.null(title)) {
         title <- paste0(deparse(substitute(x)))
@@ -108,7 +108,7 @@ plot_violin <- function(
                 length(na.omit(x))
             )
         } else {
-            if (stat) {
+            if (stats) {
                 subtitle <- get_melt(x) %>%
                     get(paste0(method, "_test"))(value ~ name) %>%
                     print_mean_test(digits_p = 3)
@@ -205,8 +205,8 @@ plot_violin <- function(
         scale_x_discrete(limits = colnames(x), labels = sub_labs) +
         scale_y_continuous(breaks = pretty_breaks(n = 3)) +
         xlab("")
-    if ((class(x) %in% c("data.frame", "tibble")) && ncol(x) > 2 && stat) {
-        stats <- dunn_test(
+    if ((class(x) %in% c("data.frame", "tibble")) && ncol(x) > 2 && stats) {
+        post_hoc <- dunn_test(
             df,
             value ~ name,
             p.adjust.method = method_adjust
@@ -218,7 +218,7 @@ plot_violin <- function(
                         max(value, na.rm = TRUE) / 7
             )
         p <- p + ggpubr::stat_pvalue_manual(
-            stats,
+            post_hoc,
             label = "p.adj.signif",
             color = "gray50",
             bracket.pch_size = lwd * 0.7,
@@ -226,7 +226,7 @@ plot_violin <- function(
             hide.ns = TRUE,
             tip.length = 0
         )
-        max_stats <- pull(stats, y.position) %>% max()
+        max_stats <- pull(post_hoc, y.position) %>% max()
     }
     p <- p + geom_sina(
         pch_size = pch_size,
