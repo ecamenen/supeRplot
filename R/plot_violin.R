@@ -35,37 +35,31 @@ plot_violin <- function(
     colour = "red",
     lwd = 1,
     cex = 1,
-    size = cex,
+    pch_size = cex,
     cex_main = 21 * cex,
     cex_sub = 15 * cex,
     cex_axis = 17 * cex,
     alpha = 0.3,
     title = NULL,
-    wrap_title = 20,
+    width_title = 20,
     probs = c(.25, .75),
     coef = 1.5,
     pch_colour = "gray50",
     pch_alpha = 1,
-    class = 1,
-    value = 1,
     subtitle = FALSE,
-    caption = NULL,
     color_title = colour,
-    ratio = 5,
-    title_center = 0.5,
-    lim1 = NULL,
-    lim2 = NULL,
+    hjust = 0.5,
     method = "anova",
     ylab = NULL,
     method_adjust = "BH",
-    wrap = 20,
-    ratio_y = 7,
+    width_text = 20,
     digits = 0,
     stat = TRUE) {
     set.seed(1)
     if (is.null(title)) {
         title <- paste0(deparse(substitute(x)))
     }
+    value <- 1
     if (isFALSE(subtitle)) {
         if (!(class(x) %in% c("data.frame", "tibble"))) {
             subtitle <- paste0(
@@ -85,14 +79,12 @@ plot_violin <- function(
     }
     color_subtitle <- colour
     if (!(class(x) %in% c("data.frame", "tibble"))) {
-        df <- data.frame(value = x, name = class)
+        df <- data.frame(value = x, name = 1)
         colour_fill <- colour
         sub_labs <- ""
         guide <- FALSE
     } else {
         df <- get_melt(x)
-        # df$name <- factor(df$name, labels = colnames(x)) %>% as.numeric()
-        # x <- df$value
         colour_fill <- sort(colnames(x)) %>%
             match(., colnames(x)) %>%
             colour[.]
@@ -110,7 +102,7 @@ plot_violin <- function(
                     name, label,
                     sep = "\n"
                 ) %>%
-                    str_wrap(wrap)
+                    str_wrap(width_text)
             ) %>%
             pull(label)
         sub_labs <- sort(colnames(x)) %>%
@@ -120,12 +112,6 @@ plot_violin <- function(
     }
     colour_fill1 <- factor(df$name, labels = colour_fill)
     colour_fill0 <- colour
-    if (is.null(lim1)) {
-        lim1 <- min(df$value, na.rm = TRUE)
-    }
-    if (is.null(lim2)) {
-        lim2 <- max(df$value, na.rm = TRUE)
-    }
     quant <- group_by(df, name) %>%
         dplyr::summarise(quantile(value, probs, na.rm = TRUE)) %>%
         pull(2)
@@ -152,7 +138,6 @@ plot_violin <- function(
             as.numeric()
     }
     p <- ggplot(df, aes(x = as.character(name), y = as.numeric(value))) +
-        # expand_limits(x = 1 + 1 / ratio) +
         geom_errorbar(
             width = .1,
             lwd = lwd,
@@ -172,9 +157,8 @@ plot_violin <- function(
         geom_violin(alpha = alpha, aes(fill = colour_fill0), colour = NA) +
         theme_minimal() +
         labs(
-            title = str_wrap(title, wrap_title),
+            title = str_wrap(title, width_title),
             subtitle = subtitle, # str_wrap(subtitle, wrap_subtitle),
-            caption = caption,
             y = ylab
         ) +
         scale_fill_manual(values = colour_fill) +
@@ -191,26 +175,21 @@ plot_violin <- function(
             mutate(
                 y.position = max(value, na.rm = TRUE) +
                     as.numeric(rownames(.)) *
-                        max(value, na.rm = TRUE) /
-                        ratio_y
+                        max(value, na.rm = TRUE) / 7
             )
         p <- p + ggpubr::stat_pvalue_manual(
             stats,
             label = "p.adj.signif",
             color = "gray50",
-            bracket.size = 0.7,
-            size = cex * 6,
+            bracket.pch_size = lwd * 0.7,
+            pch_size = cex * 6,
             hide.ns = TRUE,
             tip.length = 0
         )
         max_stats <- pull(stats, y.position) %>% max()
-        if (lim2 < max_stats) {
-            lim2 <- max_stats
-        }
     }
-    # p <- p + scale_y_continuous(limits = c(lim1, lim2))
     p <- p + geom_sina(
-        size = size,
+        pch_size = pch_size,
         colour = pch_colour,
         alpha = pch_alpha,
         seed = 1
@@ -223,7 +202,7 @@ plot_violin <- function(
         cex_axis = cex_axis,
         guide = guide,
         color_title = color_title,
-        title_center = title_center,
+        hjust = hjust,
         color_subtitle = color_subtitle
     ) %>% suppressMessages()
 }

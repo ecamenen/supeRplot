@@ -49,10 +49,10 @@ print_mean_test <- function(x, digits = 1, digits_p = 2) {
 }
 
 add_significance0 <- function(x, p.col = NULL) {
-  add_significance(
-    x,
-    p.col = NULL,
-    cutpoints = c(0, 1e-03, 1e-02, 5e-02, 1),
-    symbols = c("***", "**", "*", "ns")
-  )
+    add_significance(
+        x,
+        p.col = NULL,
+        cutpoints = c(0, 1e-03, 1e-02, 5e-02, 1),
+        symbols = c("***", "**", "*", "ns")
+    )
 }
