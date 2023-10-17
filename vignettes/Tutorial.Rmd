@@ -14,17 +14,21 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup, echo = FALSE}
+```{r setup, echo = FALSE, warning = FALSE}
 library(supeRplot)
 library(RColorBrewer)
+library(magrittr)
+set.seed(0)
 ```
 
 ## Violin plots
-```{r violin, fig.width = 5, fig.height = 5}
+```{r violin}
 # Default plot
 x <- runif(10)
 plot_violin(x)
+```
 
+```{r violin_adv, fig.width = 5, fig.height = 5}
 # Multiple variables
 df <- lapply(seq(2), function(x) runif(10))
 df <- as.data.frame(df)
@@ -53,6 +57,34 @@ plot_violin(
     width_title = 30,
     lwd = 1.25,
     digits = 2
+)
+```
+
+## Piecharts
+```{r pie, fig.width = 5}
+# Default plot
+x <- c(rep("A", 5), rep("B", 4))
+plot_pie(x)
+```
+
+```{r pie_adv, fig.width = 7, fig.height = 5}
+# Advanced parameters
+k <- 10
+n <- runif(k, 1, 10) %>% round()
+x <- paste("Level", seq(k)) %>%
+    mapply(function(x, y) rep(x, y), ., n) %>%
+    unlist()
+plot_pie(
+    x,
+    title = "Some random variable",
+    width_text = 20,
+    width_title = 15,
+    colour = brewer.pal(9, "Reds"),
+    cex = 20,
+    digits = 1,
+    hsize = 1.5,
+    collapse = TRUE,
+    b = 3
 )
 ```
 
