@@ -1,12 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# supeRplot
+# GimmeMyPlot
 
 [![CRAN
-status](https://www.r-pkg.org/badges/version/supeRplot)](https://CRAN.R-project.org/package=supeRplot)
+status](https://www.r-pkg.org/badges/version/GimmeMyPlot)](https://CRAN.R-project.org/package=GimmeMyPlot)
 
-The supeRplot package simplifies the process of creating essential
+The GimmeMyPlot package simplifies the process of creating essential
 visualizations in R, offering a range of plotting functions for common
 chart types like violin plots, pie charts, and histograms. With an
 intuitive interface, users can effortlessly customize colors, labels,
@@ -22,7 +22,7 @@ graphics in R.
 - Softwares : R (≥ 4.0.0), RStudio (<https://posit.co/downloads/>)
 
 - R libraries : see the
-  [DESCRIPTION](https://github.com/ecamenen/supeRplot/blob/develop/DESCRIPTION)
+  [DESCRIPTION](https://github.com/ecamenen/GimmeMyPlot/blob/develop/DESCRIPTION)
   file.
 
 ### Installation
@@ -32,5 +32,5 @@ You can install the development version from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("ecamenen/supeRplot")
+devtools::install_github("ecamenen/GimmeMyPlot")
 ```
