@@ -130,7 +130,7 @@ plot_violin <- function(
             colour[.]
         colour <- factor(df$name, labels = colour)
         sub_labs <- group_by(df, name) %>%
-            dplyr::summarise(
+            reframe(
                 label = paste0(
                     print_stats(value, digits = digits),
                     ", N=",
@@ -153,10 +153,10 @@ plot_violin <- function(
     colour_fill1 <- factor(df$name, labels = colour_fill)
     colour_fill0 <- colour
     quant <- group_by(df, name) %>%
-        dplyr::summarise(quantile(value, probs, na.rm = TRUE)) %>%
+      reframe(quantile(value, probs, na.rm = TRUE)) %>%
         pull(2)
     quant0 <- group_by(df, name) %>%
-        dplyr::summarise(quantile(value, c(0, 1), na.rm = TRUE)) %>%
+      reframe(quantile(value, c(0, 1), na.rm = TRUE)) %>%
         pull(2)
     iqr <- quant - c(-1, 1) * (1 - coef) * quant
     iqr_even <- function(x) {
