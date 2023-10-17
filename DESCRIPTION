@@ -1,10 +1,10 @@
-Package: supeRplot
-Title: supeRplot
+Package: GimmeMyPlot
+Title: GimmeMyPlot
 Version: 0.1.0
 Authors@R: 
     person("Etienne", "Camenen", , "etienne.camenen@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-2398-0190"))
-Description: The supeRplot package simplifies the process of creating
+Description: The GimmeMyPlot package simplifies the process of creating
     essential visualizations in R, offering a range of plotting functions
     for common chart types like violin plots, pie charts, and histograms.
     With an intuitive interface, users can effortlessly customize colors,
@@ -23,6 +23,7 @@ Imports:
     rstatix,
     scales,
     stringr,
+    stats,
     tidyr
 Suggests: 
     covr,
