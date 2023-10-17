@@ -15,6 +15,7 @@ Description: The supeRplot package simplifies the process of creating
 License: GPL-3
 Imports:
     dplyr,
+    forcats,
     ggforce,
     ggplot2,
     ggpubr,

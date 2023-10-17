@@ -1,9 +1,12 @@
 utils::globalVariables(
     c(
         ".",
+        "f",
         "label",
         "name",
         "p.adj.signif",
+        "pos",
+        "text",
         "y.position"
     )
 )
