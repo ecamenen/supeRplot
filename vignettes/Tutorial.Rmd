@@ -25,7 +25,7 @@ library(RColorBrewer)
 x <- runif(10)
 plot_violin(x)
 
-# Advanced parameters
+# Multiple variables
 df <- lapply(seq(2), function(x) runif(10))
 df <- as.data.frame(df)
 df[, 3] <- runif(10, 1, 2)
@@ -35,6 +35,8 @@ plot_violin(
     title = "Some random variables",
     colour = brewer.pal(9, "Set1")[seq(3)]
 )
+
+# Advanced parameters
 plot_violin(
     df,
     title = "Some random variables",
