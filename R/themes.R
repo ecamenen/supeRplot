@@ -8,7 +8,7 @@ theme_violin <- function(
     guide = FALSE,
     grid = FALSE,
     color_title = "black",
-    title_center = 0.5,
+    hjust = 0.5,
     x_axis = FALSE,
     color_subtitle = "gray50",
     legend = FALSE) {
@@ -16,13 +16,13 @@ theme_violin <- function(
         theme_minimal() +
         theme(
             plot.title = element_text(
-                hjust = title_center,
+                hjust = hjust,
                 size = cex_main,
                 face = "bold",
                 color = color_title
             ),
             plot.subtitle = element_text(
-                hjust = title_center,
+                hjust = hjust,
                 size = cex_sub,
                 color = "gray50"
             ),
@@ -44,7 +44,7 @@ theme_violin <- function(
     p <- p +
         theme(
             axis.text.x = element_text(
-                hjust = title_center,
+                hjust = hjust,
                 size = cex * 15,
                 color = color_subtitle,
                 angle = 45, vjust = 1
