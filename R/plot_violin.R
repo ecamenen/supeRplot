@@ -33,9 +33,9 @@
 #' @param alpha Integer for the transparency of the violin plot
 #' (ranging from 0 to 1 for maximum opacity)
 #' @param coef Integer to multiply the quantiles by.
-#' @param hjust Integer for the horizontal justification (in \[0,1\]).
+#' @param hjust Integer for the horizontal justification (in \[0, 1\]).
 #' @param lwd Integer for the line width.
-#' @param probs Integer vector of probabilities (in \[0,1\]).
+#' @param probs Integer vector of probabilities (in \[0, 1\]).
 #' @param subtitle Character for the subtitle.
 #' @param ylab Character for the title of the Y-axis.
 #'
@@ -154,10 +154,10 @@ plot_violin <- function(
     colour_fill1 <- factor(df$name, labels = colour_fill)
     colour_fill0 <- colour
     quant <- group_by(df, name) %>%
-      reframe(quantile(value, probs, na.rm = TRUE)) %>%
+        reframe(quantile(value, probs, na.rm = TRUE)) %>%
         pull(2)
     quant0 <- group_by(df, name) %>%
-      reframe(quantile(value, c(0, 1), na.rm = TRUE)) %>%
+        reframe(quantile(value, c(0, 1), na.rm = TRUE)) %>%
         pull(2)
     iqr <- quant - c(-1, 1) * (1 - coef) * quant
     iqr_even <- function(x) {
@@ -227,7 +227,6 @@ plot_violin <- function(
             hide.ns = TRUE,
             tip.length = 0
         )
-        max_stats <- pull(post_hoc, y.position) %>% max()
     }
     p <- p + geom_sina(
         size = pch_size,

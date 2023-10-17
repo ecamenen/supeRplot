@@ -12,34 +12,45 @@ get_colors <- function() {
     )
 }
 
-count_cat <- function(x, parse = FALSE, wrap = 20, collapse = FALSE, label = NULL) {
-  x0 <- as.data.frame(x)
-  if (ncol(x0) > 1) {
-    x <- sapply(colnames(x0), function(i) rep(i, pull(x0, i) %>% unlist() %>% sum(na.rm = TRUE)))
-  }
-  x <- unlist(x) %>%
-    stri_trans_general("latin-ascii") %>%
-    str_replace_all("\n", " ")
-  if (parse) {
-    x <- str_to_title(x)
-  }
-  df <- factor(x) %>%
-    # fct_relabel(~ str_replace_all(.x, "\\s*\\([^\\)]+\\)", "")) %>%
-    fct_relabel(~ str_replace_all(.x, "\\$\\$[^\\)]+", "")) %>%
-    fct_relabel(~ str_replace_all(.x, "^0$", "No")) %>%
-    fct_relabel(~ str_replace_all(.x, "^1$", ifelse(colnames(x0)[1] == "x", "Yes", colnames(x0)[1]))) %>%
-    str_wrap(wrap) %>%
-    fct_infreq() %>%
-    fct_rev() %>%
-    fct_count()
-  if (collapse) {
-    df <- group_by(df, n) %>%
-      summarise(f = paste(f, collapse = ", ") %>% str_wrap(wrap)) %>%
-      mutate(f = factor(f))
-    df$f <- reorder(df$f, df$n)
-  }
-  if (!is.null(label)) {
-    df$f <- factor(df$f, labels = rev(str_wrap(label, wrap)))
-  }
-  return(df)
+count_cat <- function(
+    x,
+    width = 20,
+    collapse = FALSE,
+    label = NULL) {
+    x0 <- as.data.frame(x)
+    if (ncol(x0) > 1) {
+        x <- sapply(
+            colnames(x0),
+            function(i) rep(i, pull(x0, i) %>% unlist() %>% sum(na.rm = TRUE))
+        )
+    }
+    x <- unlist(x) %>%
+        stri_trans_general("latin-ascii") %>%
+        str_replace_all("\n", " ") %>%
+        to_title()
+    df <- factor(x) %>%
+        # fct_relabel(~ str_replace_all(.x, "\\s*\\([^\\)]+\\)", "")) %>%
+        fct_relabel(~ str_replace_all(.x, "\\$\\$[^\\)]+", "")) %>%
+        fct_relabel(~ str_replace_all(.x, "^0$", "No")) %>%
+        fct_relabel(
+            ~ str_replace_all(
+                .x,
+                "^1$",
+                ifelse(colnames(x0)[1] == "x", "Yes", colnames(x0)[1])
+            )
+        ) %>%
+        str_wrap(width) %>%
+        fct_infreq() %>%
+        fct_rev() %>%
+        fct_count()
+    if (collapse) {
+        df <- group_by(df, n) %>%
+            summarise(f = paste(f, collapse = ", ") %>% str_wrap(width)) %>%
+            mutate(f = factor(f))
+        df$f <- reorder(df$f, df$n)
+    }
+    if (!is.null(label)) {
+        df$f <- factor(df$f, labels = rev(str_wrap(label, width)))
+    }
+    return(df)
 }

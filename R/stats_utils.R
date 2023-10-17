@@ -16,9 +16,6 @@ print_mean_test <- function(x, digits = 1, digits_p = 2) {
     if (method == "data.frame") {
         method <- "anova"
     }
-
-    # stopifnot(method %in% c("anova", "ks"))
-    # e <- effectsize(x) %>% suppressMessages()
     if (is.null(x$p.signif) %>% suppressWarnings()) {
         x <- x %>% add_significance0()
         if (x$p.signif == "ns") {
@@ -42,7 +39,6 @@ print_mean_test <- function(x, digits = 1, digits_p = 2) {
     } else if (method == "wilcox") {
         par <- ""
         statistic <- x$statistic %>% round(digits)
-        # index <- "Wilcoxon, W"
         index <- "W"
     }
     paste0(index, par, " = ", statistic, ",", " p ", x$p, x$p.signif)
