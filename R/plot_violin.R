@@ -69,6 +69,7 @@
 #'     digits = 2
 #' )
 #'
+#' @return A ggplot object.
 #' @export
 plot_violin <- function(
     x,
@@ -244,5 +245,5 @@ plot_violin <- function(
         color_title = color_title,
         hjust = hjust,
         color_subtitle = color_subtitle
-    ) %>% suppressMessages() # %>% suppressWarnings()
+    ) %>% suppressWarnings()
 }

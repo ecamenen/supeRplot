@@ -89,6 +89,9 @@ relative to the default.}
 
 \item{ylab}{Character for the title of the Y-axis.}
 }
+\value{
+A ggplot object.
+}
 \description{
 Visualize the distribution of single or multiple variables using violin
 plots, boxplots, and sina plots
