@@ -221,15 +221,15 @@ plot_violin <- function(
             post_hoc,
             label = "p.adj.signif",
             color = "gray50",
-            bracket.pch_size = lwd * 0.7,
-            pch_size = cex * 6,
+            bracket.size = lwd * 0.7,
+            size = cex * 6,
             hide.ns = TRUE,
             tip.length = 0
         )
         max_stats <- pull(post_hoc, y.position) %>% max()
     }
     p <- p + geom_sina(
-        pch_size = pch_size,
+        size = pch_size,
         colour = pch_colour,
         alpha = pch_alpha,
         seed = 1
