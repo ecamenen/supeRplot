@@ -1,3 +1,48 @@
+#' Piechart
+#'
+#' Visualize the proportions of a categorical variable using a piechart
+#'
+#' @inheritParams plot_violin
+#' @inheritParams ggplot2::margin
+#' @param x Vector of character values visualized on the plot.
+#' @param hsize Integer for the size of the central hole in the pie chart
+#' (in \[1, 2\]).
+#' @param legend Boolean to toggle the display of the legend.
+#' @param n Integer for the sample size of the dataset to calculate percentages
+#'  (if different from the length of the variable).
+#' @param collapse Boolean to merge categories with identical proportions.
+#' @param threshold Integer for the minimal percentage value before being
+#'  hidden on the plot.
+#'
+#' @examples
+#' library(magrittr)
+#' library(RColorBrewer)
+#'
+#' # Default plot
+#' x <- c(rep("A", 5), rep("B", 4))
+#' plot_pie(x)
+#'
+#' # Advanced parameters
+#' k <- 10
+#' n <- runif(k, 1, 10) %>% round()
+#' x <- paste("Level", seq(k)) %>%
+#'     mapply(function(x, y) rep(x, y), ., n) %>%
+#'     unlist()
+#' plot_pie(
+#'     x,
+#'     title = "Some random variable",
+#'     width_text = 5,
+#'     width_title = 15,
+#'     colour = brewer.pal(9, "Reds"),
+#'     cex = 20,
+#'     digits = 1,
+#'     hsize = 1.5,
+#'     collapse = TRUE,
+#'     b = 3
+#' )
+#'
+#' @return A ggplot object.
+#' @export
 plot_pie <- function(
     x,
     title = NULL,

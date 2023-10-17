@@ -79,11 +79,11 @@ relative to the default.}
 
 \item{coef}{Integer to multiply the quantiles by.}
 
-\item{hjust}{Integer for the horizontal justification (in [0,1]).}
+\item{hjust}{Integer for the horizontal justification (in [0, 1]).}
 
 \item{lwd}{Integer for the line width.}
 
-\item{probs}{Integer vector of probabilities (in [0,1]).}
+\item{probs}{Integer vector of probabilities (in [0, 1]).}
 
 \item{subtitle}{Character for the subtitle.}
 
