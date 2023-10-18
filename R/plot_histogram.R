@@ -1,12 +1,20 @@
 plot_histogram <- function(
     x,
     color = "red",
-    dotsize = 1,
+    color_title = color,
+    color_stats = "black",
+    title = NULL,
+    cex = 1,
+    cex_axis = 17 * cex,
+    cex_main = 21 * cex,
+    cex_sub = 15 * cex,
+    digits = 0,
     binwidth = 1.5,
-    method = "histodot",
+    # dotsize = 1,
+    # method = "histodot",
     probs = c(.25, .75),
-    subtitle = NULL,
-    title = NULL
+    subtitle = TRUE,
+    ...
 ) {
   df <- data.frame(x) %>% get_melt()
   quant <- quantile(x, probs, na.rm = TRUE)
@@ -14,7 +22,7 @@ plot_histogram <- function(
     title <- deparse(substitute(x))
   }
   if (!is.null(subtitle)) {
-    subtitle <- paste0(print_stats(df$value), ", N=", length(na.omit(df$value)))
+    subtitle <- paste0(print_stats(df$value, digits = digits), ", N=", length(na.omit(df$value)))
   }
   p <- gghistogram(
     df,
@@ -26,10 +34,11 @@ plot_histogram <- function(
     add = "median",
     rug = TRUE,
     add.params = list(linetype = "solid", size = 1),
+    ...
   ) +
     geom_density(
-      lwd = 1,
-      colour = color,
+      lwd = cex * 1.1,
+      colour = color_stats,
       fill = color,
       alpha = 0.25
       # ) +
@@ -40,10 +49,18 @@ plot_histogram <- function(
       #     dotsize = dotsize,
       #     method = method
     ) +
-    geom_vline(xintercept = quant, color = "red", lty = 2) +
+    geom_vline(xintercept = quant, color = color_stats, lty = 2, lwd = cex * 1.25) +
     labs(subtitle = subtitle, title = title) +
     theme_minimal() +
     scale_x_continuous(expand = c(0.01, 0), labels = function(x) paste0(x)) +
     guides(color = "none", fill = "none")
-  theme_histogram(p, guide = TRUE)
+  theme_histogram(
+    p,
+                  cex = cex,
+                  cex_main = cex_main,
+                  cex_sub = cex_sub,
+                  cex_axis = cex_axis,
+                  guide = TRUE,
+                  color_title = color_title
+                )
 }

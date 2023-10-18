@@ -123,6 +123,7 @@ theme_histogram <- function(
     color_subtitle = "gray50"
 ) {
   p <- p +
+    ylab("Count") +
     theme_minimal() +
     guides(
       color = "none",
@@ -158,7 +159,7 @@ theme_histogram <- function(
           # hjust = title_center,
           size = cex * 13,
           color = color_subtitle,
-          angle = 45, vjust = 1, hjust = 1
+          vjust = 1, hjust = 1
         )
       )
   }
