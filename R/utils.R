@@ -12,11 +12,7 @@ get_colors <- function() {
     )
 }
 
-count_cat <- function(
-    x,
-    width = 20,
-    collapse = FALSE,
-    label = NULL) {
+count_cat <- function(x, width = 20, collapse = FALSE) {
     x0 <- as.data.frame(x)
     if (ncol(x0) > 1) {
         x <- sapply(
@@ -49,9 +45,9 @@ count_cat <- function(
             mutate(f = factor(f))
         df$f <- reorder(df$f, df$n)
     }
-    if (!is.null(label)) {
-        df$f <- factor(df$f, labels = rev(str_wrap(label, width)))
-    }
+    # if (!is.null(label)) {
+    #     df$f <- factor(df$f, labels = rev(str_wrap(label, width)))
+    # }
     return(df)
 }
 

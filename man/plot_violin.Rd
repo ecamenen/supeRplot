@@ -74,8 +74,8 @@ relative to the default.}
 
 \item{digits}{Integer for the number of decimals.}
 
-\item{alpha}{Integer for the transparency of the violin plot
-(ranging from 0 to 1 for maximum opacity)}
+\item{alpha}{Integer for the transparency of the violin plot (ranging from 0
+to 1 for maximum opacity).}
 
 \item{coef}{Integer to multiply the quantiles by.}
 
@@ -99,7 +99,7 @@ plots, boxplots, and sina plots
 \examples{
 library(RColorBrewer)
 
-# Default plot
+# Default parameters
 x <- runif(10)
 plot_violin(x)
 
@@ -110,7 +110,7 @@ df[, 3] <- runif(10, 1, 2)
 colnames(df) <- paste0("X", seq(3))
 plot_violin(
     df,
-    title = "Some random variables",
+    title = "Some numerical variables",
     color_title = brewer.pal(9, "Set1")[5],
     ylab = "Y-values",
     colour = brewer.pal(9, "Set1")[seq(3)],

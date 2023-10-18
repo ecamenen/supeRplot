@@ -34,7 +34,7 @@ theme_violin <- function(
             axis.title.x = element_blank(),
             axis.text.y = element_text(colour = "gray50")
         ) +
-        theme_perso(cex, cex_main, cex_sub, cex_axis)
+        theme_custom(cex, cex_main, cex_sub, cex_axis)
     if (!x_axis) {
         p <- p + theme(axis.title.x = element_blank())
     }
@@ -67,7 +67,7 @@ theme_violin <- function(
     return(p)
 }
 
-theme_perso <- function(
+theme_custom <- function(
     cex = 1,
     cex_main = 12 * cex,
     cex_sub = 15 * cex,

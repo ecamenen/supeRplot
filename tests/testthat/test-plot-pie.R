@@ -3,7 +3,7 @@ test_that("piechart default works", {
     expect_s3_class(plot_pie(x), "ggplot")
 })
 
-test_that("piechart default works", {
+test_that("piechart advanced works", {
     k <- 10
     n <- runif(k, 1, 10) %>% round()
     x <- paste("Level", seq(k)) %>%
@@ -11,9 +11,9 @@ test_that("piechart default works", {
         unlist()
     p <- plot_pie(
         x,
-        title = "Some random variable",
+        title = "Some categorical variable",
         width_text = 5,
-        width_title = 15,
+        width_title = 20,
         colour = brewer.pal(9, "Reds"),
         cex = 20,
         digits = 1,

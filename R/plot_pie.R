@@ -5,11 +5,12 @@
 #' @inheritParams plot_violin
 #' @inheritParams ggplot2::margin
 #' @param x Vector of character values visualized on the plot.
+#' @param colour Color or vector of colors for the categories.
 #' @param hsize Integer for the size of the central hole in the pie chart
 #' (in \[1, 2\]).
 #' @param legend Boolean to toggle the display of the legend.
-#' @param n Integer for the sample size of the dataset to calculate percentages
-#'  (if different from the length of the variable).
+#' @param sample_size Integer for the sample size of the dataset to calculate
+#' percentages (if different from the length of the variable).
 #' @param collapse Boolean to merge categories with identical proportions.
 #' @param threshold Integer for the minimal percentage value before being
 #'  hidden on the plot.
@@ -18,7 +19,7 @@
 #' library(magrittr)
 #' library(RColorBrewer)
 #'
-#' # Default plot
+#' # Default parameters
 #' x <- c(rep("A", 5), rep("B", 4))
 #' plot_pie(x)
 #'
@@ -30,9 +31,9 @@
 #'     unlist()
 #' plot_pie(
 #'     x,
-#'     title = "Some random variable",
+#'     title = "Some categorical variable",
 #'     width_text = 5,
-#'     width_title = 15,
+#'     width_title = 20,
 #'     colour = brewer.pal(9, "Reds"),
 #'     cex = 20,
 #'     digits = 1,
@@ -54,7 +55,7 @@ plot_pie <- function(
     cex_main = cex * 1.5,
     hsize = 1.2,
     legend = TRUE,
-    n = NULL,
+    sample_size = NULL,
     collapse = FALSE,
     threshold = 5,
     # label_name = NULL,
@@ -69,8 +70,8 @@ plot_pie <- function(
         collapse = collapse
         # label = label_name
     )
-    if (!is.null(n)) {
-        df <- rbind(df, data.frame(f = NA, n = c(n - sum(df$n))))
+    if (!is.null(sample_size)) {
+        df <- rbind(df, data.frame(f = NA, n = c(sample_size - sum(df$n))))
     }
     if (!is.null(legend) && !is.logical(legend)) {
         df$f <- factor(df$f, labels = legend)

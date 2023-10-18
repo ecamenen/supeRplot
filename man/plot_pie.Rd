@@ -15,7 +15,7 @@ plot_pie(
   cex_main = cex * 1.5,
   hsize = 1.2,
   legend = TRUE,
-  n = NULL,
+  sample_size = NULL,
   collapse = FALSE,
   threshold = 5,
   t = -0.5,
@@ -33,7 +33,7 @@ plot_pie(
 
 \item{width_title}{Integer for the maximum length of the title.}
 
-\item{colour}{Color or vector of colors for the violin and boxplot.}
+\item{colour}{Color or vector of colors for the categories.}
 
 \item{digits}{Integer for the number of decimals.}
 
@@ -48,8 +48,8 @@ relative to the default.}
 
 \item{legend}{Boolean to toggle the display of the legend.}
 
-\item{n}{Integer for the sample size of the dataset to calculate percentages
-(if different from the length of the variable).}
+\item{sample_size}{Integer for the sample size of the dataset to calculate
+percentages (if different from the length of the variable).}
 
 \item{collapse}{Boolean to merge categories with identical proportions.}
 
@@ -68,7 +68,7 @@ Visualize the proportions of a categorical variable using a piechart
 library(magrittr)
 library(RColorBrewer)
 
-# Default plot
+# Default parameters
 x <- c(rep("A", 5), rep("B", 4))
 plot_pie(x)
 
@@ -80,9 +80,9 @@ x <- paste("Level", seq(k)) \%>\%
     unlist()
 plot_pie(
     x,
-    title = "Some random variable",
+    title = "Some categorical variable",
     width_text = 5,
-    width_title = 15,
+    width_title = 20,
     colour = brewer.pal(9, "Reds"),
     cex = 20,
     digits = 1,

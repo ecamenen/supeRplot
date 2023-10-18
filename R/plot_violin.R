@@ -30,8 +30,6 @@
 #' relative to the default.
 #' @param stats Boolean to display the results of statistical tests.
 #' @param digits Integer for the number of decimals.
-#' @param alpha Integer for the transparency of the violin plot
-#' (ranging from 0 to 1 for maximum opacity)
 #' @param coef Integer to multiply the quantiles by.
 #' @param hjust Integer for the horizontal justification (in \[0, 1\]).
 #' @param lwd Integer for the line width.
@@ -42,7 +40,7 @@
 #' @examples
 #' library(RColorBrewer)
 #'
-#' # Default plot
+#' # Default parameters
 #' x <- runif(10)
 #' plot_violin(x)
 #'
@@ -53,7 +51,7 @@
 #' colnames(df) <- paste0("X", seq(3))
 #' plot_violin(
 #'     df,
-#'     title = "Some random variables",
+#'     title = "Some numerical variables",
 #'     color_title = brewer.pal(9, "Set1")[5],
 #'     ylab = "Y-values",
 #'     colour = brewer.pal(9, "Set1")[seq(3)],
