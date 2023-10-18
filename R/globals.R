@@ -7,6 +7,7 @@ utils::globalVariables(
         "p.adj.signif",
         "pos",
         "text",
+        "y_lab",
         "y.position"
     )
 )
