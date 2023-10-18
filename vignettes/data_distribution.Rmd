@@ -1,8 +1,8 @@
 ---
-title: "Tutorial"
+title: "Visualize data distribution"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Tutorial}
+  %\VignetteIndexEntry{data_distribution}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,9 +21,9 @@ library(magrittr)
 set.seed(0)
 ```
 
-## Violin plots
+## Numerical data: violin plots
 ```{r violin}
-# Default plot
+# Default parameters
 x <- runif(10)
 plot_violin(x)
 ```
@@ -36,14 +36,14 @@ df[, 3] <- runif(10, 1, 2)
 colnames(df) <- paste0("X", seq(3))
 plot_violin(
     df,
-    title = "Some random variables",
+    title = "Some numerical variables",
     colour = brewer.pal(9, "Set1")[seq(3)]
 )
 
 # Advanced parameters
 plot_violin(
     df,
-    title = "Some random variables",
+    title = "Some numerical variables",
     color_title = brewer.pal(9, "Set1")[5],
     ylab = "Y-values",
     colour = brewer.pal(9, "Set1")[seq(3)],
@@ -60,9 +60,10 @@ plot_violin(
 )
 ```
 
-## Piecharts
+## Categorical data
+### Piecharts for a single variable
 ```{r pie, fig.width = 5}
-# Default plot
+# Default parameters
 x <- c(rep("A", 5), rep("B", 4))
 plot_pie(x)
 ```
@@ -76,10 +77,10 @@ x <- paste("Level", seq(k)) %>%
     unlist()
 plot_pie(
     x,
-    title = "Some random variable",
+    title = "Some categorical variable",
     width_text = 20,
-    width_title = 15,
-    colour = brewer.pal(9, "Reds"),
+    width_title = 20,
+    colour = rev(brewer.pal(9, "Reds")),
     cex = 20,
     digits = 1,
     hsize = 1.5,
