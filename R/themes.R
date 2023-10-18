@@ -107,3 +107,66 @@ theme_bar <- function(
         p + scale_fill_gradientn(colors = colors, na.value = "black")
     }
 }
+
+theme_histogram <- function(
+    p,
+    colors = get_colors(),
+    cex = 1,
+    cex_main = 15 * cex,
+    cex_sub = 13 * cex,
+    cex_axis = 17 * cex,
+    guide = FALSE,
+    grid = FALSE,
+    color_title = "black",
+    title_center = 0.5,
+    x_axis = FALSE,
+    color_subtitle = "gray50"
+) {
+  p <- p +
+    theme_minimal() +
+    guides(
+      color = "none",
+      fill = "none"
+    ) +
+    theme(
+      plot.title = element_text(
+        hjust = title_center,
+        size = cex_main,
+        face = "bold",
+        color = color_title
+      ),
+      plot.subtitle = element_text(
+        hjust = title_center,
+        size = cex_sub,
+        color = "gray50"
+      ),
+      plot.caption = element_text(
+        hjust = 1,
+        size = cex * 11,
+        color = "gray"
+      ),
+      axis.title.x = element_blank(),
+      axis.text.y = element_text(colour = "gray50")
+    ) +
+    theme_custom(cex, cex_main, cex_sub, cex_axis)
+  if (!isTRUE(guide)) {
+    p <- p + guides(x = "none")
+  } else {
+    p <- p +
+      theme(
+        axis.text.x = element_text(
+          # hjust = title_center,
+          size = cex * 13,
+          color = color_subtitle,
+          angle = 45, vjust = 1, hjust = 1
+        )
+      )
+  }
+  if (!isTRUE(grid)) {
+    p <- p + theme(
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank()
+    )
+  }
+  return(p)
+}
