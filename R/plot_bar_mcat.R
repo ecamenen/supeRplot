@@ -1,3 +1,50 @@
+#' Barplot for categorical variables
+#'
+#' Visualize the proportions of multiple categorical variables using a
+#' barplot
+#'
+#' @inheritParams plot_violin
+#' @inheritParams plot_pie
+#' @param x Data.frame of character values visualized on the plot.
+#' @param ratio Integer for the width scale
+#' @param n_collapse Integer for the maximum number of merged categories to show
+#' @param n_max Integer for the maximum number of categories to show
+#' (prioritizing those with the largest sample size)
+#' @param hjust_title Integer for the horizontal justification of the title
+#' (in \[0, 1\]).
+#' @param hjust_text Integer for the horizontal justification of the text
+#' (in \[0, 1\]).
+#' @param vjust_text Integer for the vertical justification of the text
+#' (in \[0, 1\]).
+#'
+#' @examples
+#' library(magrittr)
+#' library(RColorBrewer)
+#'
+#' # Default parameters
+#' df <- sapply(seq(10), function(x) runif(10) %>% round()) %>% as.data.frame()
+#' colnames(df) <- paste("Level", seq(10))
+#' plot_bar_mcat(df)
+#'
+#' # Advanced parameters
+#' plot_bar_mcat(
+#'     df,
+#'     sample_size = 15,
+#'     title = "Some categorical variable",
+#'     width_text = 30,
+#'     width_title = 50,
+#'     colour = brewer.pal(9, "Reds"),
+#'     color_title = "red",
+#'     cex = 8,
+#'     digits = 1,
+#'     collapse = TRUE,
+#'     ratio = 2,
+#'     hjust_title = 1,
+#'     n_max = 4,
+#'     n_collapse = 3
+#' )
+#' @return A ggplot object.
+#' @export
 plot_bar_mcat <- function(
     x,
     sample_size = NULL,
