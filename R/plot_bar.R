@@ -23,17 +23,16 @@ plot_bar <- function(
     colour = c("blue", "gray", "#cd5b45"),
     color_title = "black",
     cex = 1,
+    cex_main = cex * 30,
     digits = 0,
-    hjust = 0,
-    vjust = 0.5,
     n_max = 100,
     ratio = 5,
-    label = NULL) {
+    threshold = 2) {
     if (is.null(title)) {
-      title <- deparse(substitute(x))
+        title <- deparse(substitute(x))
     }
-    df0 <- as.data.frame(x)
-    colnames(df0)[1] <- "val"
+    df0 <- as.data.frame(x) %>%
+        set_colnames("val")
     if (n_max > nrow(df0)) {
         n_max <- nrow(df0)
     }
@@ -49,37 +48,34 @@ plot_bar <- function(
         theme_minimal()
     colors <- colorRampPalette(colour)(length(p$data$val))
     y_lab <- p$data$val / 2
-    x_lab <- ""
-    if (!is.null(label)) {
-        x_lab <- round(p$data$val, digits)
-    }
-    x_lab[p$data$val < 2] <- ""
+    x_lab <- round(p$data$val, digits)
+    x_lab[p$data$val < threshold] <- ""
     p +
-        geom_hline(yintercept = 0, col = "grey", linewidth = 1) +
         geom_bar(stat = "identity") +
         expand_limits(y = max(p$data$val) + max(p$data$val) / ratio) +
         coord_flip() +
         scale_x_continuous(breaks = df$order, labels = rownames(df)) +
-        labs(
-            title = str_wrap(title, width_title),
-            x = "",
-            y = ""
+        scale_y_continuous(
+            breaks = pretty_breaks(n = 4),
+            labels = label_number_auto()
         ) +
+        labs(title = str_wrap(title, width_title)) +
         geom_text(
             aes(color = I("white"), y = y_lab, label = x_lab),
-            size = cex * 3.5
+            size = cex * 7
         ) +
         theme(
-            axis.text.y = element_text(size = cex * 10, face = "italic", color = colors),
-            axis.text.x = element_text(size = cex * 10, face = "italic", color = "darkgrey"),
+            axis.text.y = element_text(size = cex * 20, face = "italic", color = colors),
+            axis.text.x = element_text(size = cex * 20, face = "italic", color = "darkgrey"),
             axis.line = element_blank(),
             axis.ticks = element_blank(),
-            plot.title = element_text(size = cex * 16, face = "bold", color = color_title),
-            plot.subtitle = element_text(hjust = 0.5, size = cex * 16, face = "italic"),
+            axis.title = element_blank(),
+            plot.title = element_text(size = cex_main, face = "bold", color = color_title),
             panel.grid.major.y = element_blank(),
             panel.grid.minor = element_blank()
-        ) +
-        geom_text(aes(label = round(after_stat(y), digits) %>% paste0("%")), hjust = hjust, vjust = vjust, size = cex * 4, color = colors) +
+        ) %>%
+      suppressWarnings() +
         theme(legend.position = "none") +
-        scale_fill_gradientn(colours = rev(colors), na.value = "black")
+        scale_fill_gradientn(colours = rev(colors), na.value = "black") %>%
+      suppressWarnings()
 }
