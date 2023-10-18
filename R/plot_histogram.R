@@ -1,24 +1,55 @@
+#' Plot histogram
+#'
+#' Visualize the distribution of single variable using histogram
+#'
+#' @inheritParams plot_violin
+#' @param x Vector of numerical values visualized on the plot
+#' @param color Color for the plot
+#' @param color_stats Color for the median and quantile lines
+#' @param binwidth Integer for the number of bins
+#'
+#' @return A ggplot object.
+#' @export
+#'
+#' @examples
+#' # Default parameters
+#' x <- rnorm(100)
+#' plot_histogram(x)
+#'
+#' # Advanced parameters
+#' plot_histogram(x)
+#' plot_histogram(
+#'     x,
+#'     title = "Some numerical variable",
+#'     width_title = 15,
+#'     color = "blue",
+#'     color_title = "orange",
+#'     color_stats = "orange",
+#'     cex = 1.2,
+#'     digits = 1,
+#'     binwidth = 0.5
+#' )
 plot_histogram <- function(
     x,
+    title = NULL,
+    width_title = 20,
     color = "red",
     color_title = color,
     color_stats = "black",
-    title = NULL,
     cex = 1,
     cex_axis = 17 * cex,
     cex_main = 21 * cex,
     cex_sub = 15 * cex,
     digits = 0,
-    binwidth = 1.5,
-    probs = c(.25, .75),
     subtitle = TRUE,
-    ...) {
+    probs = c(.25, .75),
+    binwidth = 1.5) {
     df <- data.frame(x) %>% get_melt()
     quant <- quantile(x, probs, na.rm = TRUE)
     if (is.null(title)) {
         title <- deparse(substitute(x))
     }
-    if (!is.null(subtitle)) {
+    if (subtitle) {
         subtitle <- paste0(
             print_stats(df$value, digits = digits),
             ", N=",
@@ -49,7 +80,7 @@ plot_histogram <- function(
             lty = 2,
             lwd = cex * 1.25
         ) +
-        labs(subtitle = subtitle, title = title) +
+        labs(subtitle = subtitle, title = str_wrap(title, width_title)) +
         theme_minimal() +
         scale_x_continuous(
             expand = c(0.01, 0),

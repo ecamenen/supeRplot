@@ -34,7 +34,7 @@
 #' @param hjust Integer for the horizontal justification (in \[0, 1\]).
 #' @param lwd Integer for the line width.
 #' @param probs Integer vector of probabilities (in \[0, 1\]).
-#' @param subtitle Character for the subtitle.
+#' @param subtitle Boolean to display the subtitle.
 #' @param ylab Character for the title of the Y-axis.
 #'
 #' @examples

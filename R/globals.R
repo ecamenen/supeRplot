@@ -1,6 +1,7 @@
 utils::globalVariables(
     c(
         ".",
+        "...",
         "f",
         "label",
         "name",

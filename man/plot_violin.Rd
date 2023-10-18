@@ -85,7 +85,7 @@ to 1 for maximum opacity).}
 
 \item{probs}{Integer vector of probabilities (in [0, 1]).}
 
-\item{subtitle}{Character for the subtitle.}
+\item{subtitle}{Boolean to display the subtitle.}
 
 \item{ylab}{Character for the title of the Y-axis.}
 }
