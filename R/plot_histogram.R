@@ -5,12 +5,16 @@ plot_histogram <- function(
     binwidth = 1.5,
     method = "histodot",
     probs = c(.25, .75),
-    subtitle = NULL
+    subtitle = NULL,
+    title = NULL
 ) {
   df <- data.frame(x) %>% get_melt()
   quant <- quantile(x, probs, na.rm = TRUE)
+  if (is.null(title)) {
+    title <- deparse(substitute(x))
+  }
   if (!is.null(subtitle)) {
-    subtitle <- paste0(print_stats0(df$value), ", N=", length(na.omit(df$value)))
+    subtitle <- paste0(print_stats(df$value), ", N=", length(na.omit(df$value)))
   }
   p <- gghistogram(
     df,
@@ -41,5 +45,5 @@ plot_histogram <- function(
     theme_minimal() +
     scale_x_continuous(expand = c(0.01, 0), labels = function(x) paste0(x)) +
     guides(color = "none", fill = "none")
-  theme_violin1(p, guide = TRUE)
+  theme_histogram(p, guide = TRUE)
 }
