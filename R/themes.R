@@ -83,3 +83,27 @@ theme_perso <- function(
         )
     )
 }
+
+
+theme_bar <- function(
+    p,
+    y = NULL,
+    colors = c(
+        brewer.pal(n = 9, name = "Set1")[-6],
+        brewer.pal(n = 9, name = "Pastel2")
+    ),
+    cat = TRUE) {
+    p <- p +
+        theme_minimal() +
+        theme_custom() +
+        theme(
+            # axis.text.y = element_text(angle = 45, vjust = 1, hjust = 1),
+            legend.position = "none"
+        ) +
+        labs(x = "", y = "")
+    if (cat) {
+        p + scale_fill_manual(p, values = colors, na.value = "black")
+    } else {
+        p + scale_fill_gradientn(colors = colors, na.value = "black")
+    }
+}
