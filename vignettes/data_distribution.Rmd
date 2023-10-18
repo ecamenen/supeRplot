@@ -2,7 +2,7 @@
 title: "Visualize data distribution"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{data_distribution}
+  %\VignetteIndexEntry{Visualize data distribution}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,7 +21,8 @@ library(magrittr)
 set.seed(0)
 ```
 
-## Numerical data: violin plots
+## Numerical data
+### Violin plots
 ```{r violin}
 # Default parameters
 x <- runif(10)
@@ -57,6 +58,26 @@ plot_violin(
     width_title = 30,
     lwd = 1.25,
     digits = 2
+)
+```
+
+### Histograms
+```{r hist, fig.width = 3.5}
+# Default parameters
+x <- rnorm(100)
+plot_histogram(x)
+
+# Advanced parameters
+plot_histogram(
+    x,
+    title = "Some numerical variable",
+    width_title = 15,
+    color = "blue",
+    color_title = "orange",
+    color_stats = "orange",
+    cex = 1.2,
+    digits = 1,
+    binwidth = 0.5
 )
 ```
 

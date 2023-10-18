@@ -66,7 +66,6 @@ x <- rnorm(100)
 plot_histogram(x)
 
 # Advanced parameters
-plot_histogram(x)
 plot_histogram(
     x,
     title = "Some numerical variable",

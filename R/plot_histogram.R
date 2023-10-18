@@ -17,7 +17,6 @@
 #' plot_histogram(x)
 #'
 #' # Advanced parameters
-#' plot_histogram(x)
 #' plot_histogram(
 #'     x,
 #'     title = "Some numerical variable",
@@ -65,8 +64,7 @@ plot_histogram <- function(
         binwidth = binwidth,
         add = "median",
         rug = TRUE,
-        add.params = list(linetype = "solid", size = 1),
-        ...
+        add.params = list(linetype = "solid", size = 1)
     ) +
         geom_density(
             lwd = cex * 1.1,
