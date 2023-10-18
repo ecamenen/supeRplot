@@ -96,7 +96,6 @@ plot_violin <- function(
     probs = c(.25, .75),
     subtitle = FALSE,
     ylab = NULL) {
-    set.seed(1)
     if (is.null(title)) {
         title <- paste0(deparse(substitute(x)))
     }
