@@ -88,6 +88,34 @@ plot_pie(
 )
 ```
 
+### Barplots for multiple variables (or for a variable whose levels may be present simultaneously)
+```{r bar_mcat, fig.width = 6, fig.height = 5}
+# Default parameters
+df <- sapply(seq(10), function(x) runif(10) %>% round()) %>% as.data.frame()
+colnames(df) <- paste("Level", seq(10))
+plot_bar_mcat(df)
+```
+
+```{r bar_mcat_adv, fig.width = 7, fig.height = 5}
+# Advanced parameters
+plot_bar_mcat(
+    df,
+    sample_size = 15,
+    title = "Some categorical variable",
+    width_text = 30,
+    width_title = 50,
+    colour = brewer.pal(9, "Reds"),
+    color_title = "red",
+    cex = 8,
+    digits = 1,
+    collapse = TRUE,
+    ratio = 2,
+    hjust_title = 1,
+    n_max = 4,
+    n_collapse = 3
+)
+```
+
 # Session information
 ```{r end, echo = FALSE}
 sessionInfo()
