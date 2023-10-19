@@ -42,7 +42,8 @@ plot_bar <- function(
     digits = 0,
     n_max = 100,
     ratio = 5,
-    threshold = 2) {
+    threshold = 2,
+    hjust_title = 0) {
     if (is.null(title)) {
         title <- deparse(substitute(x))
     }
@@ -85,12 +86,17 @@ plot_bar <- function(
             axis.line = element_blank(),
             axis.ticks = element_blank(),
             axis.title = element_blank(),
-            plot.title = element_text(size = cex_main, face = "bold", color = color_title),
+            plot.title = element_text(
+              size = cex_main,
+              face = "bold",
+              color = color_title,
+              hjust = hjust_title
+            ),
             panel.grid.major.y = element_blank(),
             panel.grid.minor = element_blank()
         ) %>%
-      suppressWarnings() +
+        suppressWarnings() +
         theme(legend.position = "none") +
         scale_fill_gradientn(colours = rev(colors), na.value = "black") %>%
-      suppressWarnings()
+        suppressWarnings()
 }
