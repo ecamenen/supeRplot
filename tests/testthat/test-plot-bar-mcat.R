@@ -21,9 +21,9 @@ test_that("bar_mcat advanced works", {
         digits = 1,
         collapse = TRUE,
         ratio = 2,
-        hjust_title = 1,
+        n_collapse = 3,
         n_max = 4,
-        n_collapse = 3
+        hjust_title = 1
     )
     expect_s3_class(p, "ggplot")
 })
