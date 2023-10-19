@@ -1,20 +1,35 @@
-#' Histogram settings
+#' Barplot
 #'
-#' Default font for a vertical barplot.
+#' Display each numerical value separately using a barplot
 #'
-#' @param p A ggplot object.
-#' @param df A dataframe with a column named "order"
-#' @param title A character string giving a graphic title
-#' @param color A vector of character giving the colors for the rows
+#' @inheritParams plot_violin
+#' @inheritParams plot_bar_mcat
+#' @param x Vector of numerical values visualized on the plot.
+#' @param colour Color or vector of colors for the gradient of the bars.
+#' @param threshold Double for the minimal percentage value before being
+#'  hidden on the plot.
+#'
 #' @examples
-#' df <- data.frame(x = runif(30), order = 30:1)
-#' library("ggplot2")
-#' p <- ggplot(df, aes(order, x))
-#' plotHistogram(p, df, "This is my title", "red")
-#' # Add colors per levels of a variable
-#' df$color <- rep(c(1, 2, 3), each = 10)
-#' p <- ggplot(df, aes(order, x, fill = color))
-#' plot_bar(p, df, "Histogram", as.character(df$color))
+#' library(magrittr)
+#'
+#' # Default parameters
+#' x <- runif(10, 1, 10) %>%
+#'     set_names(paste("Sample", LETTERS[seq(10)]))
+#' plot_bar(x)
+#'
+#' # Advanced parameters
+#' plot_bar(
+#'     x = x,
+#'     title = "Some numerical variable",
+#'     width_title = 30,
+#'     colour = c("yellow", "gray", "red"),
+#'     color_title = "blue",
+#'     cex = 1.2,
+#'     digits = 1,
+#'     n_max = 5,
+#'     ratio = 15,
+#'     hjust_title = 1
+#' )
 #' @export plot_bar
 plot_bar <- function(
     x = NULL,

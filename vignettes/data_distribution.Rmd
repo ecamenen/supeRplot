@@ -81,6 +81,30 @@ plot_histogram(
 )
 ```
 
+### Barplots
+```{r baplot}
+# Default parameters
+x <- runif(10, 1, 10) %>%
+    set_names(paste("Sample", LETTERS[seq(10)]))
+plot_bar(x)
+```
+
+```{r baplot_adv, fig.width = 7}
+# Advanced parameters
+plot_bar(
+    x = x,
+    title = "Some numerical variable",
+    width_title = 30,
+    colour = c("yellow", "gray", "red"),
+    color_title = "blue",
+    cex = 1.2,
+    digits = 1,
+    n_max = 5,
+    ratio = 15,
+    hjust_title = 1
+)
+```
+
 ## Categorical data
 ### Piecharts for a single variable
 ```{r pie, fig.width = 5}
