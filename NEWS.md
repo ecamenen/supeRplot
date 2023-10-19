@@ -1,3 +1,3 @@
-# GimmeMyPlot 1.0.0
+# GimmeMyPlot 0.1.0
 
 * Initial CRAN submission.
