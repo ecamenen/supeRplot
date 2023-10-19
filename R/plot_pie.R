@@ -6,13 +6,13 @@
 #' @inheritParams ggplot2::margin
 #' @param x Vector of character values visualized on the plot.
 #' @param colour Color or vector of colors for the categories.
-#' @param hsize Integer for the size of the central hole in the pie chart
+#' @param hsize Double for the size of the central hole in the pie chart
 #' (in \[1, 2\]).
 #' @param legend Boolean to toggle the display of the legend.
 #' @param sample_size Integer for the sample size of the dataset to calculate
 #' percentages (if different from the length of the variable).
 #' @param collapse Boolean to merge categories with identical proportions.
-#' @param threshold Integer for the minimal percentage value before being
+#' @param threshold Double for the minimal percentage value before being
 #'  hidden on the plot.
 #'
 #' @examples

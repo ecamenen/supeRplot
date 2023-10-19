@@ -13,27 +13,27 @@
 #' @param width_title Integer for the maximum length of the title.
 #' @param color_title Color for the title.
 #' @param colour Color or vector of colors for the violin and boxplot.
-#' @param alpha Integer for the transparency of the violin plot (ranging from 0
+#' @param alpha Double for the transparency of the violin plot (ranging from 0
 #' to 1 for maximum opacity).
-#' @param pch_alpha Integer for the transparency of the points (ranging from 0
+#' @param pch_alpha Double for the transparency of the points (ranging from 0
 #' to 1 for maximum opacity).
 #' @param pch_colour Color for the sina points.
-#' @param pch_size Integer for the magnification factor for the points relative
+#' @param pch_size Double for the magnification factor for the points relative
 #' to the default.
-#' @param cex Integer for the magnification factor for the text relative to the
+#' @param cex Double for the magnification factor for the text relative to the
 #' default.
-#' @param cex_axis Integer for the magnification factor for the axis labels
+#' @param cex_axis Double for the magnification factor for the axis labels
 #' relative to the default.
-#' @param cex_main Integer for the magnification factor for the subtitles
+#' @param cex_main Double for the magnification factor for the subtitles
 #' relative to the default.
-#' @param cex_sub Integer for the magnification factor for the main title
+#' @param cex_sub Double for the magnification factor for the main title
 #' relative to the default.
 #' @param stats Boolean to display the results of statistical tests.
 #' @param digits Integer for the number of decimals.
-#' @param coef Integer to multiply the quantiles by.
-#' @param hjust Integer for the horizontal justification (in \[0, 1\]).
-#' @param lwd Integer for the line width.
-#' @param probs Integer vector of probabilities (in \[0, 1\]).
+#' @param coef Double to multiply the quantiles by.
+#' @param hjust Double for the horizontal justification (in \[0, 1\]).
+#' @param lwd Double for the line width.
+#' @param probs Double vector for the probabilities (in \[0, 1\]).
 #' @param subtitle Boolean to display the subtitle.
 #' @param ylab Character for the title of the Y-axis.
 #'

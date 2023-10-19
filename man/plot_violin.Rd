@@ -50,40 +50,40 @@ plot_violin(
 
 \item{color_title}{Color for the title.}
 
-\item{pch_alpha}{Integer for the transparency of the points (ranging from 0
+\item{pch_alpha}{Double for the transparency of the points (ranging from 0
 to 1 for maximum opacity).}
 
 \item{pch_colour}{Color for the sina points.}
 
-\item{pch_size}{Integer for the magnification factor for the points relative
+\item{pch_size}{Double for the magnification factor for the points relative
 to the default.}
 
-\item{cex}{Integer for the magnification factor for the text relative to the
+\item{cex}{Double for the magnification factor for the text relative to the
 default.}
 
-\item{cex_axis}{Integer for the magnification factor for the axis labels
+\item{cex_axis}{Double for the magnification factor for the axis labels
 relative to the default.}
 
-\item{cex_main}{Integer for the magnification factor for the subtitles
+\item{cex_main}{Double for the magnification factor for the subtitles
 relative to the default.}
 
-\item{cex_sub}{Integer for the magnification factor for the main title
+\item{cex_sub}{Double for the magnification factor for the main title
 relative to the default.}
 
 \item{stats}{Boolean to display the results of statistical tests.}
 
 \item{digits}{Integer for the number of decimals.}
 
-\item{alpha}{Integer for the transparency of the violin plot (ranging from 0
+\item{alpha}{Double for the transparency of the violin plot (ranging from 0
 to 1 for maximum opacity).}
 
-\item{coef}{Integer to multiply the quantiles by.}
+\item{coef}{Double to multiply the quantiles by.}
 
-\item{hjust}{Integer for the horizontal justification (in [0, 1]).}
+\item{hjust}{Double for the horizontal justification (in [0, 1]).}
 
-\item{lwd}{Integer for the line width.}
+\item{lwd}{Double for the line width.}
 
-\item{probs}{Integer vector of probabilities (in [0, 1]).}
+\item{probs}{Double vector for the probabilities (in [0, 1]).}
 
 \item{subtitle}{Boolean to display the subtitle.}
 

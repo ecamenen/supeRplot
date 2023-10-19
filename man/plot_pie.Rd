@@ -37,13 +37,13 @@ plot_pie(
 
 \item{digits}{Integer for the number of decimals.}
 
-\item{cex}{Integer for the magnification factor for the text relative to the
+\item{cex}{Double for the magnification factor for the text relative to the
 default.}
 
-\item{cex_main}{Integer for the magnification factor for the subtitles
+\item{cex_main}{Double for the magnification factor for the subtitles
 relative to the default.}
 
-\item{hsize}{Integer for the size of the central hole in the pie chart
+\item{hsize}{Double for the size of the central hole in the pie chart
 (in [1, 2]).}
 
 \item{legend}{Boolean to toggle the display of the legend.}
@@ -53,7 +53,7 @@ percentages (if different from the length of the variable).}
 
 \item{collapse}{Boolean to merge categories with identical proportions.}
 
-\item{threshold}{Integer for the minimal percentage value before being
+\item{threshold}{Double for the minimal percentage value before being
 hidden on the plot.}
 
 \item{t, r, b, l}{Dimensions of each margin. (To remember order, think trouble).}

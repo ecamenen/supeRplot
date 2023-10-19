@@ -34,25 +34,25 @@ plot_histogram(
 
 \item{color_stats}{Color for the median and quantile lines}
 
-\item{cex}{Integer for the magnification factor for the text relative to the
+\item{cex}{Double for the magnification factor for the text relative to the
 default.}
 
-\item{cex_axis}{Integer for the magnification factor for the axis labels
+\item{cex_axis}{Double for the magnification factor for the axis labels
 relative to the default.}
 
-\item{cex_main}{Integer for the magnification factor for the subtitles
+\item{cex_main}{Double for the magnification factor for the subtitles
 relative to the default.}
 
-\item{cex_sub}{Integer for the magnification factor for the main title
+\item{cex_sub}{Double for the magnification factor for the main title
 relative to the default.}
 
 \item{digits}{Integer for the number of decimals.}
 
 \item{subtitle}{Boolean to display the subtitle.}
 
-\item{probs}{Integer vector of probabilities (in [0, 1]).}
+\item{probs}{Double vector for the probabilities (in [0, 1]).}
 
-\item{binwidth}{Integer for the number of bins}
+\item{binwidth}{Double for the number of bins}
 }
 \value{
 A ggplot object.

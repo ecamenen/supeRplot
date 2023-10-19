@@ -40,30 +40,30 @@ percentages (if different from the length of the variable).}
 
 \item{color_title}{Color for the title.}
 
-\item{cex}{Integer for the magnification factor for the text relative to the
+\item{cex}{Double for the magnification factor for the text relative to the
 default.}
 
 \item{digits}{Integer for the number of decimals.}
 
 \item{collapse}{Boolean to merge categories with identical proportions.}
 
-\item{ratio}{Integer for the width scale}
+\item{ratio}{Double for the width scale}
 
 \item{n_collapse}{Integer for the maximum number of merged categories to show}
 
-\item{n_max}{Integer for the maximum number of categories to show
-(prioritizing those with the largest sample size)}
+\item{n_max}{Integer for the maximum number of bars to show
+(prioritizing those with the largest value)}
 
-\item{threshold}{Integer for the minimal percentage value before being
+\item{threshold}{Double for the minimal percentage value before being
 hidden on the plot.}
 
-\item{hjust_title}{Integer for the horizontal justification of the title
+\item{hjust_title}{Double for the horizontal justification of the title
 (in [0, 1]).}
 
-\item{hjust_text}{Integer for the horizontal justification of the text
+\item{hjust_text}{Double for the horizontal justification of the text
 (in [0, 1]).}
 
-\item{vjust_text}{Integer for the vertical justification of the text
+\item{vjust_text}{Double for the vertical justification of the text
 (in [0, 1]).}
 }
 \value{
@@ -94,9 +94,9 @@ plot_bar_mcat(
     cex = 8,
     digits = 1,
     collapse = TRUE,
-    ratio = 2,
-    hjust_title = 1,
+    ratio = 2,#'
+    n_collapse = 3,
     n_max = 4,
-    n_collapse = 3
+    hjust_title = 1
 )
 }

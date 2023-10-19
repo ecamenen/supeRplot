@@ -6,15 +6,15 @@
 #' @inheritParams plot_violin
 #' @inheritParams plot_pie
 #' @param x Data.frame of character values visualized on the plot.
-#' @param ratio Integer for the width scale
+#' @param ratio Double for the width scale
 #' @param n_collapse Integer for the maximum number of merged categories to show
-#' @param n_max Integer for the maximum number of categories to show
-#' (prioritizing those with the largest sample size)
-#' @param hjust_title Integer for the horizontal justification of the title
+#' @param n_max Integer for the maximum number of bars to show
+#' (prioritizing those with the largest value)
+#' @param hjust_title Double for the horizontal justification of the title
 #' (in \[0, 1\]).
-#' @param hjust_text Integer for the horizontal justification of the text
+#' @param hjust_text Double for the horizontal justification of the text
 #' (in \[0, 1\]).
-#' @param vjust_text Integer for the vertical justification of the text
+#' @param vjust_text Double for the vertical justification of the text
 #' (in \[0, 1\]).
 #'
 #' @examples
@@ -39,9 +39,9 @@
 #'     digits = 1,
 #'     collapse = TRUE,
 #'     ratio = 2,
-#'     hjust_title = 1,
+#'     n_collapse = 3,
 #'     n_max = 4,
-#'     n_collapse = 3
+#'     hjust_title = 1
 #' )
 #' @return A ggplot object.
 #' @export
