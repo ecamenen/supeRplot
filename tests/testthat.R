@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(supeRplot)
+library(GimmeMyPlot)
 
-test_check("supeRplot")
+test_check("GimmeMyPlot")
