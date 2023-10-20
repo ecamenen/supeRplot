@@ -25,7 +25,7 @@ count_cat <- function(x, width = 20, collapse = FALSE) {
         str_replace_all("\n", " ") %>%
         to_title()
     df <- factor(x) %>%
-        # fct_relabel(~ str_replace_all(.x, "\\s*\\([^\\)]+\\)", "")) %>%
+        fct_relabel(~ str_replace_all(.x, "\\s*\\([^\\)]+\\)", "")) %>%
         fct_relabel(~ str_replace_all(.x, "\\$\\$[^\\)]+", "")) %>%
         fct_relabel(~ str_replace_all(.x, "^0$", "No")) %>%
         fct_relabel(
@@ -45,9 +45,6 @@ count_cat <- function(x, width = 20, collapse = FALSE) {
             mutate(f = factor(f))
         df$f <- reorder(df$f, df$n)
     }
-    # if (!is.null(label)) {
-    #     df$f <- factor(df$f, labels = rev(str_wrap(label, width)))
-    # }
     return(df)
 }
 

@@ -57,7 +57,6 @@ plot_bar_mcat <- function(
     digits = 0,
     collapse = FALSE,
     ratio = 5,
-    # label = NULL,
     n_collapse = 5,
     n_max = Inf,
     threshold = 1,
@@ -72,7 +71,6 @@ plot_bar_mcat <- function(
         x0,
         width = width_text,
         collapse = collapse
-        # label = label
     ) %>%
         data.frame(., order = as.numeric(rownames(.))) %>%
         tail(n_max)

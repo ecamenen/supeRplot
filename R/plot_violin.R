@@ -196,7 +196,7 @@ plot_violin <- function(
         theme_minimal() +
         labs(
             title = str_wrap(title, width_title),
-            subtitle = subtitle, # str_wrap(subtitle, wrap_subtitle),
+            subtitle = subtitle,
             y = ylab
         ) +
         scale_fill_manual(values = colour_fill) +

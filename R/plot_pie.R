@@ -58,8 +58,6 @@ plot_pie <- function(
     sample_size = NULL,
     collapse = FALSE,
     threshold = 5,
-    # label_name = NULL,
-    # legend_name = NULL,
     t = -0.5,
     l = -1,
     r = -1,
@@ -68,7 +66,6 @@ plot_pie <- function(
         x,
         width = width_text,
         collapse = collapse
-        # label = label_name
     )
     if (!is.null(sample_size)) {
         df <- rbind(df, data.frame(f = NA, n = c(sample_size - sum(df$n))))
@@ -90,26 +87,11 @@ plot_pie <- function(
     }
     i <- df$n / sum(df$n) <= threshold / 100
     df$text[i] <- ""
-    # if (!is.null(legend_name)) {
-    #     df$legend <- str_replace_all(legend_name, "\\(", "\\\\(") %>%
-    #         str_replace_all("\\)", "\\\\)") %>%
-    #         c("NA")
-    #     i <- sapply(df$legend, function(i) {
-    #         paste(df$f) %>%
-    #             str_replace_all("\n", " ") %>%
-    #             str_which(i)
-    #     })
-    #     colour0 <- c(rev(colour), "gray")[i]
-    #     colour <- colour0
-    #     df$legend <- df$f[i]
-    # } else {
     df$legend <- df$f
     colour <- sort(levels(df$f)) %>%
         match(., levels(df$f)) %>%
         colour[.] %>%
         c("gray")
-    colour0 <- colour
-    # }
     df$legend0 <- paste0(df$legend, ": ", df$n)
     df$legend[df$legend == "NA"] <- NA
     p <- ggplot(df, aes(x = hsize, y = n, fill = f)) +
