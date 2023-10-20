@@ -81,16 +81,24 @@ plot_bar <- function(
             size = cex * 7
         ) +
         theme(
-            axis.text.y = element_text(size = cex * 20, face = "italic", color = colors),
-            axis.text.x = element_text(size = cex * 20, face = "italic", color = "darkgrey"),
+            axis.text.y = element_text(
+                size = cex * 20,
+                face = "italic",
+                color = colors
+            ),
+            axis.text.x = element_text(
+                size = cex * 20,
+                face = "italic",
+                color = "darkgrey"
+            ),
             axis.line = element_blank(),
             axis.ticks = element_blank(),
             axis.title = element_blank(),
             plot.title = element_text(
-              size = cex_main,
-              face = "bold",
-              color = color_title,
-              hjust = hjust_title
+                size = cex_main,
+                face = "bold",
+                color = color_title,
+                hjust = hjust_title
             ),
             panel.grid.major.y = element_blank(),
             panel.grid.minor = element_blank()
