@@ -5,6 +5,7 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/GimmeMyPlot)](https://CRAN.R-project.org/package=GimmeMyPlot)
+[![R-CMD-check](https://github.com/ecamenen/GimmeMyPlot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ecamenen/GimmeMyPlot/actions/workflows/R-CMD-check.yaml)
 
 Simplifies the process of creating essential visualizations in R,
 offering a range of plotting functions for common chart types like
@@ -27,7 +28,7 @@ provides a streamlined solution for fundamental graphics in R.
 ### Installation
 
 You can install the development version from
-[GitHub](https://github.com/) with:
+[GitHub](https://github.com/ecamenen/GimmeMyPlot) with:
 
 ``` r
 # install.packages("devtools")
