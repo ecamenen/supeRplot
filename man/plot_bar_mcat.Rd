@@ -94,7 +94,7 @@ plot_bar_mcat(
     cex = 8,
     digits = 1,
     collapse = TRUE,
-    ratio = 2,#'
+    ratio = 2,
     n_collapse = 3,
     n_max = 4,
     hjust_title = 1

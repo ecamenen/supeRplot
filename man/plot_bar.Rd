@@ -70,6 +70,7 @@ plot_bar(
     cex = 1.2,
     digits = 1,
     n_max = 5,
-    ratio = 15
+    ratio = 15,
+    hjust_title = 1
 )
 }

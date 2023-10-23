@@ -23,7 +23,7 @@ Imports:
     RColorBrewer,
     rstatix,
     scales,
-    stats,
+    stringi,
     stringr,
     tidyr
 Suggests: 

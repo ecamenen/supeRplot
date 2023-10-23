@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, echo = FALSE, warning = FALSE}
-library(supeRplot)
+library(GimmeMyPlot)
 library(RColorBrewer)
 library(magrittr)
 set.seed(0)
