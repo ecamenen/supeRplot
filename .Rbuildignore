@@ -19,3 +19,4 @@ docker_launch.sh
 app_config.R
 ^.*\.BiocCheck$
 .*golem-config.yml
+^codecov\.yml$

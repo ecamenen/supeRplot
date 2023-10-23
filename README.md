@@ -8,6 +8,8 @@ Graphical utilities for visualizing and exploring data
 [![CRAN
 status](https://www.r-pkg.org/badges/version/GimmeMyPlot)](https://CRAN.R-project.org/package=GimmeMyPlot)
 [![R-CMD-check](https://github.com/ecamenen/GimmeMyPlot/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ecamenen/GimmeMyPlot/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/ecamenen/GimmeMyPlot/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ecamenen/GimmeMyPlot?branch=main)
 
 ## Overview
 
