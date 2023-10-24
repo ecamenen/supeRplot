@@ -5,7 +5,7 @@ get_melt <- function(x) {
 
 get_colors <- function() {
     c(
-        brewer.pal(9, "Set1"),
+        brewer.pal(9, "Set1")[-6],
         brewer.pal(7, "Set2"),
         brewer.pal(8, "Pastel1"),
         brewer.pal(8, "Set2")[-5]

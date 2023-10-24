@@ -3,10 +3,10 @@
 #' Visualize the distribution of single variable using histogram
 #'
 #' @inheritParams plot_violin
-#' @param x Vector of numerical values visualized on the plot
-#' @param color Color for the plot
-#' @param color_stats Color for the median and quantile lines
-#' @param binwidth Double for the number of bins
+#' @param x Vector of numerical values visualized on the plot.
+#' @param color Color for the plot.
+#' @param color_stats Color for the median and quantile lines.
+#' @param binwidth Double for the number of bins.
 #'
 #' @return A ggplot object.
 #' @export

@@ -5,6 +5,7 @@
 #' @inheritParams plot_violin
 #' @inheritParams ggplot2::margin
 #' @param x Vector of character values visualized on the plot.
+#' @param width_text Integer for the maximum length of the text.
 #' @param colour Color or vector of colors for the categories.
 #' @param hsize Double for the size of the central hole in the pie chart
 #' (in \[1, 2\]).
@@ -34,7 +35,7 @@
 #'     title = "Some categorical variable",
 #'     width_text = 5,
 #'     width_title = 20,
-#'     colour = brewer.pal(9, "Reds"),
+#'     colour = rev(brewer.pal(9, "Reds")),
 #'     cex = 20,
 #'     digits = 1,
 #'     hsize = 1.5,

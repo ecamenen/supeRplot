@@ -22,17 +22,17 @@ plot_histogram(
 )
 }
 \arguments{
-\item{x}{Vector of numerical values visualized on the plot}
+\item{x}{Vector of numerical values visualized on the plot.}
 
 \item{title}{Character for the title.}
 
 \item{width_title}{Integer for the maximum length of the title.}
 
-\item{color}{Color for the plot}
+\item{color}{Color for the plot.}
 
 \item{color_title}{Color for the title.}
 
-\item{color_stats}{Color for the median and quantile lines}
+\item{color_stats}{Color for the median and quantile lines.}
 
 \item{cex}{Double for the magnification factor for the text relative to the
 default.}
@@ -52,7 +52,7 @@ relative to the default.}
 
 \item{probs}{Double vector for the probabilities (in [0, 1]).}
 
-\item{binwidth}{Double for the number of bins}
+\item{binwidth}{Double for the number of bins.}
 }
 \value{
 A ggplot object.

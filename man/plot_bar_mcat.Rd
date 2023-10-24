@@ -47,12 +47,12 @@ default.}
 
 \item{collapse}{Boolean to merge categories with identical proportions.}
 
-\item{ratio}{Double for the width scale}
+\item{ratio}{Double for the width scale.}
 
 \item{n_collapse}{Integer for the maximum number of merged categories to show}
 
 \item{n_max}{Integer for the maximum number of bars to show
-(prioritizing those with the largest value)}
+(prioritizing those with the largest value).}
 
 \item{threshold}{Double for the minimal percentage value before being
 hidden on the plot.}

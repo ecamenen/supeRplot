@@ -6,10 +6,10 @@
 #' @inheritParams plot_violin
 #' @inheritParams plot_pie
 #' @param x Data.frame of character values visualized on the plot.
-#' @param ratio Double for the width scale
+#' @param ratio Double for the width scale.
 #' @param n_collapse Integer for the maximum number of merged categories to show
 #' @param n_max Integer for the maximum number of bars to show
-#' (prioritizing those with the largest value)
+#' (prioritizing those with the largest value).
 #' @param hjust_title Double for the horizontal justification of the title
 #' (in \[0, 1\]).
 #' @param hjust_text Double for the horizontal justification of the text

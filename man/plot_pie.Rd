@@ -29,7 +29,7 @@ plot_pie(
 
 \item{title}{Character for the title.}
 
-\item{width_text}{Integer for the maximum length of the subtitle(s).}
+\item{width_text}{Integer for the maximum length of the text.}
 
 \item{width_title}{Integer for the maximum length of the title.}
 
@@ -83,7 +83,7 @@ plot_pie(
     title = "Some categorical variable",
     width_text = 5,
     width_title = 20,
-    colour = brewer.pal(9, "Reds"),
+    colour = rev(brewer.pal(9, "Reds")),
     cex = 20,
     digits = 1,
     hsize = 1.5,

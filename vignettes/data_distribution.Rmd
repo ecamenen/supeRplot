@@ -82,14 +82,14 @@ plot_histogram(
 ```
 
 ### Barplots
-```{r baplot}
+```{r barplot}
 # Default parameters
 x <- runif(10, 1, 10) %>%
     set_names(paste("Sample", LETTERS[seq(10)]))
 plot_bar(x)
 ```
 
-```{r baplot_adv, fig.width = 7}
+```{r barplot_adv, fig.width = 7}
 # Advanced parameters
 plot_bar(
     x = x,
