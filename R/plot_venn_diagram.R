@@ -1,18 +1,18 @@
 plot_venn_diagram <- function(
     x,
-    n = 4,
-    color = get_colors()[-6],
+    width_text = 30,
+    width_label = 30,
+    colour = get_colors(),
     cex = 1,
-    vjust = 0.5,
-    label = TRUE,
+    cex_main = cex * 6,
+    n_max = 4,
+    vjust_label = 0.5,
     ratio = 0.1,
-    wrap = 30,
-    wrap_title = 30,
+    label = TRUE,
     percent = TRUE,
-    item = TRUE,
-    cex_main = cex * 6) {
+    element = TRUE) {
     data <- x %>%
-        set_names(names(.) %>% str_wrap(wrap_title)) %>%
+        set_names(names(.) %>% str_wrap(width_label)) %>%
         Venn() %>%
         process_data()
     data@region <- data@region %>%
@@ -26,16 +26,16 @@ plot_venn_diagram <- function(
                 paste(count, ., sep = "\n")
         )
     data@region$label[data@region$item %>% list.which(length(.) == 0)] <- ""
-    if (item) {
-        i <- data@region$item %>% list.which(length(.) <= n & length(.) > 0)
+    if (element) {
+        i <- data@region$item %>% list.which(length(.) <= n_max & length(.) > 0)
         data@region$label[unlist(i)] <- data@region$item %>%
-            list.search(length(.) <= n & length(.) > 0) %>%
-            list.mapv(str_trunc2(., wrap) %>% paste(., collapse = "\n"))
+            list.search(length(.) <= n_max & length(.) > 0) %>%
+            list.mapv(str_trunc2(., width_text) %>% paste(., collapse = "\n"))
     }
     p <- ggplot() +
         # geom_sf(aes(fill = count), data = venn_region(data)) +
         geom_sf(
-            aes(color = id),
+            aes(colour = id),
             data = venn_setedge(data),
             show.legend = FALSE,
             lwd = 1.5
@@ -49,7 +49,7 @@ plot_venn_diagram <- function(
         ) +
         theme_void() +
         # scale_fill_gradient(low = "white", high = "red") +
-        scale_color_manual(values = color) +
+        scale_color_manual(values = colour) +
         theme(
             legend.title = element_text(face = "bold.italic", size = cex * 13),
             legend.text = element_text(size = cex * 9)
@@ -59,8 +59,8 @@ plot_venn_diagram <- function(
     if (label) {
         p <- p + geom_sf_text(
             aes(label = name),
-            color = color[seq(length(x))],
-            vjust = vjust,
+            colour = colour[seq(length(x))],
+            vjust = vjust_label,
             data = venn_setlabel(data),
             size = cex_main
         )
