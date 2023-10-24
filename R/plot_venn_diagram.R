@@ -1,3 +1,60 @@
+#' Venn diagram
+#'
+#' Visualize a venn diagram with the element of in each set and their
+#' intersection.
+#'
+#' @inheritParams plot_violin
+#' @inheritParams plot_pie
+#' @inheritParams plot_bar_mcat
+#' @param x X
+#' @param width_label Integer for the maximum length of the labels.
+#' @param n_max Integer for the maximum number of element to show.
+#' After this threshold, only their statistics will be visible.
+#' @param vjust_label Double for the vertical justification of the labels
+#' (in \[0, 1\]).
+#' @param label Boolean to toggle the display of the labels.
+#' @param element Boolean to toggle the display of the elements.
+#' If disabled, only their statistics will be visible.
+#' @param percentage Boolean to toggle the display of the percenatge of the
+#' elements.
+#'
+#' @examples
+#' library(magrittr)
+#' library(RColorBrewer)
+#'
+#' x <- lapply(
+#'     seq(3),
+#'     function(x) {
+#'         runif(10, 1, 10) %>%
+#'             round() %>%
+#'             letters[.] %>%
+#'             unique() %>%
+#'             paste("Element", .)
+#'     }
+#' ) %>%
+#'     set_names(paste("Dataset", LETTERS[seq(3)]))
+#'
+#' # Default parameters
+#' plot_venn_diagram(x)
+#'
+#' # Advanced parameters
+#' plot_venn_diagram(
+#'     x,
+#'     width_text = 8,
+#'     width_label = 5,
+#'     colour = brewer.pal(3, "Reds"),
+#'     cex = 1.2,
+#'     cex_main = 1.2 * 6,
+#'     n_max = 2,
+#'     vjust_label = 0.75,
+#'     ratio = 0.5,
+#'     label = FALSE,
+#'     element = FALSE,
+#'     percent = FALSE
+#' )
+#'
+#' @return A ggplot object.
+#' @export
 plot_venn_diagram <- function(
     x,
     width_text = 30,
