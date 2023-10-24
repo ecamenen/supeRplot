@@ -1,10 +1,19 @@
 plot_radar <- function(
     x,
+    colour = get_colors(),
     maxmin = FALSE,
     perc = TRUE,
     dec = 0,
     seg = 2,
     col_alpha = 0.25) {
+  if (!is.null(ncol(x))) {
+      x <- t(df)
+      n <- ncol(x)
+      colors <- colour[seq(n)]
+    } else {
+      n <- length(x)
+      colors <- colour[1]
+    }
     if (maxmin) {
         v_max <- 100
         caxislabels <- c("50%", "100%")
@@ -22,8 +31,8 @@ plot_radar <- function(
     }
     x[is.na(x)] <- 0
     x0 <- rbind(
-        rep(v_max, ncol(x)),
-        rep(0, ncol(x))
+        rep(v_max, n),
+        rep(0, n)
     ) %>%
         set_rownames(c("Max", "Min")) %>%
         set_colnames(colnames(x)) %>%
@@ -36,8 +45,8 @@ plot_radar <- function(
             cglty = 5,
             cglcol = "gray",
             plty = 1,
-            pcol = get_colors1()[seq(nrow(x))],
-            pfcol = get_colors1()[seq(nrow(x))] %>% alpha(col_alpha),
+            pcol = colors,
+            pfcol = alpha(colors, col_alpha),
             plwd = 4,
             axistype = 1,
             axislabcol = "black",
@@ -52,7 +61,7 @@ plot_radar <- function(
         legend = rownames(x),
         bty = "n",
         pch = 20,
-        col = get_colors1()[seq(nrow(x))],
+        col = colors,
         text.col = "black",
         pt.cex = 2
     )
