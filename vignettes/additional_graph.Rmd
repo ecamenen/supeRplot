@@ -1,0 +1,75 @@
+---
+title: "Additional graphics"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Additional graphics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>"
+)
+```
+
+```{r setup, echo = FALSE, warning = FALSE}
+library(GimmeMyPlot)
+library(RColorBrewer)
+library(magrittr)
+set.seed(0)
+```
+
+## Venn diagrams
+```{r venn}
+x <- lapply(
+    seq(3),
+    function(x) {
+        runif(10, 1, 10) %>%
+            round() %>%
+            letters[.] %>%
+            unique() %>%
+            paste("Element", .)
+    }
+) %>%
+    set_names(paste("Dataset", LETTERS[seq(3)]))
+
+# Default parameters
+plot_venn_diagram(x)
+```
+
+```{r venn_adv, fig.width = 5}
+# Advanced parameters
+plot_venn_diagram(
+    x,
+    width_label = 5,
+    colour = brewer.pal(3, "Reds"),
+    color_gradient = c("white", "red"),
+    cex = 1.2,
+    cex_main = 1.2 * 6,
+    n_max = 2,
+    vjust_label = 0.75,
+    ratio = 0.2
+)
+
+plot_venn_diagram(
+    x,
+    width_text = 8,
+    width_label = 5,
+    colour = brewer.pal(3, "Reds"),
+    cex = 1.2,
+    cex_main = 1.2 * 6,
+    n_max = 2,
+    vjust_label = 0.75,
+    ratio = 0.5,
+    label = FALSE,
+    element = FALSE,
+    percent = FALSE
+)
+```
+
+# Session information
+```{r end, echo = FALSE}
+sessionInfo()
+```
