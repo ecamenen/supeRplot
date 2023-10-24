@@ -9,14 +9,15 @@ plot_venn_diagram(
   width_text = 30,
   width_label = 30,
   colour = get_colors(),
+  color_gradient = NULL,
   cex = 1,
   cex_main = cex * 6,
   n_max = 4,
   vjust_label = 0.5,
   ratio = 0.1,
   label = TRUE,
-  percent = TRUE,
-  element = TRUE
+  element = TRUE,
+  percent = TRUE
 )
 }
 \arguments{
@@ -27,6 +28,9 @@ plot_venn_diagram(
 \item{width_label}{Integer for the maximum length of the labels.}
 
 \item{colour}{Color or vector of colors for the violin and boxplot.}
+
+\item{color_gradient}{Vector of colors for the gradient of number of
+elements.}
 
 \item{cex}{Double for the magnification factor for the text relative to the
 default.}
@@ -47,7 +51,7 @@ After this threshold, only their statistics will be visible.}
 \item{element}{Boolean to toggle the display of the elements.
 If disabled, only their statistics will be visible.}
 
-\item{percentage}{Boolean to toggle the display of the percenatge of the
+\item{percent}{Boolean to toggle the display of the percenatge of the
 elements.}
 }
 \value{
@@ -82,13 +86,15 @@ plot_venn_diagram(
     width_text = 8,
     width_label = 5,
     colour = brewer.pal(3, "Reds"),
+    color_gradient = c("white", "red"),
     cex = 1.2,
     cex_main = 1.2 * 6,
     n_max = 2,
     vjust_label = 0.75,
     ratio = 0.5,
     label = FALSE,
-    element = FALSE
+    element = FALSE,
+    percent = FALSE
 )
 
 }
