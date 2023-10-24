@@ -11,11 +11,11 @@ x <- lapply(
     set_names(paste("Dataset", LETTERS[seq(3)]))
 
 test_that("venn default works", {
-    expect_s3_class(plot_venn_diagram(x), "ggplot")
+    expect_s3_class(plot_venn(x), "ggplot")
 })
 
 test_that("venn advanced works", {
-    p <- plot_venn_diagram(
+    p <- plot_venn(
         x,
         width_text = 8,
         width_label = 5,

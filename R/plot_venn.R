@@ -37,10 +37,10 @@
 #'     set_names(paste("Dataset", LETTERS[seq(3)]))
 #'
 #' # Default parameters
-#' plot_venn_diagram(x)
+#' plot_venn(x)
 #'
 #' # Advanced parameters
-#' plot_venn_diagram(
+#' plot_venn(
 #'     x,
 #'     width_text = 8,
 #'     width_label = 5,
@@ -58,7 +58,7 @@
 #'
 #' @return A ggplot object.
 #' @export
-plot_venn_diagram <- function(
+plot_venn <- function(
     x,
     width_text = 30,
     width_label = 30,

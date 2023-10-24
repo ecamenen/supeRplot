@@ -36,12 +36,12 @@ x <- lapply(
     set_names(paste("Dataset", LETTERS[seq(3)]))
 
 # Default parameters
-plot_venn_diagram(x)
+plot_venn(x)
 ```
 
 ```{r venn_adv, fig.width = 5}
 # Advanced parameters
-plot_venn_diagram(
+plot_venn(
     x,
     width_label = 5,
     colour = brewer.pal(3, "Reds"),
@@ -53,7 +53,7 @@ plot_venn_diagram(
     ratio = 0.2
 )
 
-plot_venn_diagram(
+plot_venn(
     x,
     width_text = 8,
     width_label = 5,
