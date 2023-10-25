@@ -1,3 +1,43 @@
+#' Alluvial diagram
+#'
+#' Display how the frequency of observations are distributed along multiple
+#' categorical variables. The width of the links and the height of the bars
+#' are proportional to the the number of cases. Alluvial diagrams are a good
+#' alternative to multiple pie charts.
+#'
+#' @inheritParams plot_violin
+#' @inheritParams plot_venn
+#' @param x Data.frame of multiple categorical variables.
+#' @param colour Color or vector of colors for the categories.
+#'
+#' @return ggplot object.
+#' @export
+#'
+#' @examples
+#' library(ggalluvial)
+#' library(magrittr)
+#' library(RColorBrewer)
+#'
+#' x <- lapply(seq(3), function(x) {
+#'     runif(100, 1, 3) %>%
+#'         round() %>%
+#'         letters[.]
+#' }) %>%
+#'     as.data.frame() %>%
+#'     set_colnames(paste("variable", LETTERS[seq(3)]))
+#' x[x == "a"] <- NA
+#' x[, 3][is.na(x[, 3])] <- "a"
+#'
+#' # Default parameters
+#' plot_alluvial(x)
+#'
+#' # Advanced parameters
+#' plot_alluvial(
+#'     x,
+#'     width_label = 5,
+#'     colour = rev(brewer.pal(3, "Reds")),
+#'     cex = 1.5
+#' )
 plot_alluvial <- function(
     x,
     width_label = 20,
