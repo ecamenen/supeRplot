@@ -9,6 +9,7 @@ utils::globalVariables(
         "pos",
         "text",
         "val",
+        "value",
         "y_lab",
         "y.position"
     )

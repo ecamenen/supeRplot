@@ -17,6 +17,7 @@ Imports:
     dplyr,
     fmsb,
     forcats,
+    ggalluvial,
     ggforce,
     ggplot2,
     ggpubr,
