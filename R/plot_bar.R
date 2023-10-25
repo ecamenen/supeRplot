@@ -30,7 +30,9 @@
 #'     ratio = 15,
 #'     hjust_title = 1
 #' )
-#' @export plot_bar
+#'
+#' @return A ggplot object.
+#' @export
 plot_bar <- function(
     x = NULL,
     title = NULL,

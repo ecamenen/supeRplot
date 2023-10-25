@@ -43,6 +43,7 @@
 #'     n_max = 4,
 #'     hjust_title = 1
 #' )
+#'
 #' @return A ggplot object.
 #' @export
 plot_bar_mcat <- function(

@@ -49,6 +49,9 @@ hidden on the plot.}
 \item{hjust_title}{Double for the horizontal justification of the title
 (in [0, 1]).}
 }
+\value{
+A ggplot object.
+}
 \description{
 Display each numerical value separately using a barplot
 }
@@ -73,4 +76,5 @@ plot_bar(
     ratio = 15,
     hjust_title = 1
 )
+
 }

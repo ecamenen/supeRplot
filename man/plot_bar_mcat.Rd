@@ -99,4 +99,5 @@ plot_bar_mcat(
     n_max = 4,
     hjust_title = 1
 )
+
 }
