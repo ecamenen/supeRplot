@@ -1,6 +1,7 @@
-#' @import dplyr forcats ggforce ggplot2 ggpubr ggVennDiagram purrr RColorBrewer
-#' @import rlist rstatix stringi stringr tidyr
+#' @import dplyr fmsb forcats ggforce ggplot2 ggpubr ggVennDiagram purrr
+#' @import RColorBrewer rlist rstatix stringi stringr tidyr
 #' @importFrom grDevices colorRampPalette
+#' @importFrom graphics legend
 #' @importFrom utils tail head
 #' @rawNamespace import(magrittr, except = c(extract, set_names))
 #' @rawNamespace import(scales, except = discard)

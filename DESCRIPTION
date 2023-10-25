@@ -15,6 +15,7 @@ Description: Simplifies the process of creating essential visualizations
 License: GPL-3
 Imports:
     dplyr,
+    fmsb,
     forcats,
     ggforce,
     ggplot2,
