@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 library(GimmeMyPlot)
 library(RColorBrewer)
 library(magrittr)
+library(ggalluvial)
 set.seed(0)
 ```
 
@@ -95,6 +96,31 @@ plot_radar(
     alpha = 0.5
 )
 ```
+
+## Alluvial diagrams
+```{r alluvial, fig.width = 5}
+x <- lapply(seq(3), function(x) {
+    runif(100, 1, 3) %>%
+        round() %>%
+        letters[.]
+}) %>%
+    as.data.frame() %>%
+    set_colnames(paste("variable", LETTERS[seq(3)]))
+x[x == "a"] <- NA
+x[, 3][is.na(x[, 3])] <- "a"
+
+# Default parameters
+plot_alluvial(x)
+
+# Advanced parameters
+plot_alluvial(
+    x,
+    width_label = 5,
+    colour = rev(brewer.pal(3, "Reds")),
+    cex = 1.5
+)
+```
+
 
 # Session information
 ```{r end, echo = FALSE}
