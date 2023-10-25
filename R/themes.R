@@ -65,9 +65,9 @@ theme_violin <- function(
 
 theme_custom <- function(
     cex = 1,
-    cex_main = 12 * cex,
+    cex_main = 17 * cex,
     cex_sub = 15 * cex,
-    cex_axis = 10 * cex) {
+    cex_axis = 15 * cex) {
     theme(
         axis.text = element_text(size = 13 * cex, color = "gray50"),
         axis.title = element_text(face = "bold.italic", size = cex_axis),
@@ -76,7 +76,10 @@ theme_custom <- function(
             face = "bold",
             hjust = 0.5,
             margin = margin(0.5, 0.5, 0.5, 0.5)
-        )
+        ),
+        plot.title = element_text(face = "bold", size = 22 * cex, hjust = 0.5),
+        legend.title = element_text(face = "italic", size = 12 * cex),
+        legend.text = element_text(colour = "black", size = 10 * cex)
     )
 }
 

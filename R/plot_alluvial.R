@@ -1,9 +1,12 @@
 plot_alluvial <- function(
     x,
-    col_stratum = NULL,
-    col_alluvium = NULL,
-    label_stratum = NULL,
-    label = NULL) {
+    width_label = 20,
+    colour = get_colors(),
+    cex = 1,
+    cex_axis = 17 * cex) {
+    colnames(x) <- colnames(x) %>%
+        str_wrap(width_label) %>%
+        to_title()
     df <- sapply(x, function(x) as.character(x)) %>% as.data.frame()
     n <- unlist(df) %>%
         unique() %>%
@@ -40,22 +43,22 @@ plot_alluvial <- function(
             stat = "stratum",
             color = "white",
             label = label_stratum,
-            size = 8
+            size = cex * 8
         ) +
         scale_x_discrete(expand = c(.05, .05)) +
-        scale_fill_manual(values = c(get_colors()[n], "gray")) +
+        scale_fill_manual(values = c(colour[n], "gray")) +
         # scale_y_continuous(
         #     breaks = seq(0, 40, 5),
         #     minor_breaks = seq(36),
         #     sec.axis = sec_axis(trans = ~., name = "n", breaks = seq(0, 40, 5))
         # ) +
         labs(y = "n") +
-        theme_minimal() %>%
-        theme_custom(cex = 1.5, show_axis = FALSE) +
-      theme(
-        legend.position = "none",
-        axis.ticks.x = element_blank(),
-        panel.grid.major.x = element_blank(),
-        axis.title.x = element_blank()
-      )
+        theme_minimal() +
+        theme_custom(cex = cex * 1, cex_axis = cex_axis) +
+        theme(
+            legend.position = "none",
+            axis.ticks.x = element_blank(),
+            panel.grid.major.x = element_blank(),
+            axis.title.x = element_blank()
+        )
 }
