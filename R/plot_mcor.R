@@ -1,35 +1,30 @@
 plot_mcor <- function(
     x,
-    y = NULL,
-    clean_name = TRUE,
-    mat = NULL,
-    p_mat = NULL,
-    col = brewer.pal(n = 9, name = "RdBu"),
+    colour = brewer.pal(n = 8, name = "RdBu"),
+    cex = 1,
     method = "spearman",
-    p_adjust = "BH",
-    cex = 1) {
-    if (clean_name) {
-        colnames(x) <- get_var_names(colnames(x), y)
-        x <- clean_names(x)
-    }
+    method_adjust = "BH",
+    mat = NULL,
+    p_mat = NULL) {
     x <- as.data.frame(x)
     if (is.null(mat)) {
         mat <- get_corr(x, TRUE, method = method)
-        colnames(mat) <- colnames(x) -> rownames(mat)
     }
     if (is.null(p_mat)) {
         p_mat <- get_corr(x, FALSE, method = method) %>%
             as.vector() %>%
-            p.adjust(p_adjust) %>%
+            p.adjust(method_adjust) %>%
             matrix(nrow = sqrt(length(.)), ncol = sqrt(length(.)))
     }
+    rownames(mat) <- rownames(p_mat) <-
+        colnames(mat) <- colnames(p_mat) <- colnames(x)
 
     corrplot(
         mat,
-        col = col,
+        col = colour,
         type = "upper",
         order = "original",
-        tl.col = "gray50",
+        tl.col = "gray40",
         tl.srt = 45,
         tl.cex = 1 * cex,
         p.mat = p_mat,
@@ -41,7 +36,7 @@ plot_mcor <- function(
         pch.col = "white",
         diag = FALSE,
         na.label = " ",
-        cl.cex = cex,
-        cl.col = "gray50"
+        cl.cex = cex * 0.95,
+        cl.align.text = "l"
     )
 }
