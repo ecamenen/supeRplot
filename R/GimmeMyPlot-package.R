@@ -1,5 +1,5 @@
-#' @import dplyr fmsb forcats ggalluvial ggforce ggplot2 ggpubr ggVennDiagram
-#' @import purrr RColorBrewer rlist rstatix stringi stringr tidyr
+#' @import dplyr fmsb forcats ggalluvial corrplot ggforce ggplot2 ggpubr
+#' @import ggVennDiagram purrr RColorBrewer rlist rstatix stringi stringr tidyr
 #' @importFrom grDevices colorRampPalette
 #' @importFrom graphics legend
 #' @importFrom utils tail head
