@@ -52,3 +52,34 @@ add_significance0 <- function(x, p.col = NULL) {
         symbols = c("***", "**", "*", "ns")
     )
 }
+
+get_corr <- function(x, pval = FALSE, method = "pearson") {
+    x <- as.data.frame(x)
+    vars <- seq(ncol(x))
+    sapply(
+        vars,
+        function(i) {
+            sapply(
+                vars,
+                function(j) {
+                    if (is.numeric(x[, i]) & is.numeric(x[, j])) {
+                        tryCatch(
+                            {
+                                res <- cor.test(x[, i], x[, j], method = method, na.rm = TRUE)
+                                if (pval) {
+                                    res$estimate
+                                } else {
+                                    res$p.value
+                                }
+                            },
+                            error = function(e) NA
+                        )
+                        # return(res)
+                    } else {
+                        NA
+                    }
+                }
+            )
+        }
+    )
+}
