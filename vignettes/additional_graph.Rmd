@@ -117,10 +117,27 @@ plot_alluvial(
     x,
     width_label = 5,
     colour = rev(brewer.pal(3, "Reds")),
-    cex = 1.5
+    cex = 1.2
 )
 ```
 
+# Multiple correlation heatmaps
+```{r mcor, fig.width = 6, fig.height = 5}
+ x <- sapply(seq(20), function(x) runif(20)) %>%
+     set_colnames(paste("Variable", seq(20)))
+
+ # Default parameters
+ plot_mcor(x)
+
+ # Advanced parameters
+ plot_mcor(
+     x,
+     colour = c("black", brewer.pal(n = 6, name = "RdBu"), 1),
+     method = "spearman",
+     method_adjust = "none",
+     cex = 0.8
+ )
+```
 
 # Session information
 ```{r end, echo = FALSE}
