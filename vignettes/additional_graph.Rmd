@@ -121,22 +121,86 @@ plot_alluvial(
 )
 ```
 
-# Multiple correlation heatmaps
+## Multiple correlation
+### Heatmaps
 ```{r mcor, fig.width = 6, fig.height = 5}
- x <- sapply(seq(20), function(x) runif(20)) %>%
-     set_colnames(paste("Variable", seq(20)))
+x <- runif(20)
+x <- lapply(
+    c(1, -1),
+    function(i) sapply(seq(10), function(j) x * i + runif(10, max = 1))
+) %>%
+    Reduce(cbind, .) %>%
+    set_colnames(paste("Variable", seq(20)))
 
- # Default parameters
- plot_mcor(x)
+# Default parameters
+plot_mcor(x)
 
- # Advanced parameters
- plot_mcor(
-     x,
-     colour = c("black", brewer.pal(n = 6, name = "RdBu"), 1),
-     method = "spearman",
-     method_adjust = "none",
-     cex = 0.8
- )
+# Advanced parameters
+plot_mcor(
+    x,
+    colour = c("black", brewer.pal(n = 6, name = "RdBu"), 1),
+    method = "spearman",
+    method_adjust = "none",
+    cex = 0.8
+)
+```
+
+### Networks
+```{r cor_net, fig.width = 6, fig.height = 5}
+# plot_cor_network(x)
+# plot_cor_network(
+#     x,
+#     colour_edge = c(brewer.pal(3, "Pastel1")[3], brewer.pal(3, "Pastel1")[1]),
+#     colour_node = c("white", "black"),
+#     cex = 1.5,
+#     method = "pearson",
+#     method_adjust = "none",
+#     cutoff = 0.7,
+#     digits = 1
+# )
+```
+
+## Networks
+### Classic
+```{r network, fig.width = 5, fig.height = 5}
+# Default parameters
+m <- correlate(x) %>%
+    .[[1]] %>%
+    head(10) %>%
+    .[, seq(10)]
+plot_network(m)
+```
+
+```{r network_adv, fig.width = 7, fig.height = 7}
+# Advanced parameters
+e <- Edge(m)
+n <- Node(e)
+plot_network(
+    cex = 1.5,
+    color = c("white", "gray30"),
+    shape = "none",
+    dashed = FALSE,
+    edge = e,
+    node = n,
+    dist = 0,
+    label = TRUE
+)
+```
+
+### Dynamic
+```{r net_dyn, fig.width = 6, fig.height = 5}
+# Default parameters
+plot_network_dyn(m)
+
+# Advanced parameters
+plot_network_dyn(
+    cex = 1.5,
+    color = c("white", "gray"),
+    shape = "square",
+    dashed = FALSE,
+    edge = e,
+    node = n
+)
 ```
 
 # Session information
