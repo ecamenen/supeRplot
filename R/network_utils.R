@@ -1,6 +1,8 @@
 # Creates the nodes for a design matrix
 get_nodes <- function(x, ratio = 12) {
 get_nodes <- function(x, cex = 12) {
+Node <- function(x, cex = 12) {
+    stopifnot(is(x, "Edge"))
     res <- unlist(x[, seq(2)]) %>%
         data.frame(id = .) %>%
         group_by(id) %>%
@@ -8,6 +10,7 @@ get_nodes <- function(x, cex = 12) {
         as.data.frame()
     n <- pull(res, size) %>% max()
     res$size <- res$size / n * cex
+    class(res) <- c(class(res), "Node")
     return(res)
 }
 
@@ -17,12 +20,13 @@ get_nodes <- function(x, cex = 12) {
 get_edges <- function(x, C, p = NULL) {
     J <- NCOL(C)
 get_edges <- function(x, y = NULL, digits = 2) {
+Edge <- function(x, y = NULL, digits = 2) {
     stopifnot(isSymmetric(x))
     if (!is.null(y)) {
         stopifnot(isSymmetric(y))
     }
     n <- NCOL(x)
-    edges <- list()
+    res <- list()
 
     k <- 0
     for (j in seq(n)) {
@@ -33,21 +37,22 @@ get_edges <- function(x, y = NULL, digits = 2) {
                 } else {
                     d <- y[i, j]
                 }
-                edges[[length(edges) + 1]] <- c(colnames(x)[j], colnames(x)[i], x[i, j], d)
+                res[[length(res) + 1]] <- c(colnames(x)[j], colnames(x)[i], x[i, j], d)
             }
         }
         k <- k + 1
     }
 
-    n <- length(edges[[1]])
-    edges <- as.data.frame(t(matrix(unlist(edges), n, length(edges))))
-    colnames(edges) <- c("from", "to", "weight", "p")[seq(n)]
-    edges[, 3] <- as.numeric(edges[, 3])
+    n <- length(res[[1]])
+    res <- as.data.frame(t(matrix(unlist(res), n, length(res))))
+    colnames(res) <- c("from", "to", "weight", "p")[seq(n)]
+    res[, 3] <- as.numeric(res[, 3])
     if (!is.null(y)) {
-        edges[, 4] <- as.numeric(edges[, 4])
+        res[, 4] <- as.numeric(res[, 4])
     }
-    edges$title <- edges$label <- round(edges[, 3], digits)
-    return(edges)
+    res$title <- res$label <- round(res[, 3], digits)
+    class(res) <- c(class(res), "Edge")
+    return(res)
 }
 
 #' Plot the connection between blocks
@@ -64,37 +69,41 @@ plot_network <- function(
     color = c("#eee685", "#686868"),
     shape = "dot",
     dashed = TRUE,
-    nodes = NULL,
-    edges = NULL,
+    node = NULL,
+    edge = NULL,
     dist = 1,
     label = FALSE,
     digits = 2) {
     title <- paste0(title, collapse = " ")
-    if (is.null(edges)) {
-        edges <- get_edges(x, digits = digits)
+    if (is.null(edge)) {
+        edge <- Edge(x, digits = digits)
+    } else {
+        stopifnot(is(edge, "Edge"))
     }
-    if (is.null(nodes)) {
-        nodes <- get_nodes(edges, cex * 12)
+    if (is.null(node)) {
+        node <- Node(edge, cex * 12)
+    } else {
+        stopifnot(is(node, "Node"))
     }
     if (!label) {
-        edges$label <- ""
+        edge$label <- ""
     }
-    edges$weight <- abs(edges$weight)
+    edge$weight <- abs(edge$weight)
     net <- graph_from_data_frame(
-        d = edges,
-        vertices = nodes,
+        d = edge,
+        vertices = node,
         directed = FALSE
     )
     V(net)$color <- as.vector(color[1])
-    V(net)$label <- nodes$id
+    V(net)$label <- node$id
     if (shape == "dot") {
         shape <- "circle"
     }
     V(net)$shape <- shape
-    if (is.null(edges$color)) {
+    if (is.null(edge$color)) {
         edge_color <- "gray80"
     } else {
-        edge_color <- edges$color
+        edge_color <- edge$color
     }
     E(net)$width <- E(net)$weight * cex_edge
 
@@ -111,7 +120,7 @@ plot_network <- function(
         vertex.label.dist = dist,
         vertex.label.degree = 1.5,
         vertex.label.family = "sans",
-        vertex.size = cex_node * nodes$size * 0.5,
+        vertex.size = cex_node * node$size * 0.5,
         vertex.frame.width = cex_node * 0.9,
         margin = c(0.1, 0, 0, 0)
     )
@@ -135,26 +144,30 @@ plot_network_dyn <- function(
     color = c("#eee685", "#686868"),
     shape = "dot",
     dashed = TRUE,
-    nodes = NULL,
-    edges = NULL) {
+    node = NULL,
+    edge = NULL) {
     title <- paste0(title, collapse = " ")
     if (length(color) < 2) {
         color <- c(color, "gray")
     }
-    if (is.null(edges)) {
-        edges <- get_edges(x)
+    if (is.null(edge)) {
+        edge <- Edge(x)
+    } else {
+        stopifnot(is(edge, "Edge"))
     }
-    edges$width <- edges$weight * cex_edge
-    if (is.null(nodes)) {
-        nodes <- get_nodes(edges, cex * 12)
-        nodes$label <- nodes$id
+    edge$width <- edge$weight * cex_edge
+    if (is.null(node)) {
+        node <- Node(edge, cex * 12)
+    } else {
+        stopifnot(is(node, "Node"))
     }
-    nodes$title <- nodes$label <- nodes$id
-    nodes$color.background <- rep(as.vector(color[1]), nrow(nodes))
+    node$label <- node$id
+    node$title <- node$label <- node$id
+    node$color.background <- rep(as.vector(color[1]), nrow(node))
 
     visNetwork(
-        nodes,
-        edges,
+        node,
+        edge,
         main = list(
             text = title,
             style = paste0(
@@ -209,12 +222,12 @@ plot_cor_network <- function(
     digits = 2,
     ...) {
     res <- get_corr1(x, method, method_adjust, cutoff)
-    edges <- get_edges(res$r, res$p, digits = digits)
+    edge <- Edge(res$r, res$p, digits = digits)
     font <- "14px arial black"
-    edges$font.bold.mod <- ifelse(edges$p < 0.05, paste(font, "bold"), font)
-    nodes <- get_nodes(edges, cex = cex * 12)
-    edges$color <- ifelse(
-        edges$weight > 0,
+    edge$font.bold.mod <- ifelse(edge$p < 0.05, paste(font, "bold"), font)
+    node <- Node(edge, cex = cex * 12)
+    edge$color <- ifelse(
+        edge$weight > 0,
         colour_edge[1],
         colour_edge[2]
     )
@@ -223,10 +236,10 @@ plot_cor_network <- function(
         x,
         res$r,
         dashed = FALSE,
-        nodes = nodes,
-        edges = edges,
+        node = node,
+        edge = edge,
         cex = cex,
-        cex_edge = edges$weight * 20 * cex,
+        cex_edge = edge$weight * 20 * cex,
         color = c(colour_node[1], colour_node[2]),
         ...
     )
