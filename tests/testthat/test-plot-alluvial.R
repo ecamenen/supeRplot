@@ -19,7 +19,7 @@ test_that("piechart advanced works", {
         x,
         width_label = 5,
         colour = rev(brewer.pal(3, "Reds")),
-        cex = 1.5
+        cex = 1.2
     )
     expect_s3_class(p, "ggplot")
 })
