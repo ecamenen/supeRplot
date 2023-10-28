@@ -83,7 +83,7 @@ plot_alluvial <- function(
             stat = "stratum",
             color = "white",
             label = label_stratum,
-            size = cex * 8
+            size = cex * 5.5
         ) +
         scale_x_discrete(expand = c(.05, .05)) +
         scale_fill_manual(values = c(colour[n], "gray")) +

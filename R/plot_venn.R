@@ -6,7 +6,7 @@
 #' @inheritParams plot_violin
 #' @inheritParams plot_pie
 #' @inheritParams plot_bar_mcat
-#' @param x X
+#' @param x List (with names).
 #' @param width_label Integer for the maximum length of the labels.
 #' @param color_gradient Vector of colors for the gradient of number of
 #' elements.

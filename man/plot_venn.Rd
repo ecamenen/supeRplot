@@ -21,7 +21,7 @@ plot_venn(
 )
 }
 \arguments{
-\item{x}{X}
+\item{x}{List (with names).}
 
 \item{width_text}{Integer for the maximum length of the subtitle(s).}
 
