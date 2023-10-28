@@ -2,15 +2,12 @@
 #
 # @return A dataframe with x in rows and the number of variables, of rows
 # and tau or sparsity in columns
-get_nodes <- function(x) {
-    if (is.null(names(x))) {
-        names(x) <- seq_along(x)
-    }
-    dims <- sapply(x, dim)
-    values <- list(names(x), dims[2, ], dims[1, ])
-    nodes <- as.data.frame(matrix(unlist(values), length(x), length(values)))
-    colnames(nodes) <- c("id", "p", "n")
-    return(nodes)
+get_nodes <- function(x, n = 6) {
+    unlist(x[, seq(2)]) %>%
+        data.frame(id = .) %>%
+        group_by(id) %>%
+        summarise(size = n() * n) %>%
+        as.data.frame()
 }
 
 # Creates the edges for a design matrix
@@ -219,11 +216,7 @@ plot_corr_network <- function(
     font <- "14px arial black"
     edges$font.bold.mod <- ifelse(edges$p.adj < 0.05, paste(font, "bold"), font)
     edges$title <- round(edges[, 3], 2) -> edges$label
-    id <- unlist(edges[, seq(2)])
-    nodes <- data.frame(id) %>%
-        group_by(id) %>%
-        summarise(size = n() * 6) %>%
-        as.data.frame()
+    nodes <- get_nodes(edges, 3)
 
     color_node <- ifelse(edges$weight > 0, "green", "red") -> edges$color
     edges$weight <- abs(edges$weight)
