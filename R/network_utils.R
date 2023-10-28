@@ -1,6 +1,22 @@
-# Creates the nodes for a design matrix
-get_nodes <- function(x, ratio = 12) {
-get_nodes <- function(x, cex = 12) {
+#' Node (for a network)
+#'
+#' Counts the number of connections to a node.
+#'
+#' @inheritParams plot_network
+#' @param cex Double for the magnification factor for the node width relative
+#' to the default.
+#'
+#' @return A node object in the form of a data.frame with two columns: id and
+#' size. The first column contains the node's name, the second its size.
+#' @export
+#'
+#' @examples
+#' x <- sapply(seq(5), function(j) runif(5))
+#' x[x < 0.5] <- diag(x) <- 0
+#' colnames(x) <- rownames(x) <- paste("Variable", seq(5))
+#' x[lower.tri(x)] <- t(x)[lower.tri(x)]
+#' e <- Edge(x)
+#' Node(e)
 Node <- function(x, cex = 12) {
     stopifnot(is(x, "Edge"))
     res <- unlist(x[, seq(2)]) %>%
@@ -14,12 +30,25 @@ Node <- function(x, cex = 12) {
     return(res)
 }
 
-# Creates the edges for a design matrix
-#
-# @return A dataframe with tuples of connected x
-get_edges <- function(x, C, p = NULL) {
-    J <- NCOL(C)
-get_edges <- function(x, y = NULL, digits = 2) {
+#' Edge (for a network)
+#'
+#' Extracts variable pairs with non-zero values as edges.
+#'
+#' @inheritParams plot_network
+#' @param x,y Symmetrical data.frame with column and row names.
+#'
+#' @return An object edge in the form of a data.frame with three columns: from,
+#'  to and weight. The first two columns contain the names of the variable
+#'  pairs, and the last, the corresponding values.
+#' @export
+#'
+#' @examples
+#' x <- sapply(seq(5), function(j) runif(5))
+#' x[x < 0.5] <- diag(x) <- 0
+#' colnames(x) <- rownames(x) <- paste("Variable", seq(5))
+#' x[lower.tri(x)] <- t(x)[lower.tri(x)]
+#' Edge(x)
+#' Edge(x, x)
 Edge <- function(x, y = NULL, digits = 2) {
     stopifnot(isSymmetric(x))
     if (!is.null(y)) {
@@ -55,10 +84,47 @@ Edge <- function(x, y = NULL, digits = 2) {
     return(res)
 }
 
-#' Plot the connection between blocks
+#' Network plot
 #'
-#' @return A dataframe with tuples of connected blocks
+#' Plot the connection between variables. The higher the number of connections,
+#' the larger the node.
+#'
+#' @inheritParams plot_violin
+#' @param x Symmetrical data.frame with column and row names.
+#' @param cex_node Double for the magnification factor for the node width
+#' relative to the default.
+#' @param cex_edge Double for the magnification factor for the edge width
+#' relative to the default.
+#' @param color Color vector of length 2 corresponding respectively to
+#' background and node label.
+#' @param shape Character for node shape (among: 'circle', 'square' or 'none').
+#' @param dashed Boolean for dashed edges.
+#' @param node Node object.
+#' @param edge Edge object.
+#' @param dist Integer for text distance from node.
+#' @param label Boolean for edge text display.
+#'
+#' @return NULL (launch a basic plot)
 #' @export
+#'
+#' @examples
+#' x <- sapply(seq(5), function(j) runif(5))
+#' x[x < 0.5] <- diag(x) <- 0
+#' colnames(x) <- rownames(x) <- paste("Variable", seq(5))
+#' x[lower.tri(x)] <- t(x)[lower.tri(x)]
+#' plot_network(x)
+#' e <- Edge(x)
+#' plot_network(
+#'     title = "Gimme a network",
+#'     cex = 1.5,
+#'     color = c("white", "black"),
+#'     shape = "square",
+#'     dashed = FALSE,
+#'     edge = e,
+#'     node = Node(e),
+#'     dist = 6,
+#'     label = TRUE
+#' )
 plot_network <- function(
     x = NULL,
     title = "",
@@ -127,13 +193,33 @@ plot_network <- function(
     title(title, cex.main = cex_main * 0.1)
 }
 
-#' Plot the connection between blocks (dynamic plot)
+#' Network plot (dynamic)
 #'
-#' @return A dataframe with tuples of connected blocks
+#' Plot the connection between variables (dynamic plot). The higher the number
+#' of connections, the larger the node.
+#'
+#' @inheritParams plot_violin
+#' @inheritParams plot_network
+#'
+#' @return visNetwork object
 #' @export
-plot_network2 <- function(
-    x,
-    C = 1 - diag(length(x)),
+#'
+#' @examples
+#' x <- sapply(seq(5), function(j) runif(5))
+#' x[x < 0.5] <- diag(x) <- 0
+#' colnames(x) <- rownames(x) <- paste("Variable", seq(5))
+#' x[lower.tri(x)] <- t(x)[lower.tri(x)]
+#' plot_network(x)
+#' e <- Edge(x)
+#' plot_network_dyn(
+#'     title = "Gimme a network",
+#'     cex = 1.5,
+#'     color = c("white", "gray"),
+#'     shape = "square",
+#'     dashed = FALSE,
+#'     edge = e,
+#'     node = Node(e)
+#' )
 plot_network_dyn <- function(
     x = NULL,
     title = "",
@@ -196,7 +282,35 @@ plot_network_dyn <- function(
         )
 }
 
-get_corr1 <- function(
+#' Correlation tables
+#'
+#' Calculates the correlation between variables in a data.frame and filters
+#' according to a threshold
+#'
+#' @inheritParams plot_violin
+#' @param x Data.frame with column and row names.
+#' @param method Character for the test method ('pearson' or 'spearman').
+#' @param cutoff Double to filter correlations
+#'
+#' @return List of data.frames containing correlation and p-value matrices.
+#' @export
+#'
+#' @examples
+#' library(magrittr)
+#' x <- runif(20)
+#' x <- lapply(
+#'     c(1, -1),
+#'     function(i) sapply(seq(10), function(j) x * i + runif(10, max = 1))
+#' ) %>%
+#'     Reduce(cbind, .) %>%
+#'     set_colnames(paste("Variable", seq(20)))
+#' correlate(x)
+#' correlate(
+#'     x,
+#'     method = "pearson",
+#'     method_adjust = "none",
+#'     cutoff = 0.7
+#' )
 correlate <- function(
     x,
     method = "spearman",
@@ -210,8 +324,47 @@ correlate <- function(
     return(list(r = r, p = p))
 }
 
+
+#' Correlation network
+#'
+#' Plot a correlation network. The higher the number of connections, the larger
+#' the node. Negative correlations are shown in red, positive correlations in
+#' green.
+#'
+#' @inheritParams plot_violin
+#' @inheritParams correlate
+#' @param x Data.frame with column and row names.
+#' @param colour_edge Color vector of length 2 corresponding respectively to
+#' a positive or negative correlation.
+#' @param colour_node Color vector of length 2 corresponding respectively to
+#'  background and node label.
+#' @param method Character for the test method ('pearson' or 'spearman').
+#' @param ... Additional parameters in [plot_network_dyn].
+#'
+#' @return visNetwork object
 #' @export
-plot_corr_network <- function(
+#'
+#' @examples
+#' library(magrittr)
+#' library(RColorBrewer)
+#' x <- runif(20)
+#' x <- lapply(
+#'     c(1, -1),
+#'     function(i) sapply(seq(10), function(j) x * i + runif(10, max = 1))
+#' ) %>%
+#'     Reduce(cbind, .) %>%
+#'     set_colnames(paste("Variable", seq(20)))
+#' plot_cor_network(x)
+#' plot_cor_network(
+#'     x,
+#'     colour_edge = c(brewer.pal(3, "Pastel1")[3], brewer.pal(3, "Pastel1")[1]),
+#'     colour_node = c("white", "black"),
+#'     cex = 1.5,
+#'     method = "pearson",
+#'     method_adjust = "none",
+#'     cutoff = 0.7,
+#'     digits = 1
+#' )
 plot_cor_network <- function(
     x,
     colour_edge = c("#4DAF4A", "#EE6363"),
