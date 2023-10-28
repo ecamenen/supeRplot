@@ -53,10 +53,10 @@ add_significance0 <- function(x, p.col = NULL) {
     )
 }
 
-get_corr <- function(x, pval = FALSE, method = "pearson") {
+mcor <- function(x, pval = FALSE, method = "pearson", method_adjust = "BH") {
     x <- as.data.frame(x)
     vars <- seq(ncol(x))
-    sapply(
+    res <- sapply(
         vars,
         function(i) {
             sapply(
@@ -82,4 +82,11 @@ get_corr <- function(x, pval = FALSE, method = "pearson") {
             )
         }
     )
+    if (!pval && method_adjust != "none") {
+        as.vector(res) %>%
+            p.adjust(method_adjust) %>%
+            matrix(nrow = sqrt(length(.)), ncol = sqrt(length(.)))
+    }
+    colnames(res) <- rownames(res) <- colnames(x)
+    return(res)
 }

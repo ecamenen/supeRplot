@@ -197,14 +197,15 @@ plot_network_dyn <- function(
 }
 
 get_corr1 <- function(
+correlate <- function(
     x,
     method = "spearman",
     method_adjust = "BH",
     cutoff = 0.75) {
-    r <- get_corr(x, TRUE, method)
+    r <- mcor(x, TRUE, method)
     r[abs(r) < cutoff] <- diag(r) <- 0
     r[is.na(r)] <- 0
-    p <- get_corr(x, FALSE, method, method_adjust)
+    p <- mcor(x, FALSE, method, method_adjust)
     r[p >= 0.05] <- 0
     return(list(r = r, p = p))
 }
@@ -221,7 +222,7 @@ plot_cor_network <- function(
     cutoff = 0.75,
     digits = 2,
     ...) {
-    res <- get_corr1(x, method, method_adjust, cutoff)
+    res <- correlate(x, method, method_adjust, cutoff)
     edge <- Edge(res$r, res$p, digits = digits)
     font <- "14px arial black"
     edge$font.bold.mod <- ifelse(edge$p < 0.05, paste(font, "bold"), font)

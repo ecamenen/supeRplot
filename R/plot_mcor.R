@@ -46,16 +46,16 @@ plot_mcor <- function(
     p_mat = NULL) {
     x <- as.data.frame(x)
     if (is.null(mat)) {
-        mat <- get_corr(x, TRUE, method = method)
+        mat <- mcor(x, TRUE, method = method)
     }
     if (is.null(p_mat)) {
-        p_mat <- get_corr(x, FALSE, method = method) %>%
-            as.vector() %>%
-            p.adjust(method_adjust) %>%
-            matrix(nrow = sqrt(length(.)), ncol = sqrt(length(.)))
+        p_mat <- mcor(
+            x,
+            FALSE,
+            method = method,
+            method_adjust = method_adjust
+        )
     }
-    rownames(mat) <- rownames(p_mat) <-
-        colnames(mat) <- colnames(p_mat) <- colnames(x)
 
     corrplot(
         mat,
