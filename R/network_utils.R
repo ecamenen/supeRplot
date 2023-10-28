@@ -65,13 +65,18 @@ plot_network <- function(
     shape = "square",
     dashes = TRUE,
     nodes = NULL,
-    edges = NULL) {
+    edges = NULL,
+    dist = NULL,
+    label = FALSE) {
     title <- paste0(title, collapse = " ")
     if (is.null(nodes)) {
         nodes <- get_nodes(x)
     }
     if (is.null(edges)) {
         edges <- get_edges(x, C)
+    }
+    if (!label) {
+        edges$label <- ""
     }
 
     net <- graph_from_data_frame(
@@ -87,19 +92,28 @@ plot_network <- function(
     }
 
     V(net)$shape <- shape
-
+    if (is.null(edges$color)) {
+      edge_color <- color[2]
+    } else {
+      edge_color <- edges$color
+    }
 
     E(net)$width <- E(net)$weight * cex_nodes
     plot(
         net,
-        edge.color = color[2],
-        edge.lty = 2,
-        vertex.frame.color = color[2],
+        edge.color = edge_color,
+        edge.lty = ifelse(dashes, 2, 1),
+        edge.label.color = color[2],
+        edge.label.family = "sans",
+        edge.label.cex = cex * 0.95,
+        vertex.frame.color = "gray80",
         vertex.label.cex = cex,
-        vertex.label.color = "black",
-        vertex.label.dist = 6,
+        vertex.label.color = color[2],
+        vertex.label.dist = dist,
         vertex.label.degree = 1.5,
-        vertex.size = cex_point * 7.5,
+        vertex.label.family = "sans",
+        vertex.size = cex_point * nodes$size * 0.5,
+        vertex.frame.width = cex_point * 0.9,
         margin = c(0.1, 0, 0, 0)
     )
     title(title, cex.main = cex_main * 0.1)
