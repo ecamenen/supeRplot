@@ -29,7 +29,7 @@ get_edges <- function(x, C, p = NULL) {
                 } else {
                     d <- p[i, j]
                 }
-                edges[[length(edges) + 1]] <- c(names(x)[j], names(x)[i], C[i, j], d)
+                edges[[length(edges) + 1]] <- c(colnames(x)[j], colnames(x)[i], C[i, j], d)
             }
         }
         k <- k + 1
@@ -66,21 +66,7 @@ plot_network <- function(
     dashes = TRUE,
     nodes = NULL,
     edges = NULL) {
-    stopifnot(is(x, "list"))
-    stopifnot(all(sapply(x, function(i) is(i, "data.frame"))))
     title <- paste0(title, collapse = " ")
-    RGCCA:::check_colors(color)
-    for (i in c("cex_main", "cex_point")) {
-        RGCCA:::check_integer(i, get(i))
-    }
-    RGCCA:::check_integer("cex", cex, float = TRUE)
-
-    RGCCA:::load_libraries("igraph")
-
-    # Avoid random
-    set.seed(1)
-    V <- E <- NULL
-
     if (is.null(nodes)) {
         nodes <- get_nodes(x)
     }
@@ -95,14 +81,7 @@ plot_network <- function(
     )
 
     V(net)$color <- as.vector(color[1])
-    V(net)$label <- paste(
-        nodes$id,
-        "\nP =",
-        nodes$p,
-        "\nN =",
-        nodes$n,
-        sep = " "
-    )
+    V(net)$label <- nodes$id
     if (shape == "dot") {
         shape <- "circle"
     }
@@ -146,31 +125,14 @@ plot_network2 <- function(
     dashes = TRUE,
     nodes = NULL,
     edges = NULL) {
-    # stopifnot(is(x, "list"))
-    # stopifnot(all(sapply(x, function(i) is(i, "data.frame"))))
     title <- paste0(title, collapse = " ")
-    RGCCA:::check_colors(color)
-    for (i in c("cex_main", "cex_point")) {
-        RGCCA:::check_integer(i, get(i))
-    }
-    RGCCA:::check_integer("cex", cex, float = TRUE)
     if (length(color) < 2) {
         color <- c(color, "gray")
     }
 
-    # load_libraries("visNetwork")
-    `%>%` <- magrittr::`%>%`
-
     if (is.null(nodes)) {
         nodes <- get_nodes(x)
-        nodes$label <- paste(
-            nodes$id,
-            "\nP =",
-            nodes$p,
-            "\nN =",
-            nodes$n,
-            sep = " "
-        )
+        nodes$label <- nodes$id
     }
     nodes$title <- nodes$id -> nodes$label
     nodes$color.background <- rep(as.vector(color[1]), nrow(nodes))
@@ -239,9 +201,9 @@ plot_corr_network <- function(
     res <- get_corr1(x, method, method_adjust, cutoff)
     title <- round(mean(res$C, na.rm = TRUE), 2)
     edges <- get_edges(x, res$C, res$p)
-    # edges <- adjust_pvalue(edges, "p")
-    # font <- "14px arial black"
-    # edges$font.bold.mod <- ifelse(edges$p.adj < 0.05, paste(font, "bold"), font)
+    edges <- adjust_pvalue(edges, "p")
+    font <- "14px arial black"
+    edges$font.bold.mod <- ifelse(edges$p.adj < 0.05, paste(font, "bold"), font)
     edges$title <- round(edges[, 3], 2) -> edges$label
     id <- unlist(edges[, seq(2)])
     nodes <- data.frame(id) %>%
@@ -250,6 +212,7 @@ plot_corr_network <- function(
         as.data.frame()
 
     color_node <- ifelse(edges$weight > 0, "green", "red") -> edges$color
+    edges$weight <- abs(edges$weight)
 
     plot_network2(
         x,
