@@ -14,15 +14,16 @@ Description: Simplifies the process of creating essential visualizations
     fundamental graphics in R.
 License: GPL-3
 Imports:
+    corrplot,
     dplyr,
     fmsb,
     forcats,
     ggalluvial,
-    corrplot,
     ggforce,
     ggplot2,
     ggpubr,
     ggVennDiagram,
+    igraph,
     magrittr,
     purrr,
     RColorBrewer,
@@ -31,7 +32,8 @@ Imports:
     scales,
     stringi,
     stringr,
-    tidyr
+    tidyr,
+    visNetwork
 Suggests: 
     covr,
     knitr,
