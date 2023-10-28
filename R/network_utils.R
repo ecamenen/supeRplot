@@ -162,7 +162,7 @@ plot_network2 <- function(
             size = cex_point * 11,
             font = list(size = cex * 21, color = color[2]),
             color = list(
-                border = color[2],
+                border = "#686868",
                 highlight = list(background = "black", border = "darkred")
             )
         ) %>%
@@ -190,31 +190,36 @@ get_corr1 <- function(
 #' @export
 plot_corr_network <- function(
     x,
+    colour_edge = c("#4DAF4A", "#EE6363"),
+    colour_node = c("white", "#3D3D3D"),
+    cex = 1,
     method = "spearman",
     method_adjust = "BH",
     cutoff = 0.75,
-    cex = 1,
+    digits = 2,
     ...) {
     res <- get_corr1(x, method, method_adjust, cutoff)
-    title <- round(mean(res$C, na.rm = TRUE), 2)
+    title <- round(mean(res$C, na.rm = TRUE), digits)
     edges <- get_edges(x, res$C, res$p)
     font <- "14px arial black"
     edges$font.bold.mod <- ifelse(edges$p < 0.05, paste(font, "bold"), font)
-    edges$title <- round(edges[, 3], 2) -> edges$label
-    nodes <- get_nodes(edges)
-    color_node <- ifelse(edges$weight > 0, "#4DAF4A", "#EE6363") -> edges$color
+    edges$title <- edges$label <- round(edges[, 3], digits)
+    nodes <- get_nodes(edges, cex = 12 * cex)
+    color_node <- edges$color <- ifelse(
+        edges$weight > 0,
+        colour_edge[1],
+        colour_edge[2]
+    )
 
     plot_network2(
         x,
         res$C,
-        shape = "dot",
         dashes = FALSE,
         nodes = nodes,
         edges = edges,
         cex = cex,
         cex_nodes = edges$weight * 20 * cex,
-        color = c("white", "#686868"),
-        title = "",
+        color = c(colour_node[1], colour_node[2]),
         ...
     )
 }
