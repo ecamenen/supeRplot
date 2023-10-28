@@ -182,13 +182,8 @@ get_corr1 <- function(
     C <- get_corr(x, TRUE, method)
     C[abs(C) < cutoff] <- 0 -> diag(C)
     C[is.na(C)] <- 0
-    p <- get_corr(x, FALSE, method) %>%
-        as.vector() %>%
-        p.adjust(method_adjust) %>%
-        matrix(nrow = sqrt(length(.)), ncol = sqrt(length(.)))
+    p <- get_corr(x, FALSE, method, method_adjust)
     C[p >= 0.05] <- 0
-
-    colnames(C) <- colnames(p) <- colnames(x) -> rownames(p) -> rownames(C)
     return(list(C = C, p = p))
 }
 
@@ -203,9 +198,8 @@ plot_corr_network <- function(
     res <- get_corr1(x, method, method_adjust, cutoff)
     title <- round(mean(res$C, na.rm = TRUE), 2)
     edges <- get_edges(x, res$C, res$p)
-    edges <- adjust_pvalue(edges, "p")
     font <- "14px arial black"
-    edges$font.bold.mod <- ifelse(edges$p.adj < 0.05, paste(font, "bold"), font)
+    edges$font.bold.mod <- ifelse(edges$p < 0.05, paste(font, "bold"), font)
     edges$title <- round(edges[, 3], 2) -> edges$label
     nodes <- get_nodes(edges)
     color_node <- ifelse(edges$weight > 0, "#4DAF4A", "#EE6363") -> edges$color
