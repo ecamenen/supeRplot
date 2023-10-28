@@ -50,20 +50,17 @@ get_edges <- function(x, C, p = NULL) {
 plot_network <- function(
     x,
     C = 1 - diag(length(x)),
-    title = paste0(
-        "Common rows between blocks : ",
-        length(Reduce(intersect, lapply(x, row.names)))
-    ),
+    title = "",
     cex = 1,
     cex_main = 14 * cex,
     cex_point = 3 * cex,
     cex_nodes = 2 * cex,
-    color = c("#eee685", "gray60"),
-    shape = "square",
+    color = c("#eee685", "#686868"),
+    shape = "dot",
     dashes = TRUE,
     nodes = NULL,
     edges = NULL,
-    dist = NULL,
+    dist = 1,
     label = FALSE) {
     title <- paste0(title, collapse = " ")
     if (is.null(nodes)) {
@@ -75,27 +72,25 @@ plot_network <- function(
     if (!label) {
         edges$label <- ""
     }
-
+    edges$weight <- abs(edges$weight)
     net <- graph_from_data_frame(
         d = edges,
         vertices = nodes,
         directed = FALSE
     )
-
     V(net)$color <- as.vector(color[1])
     V(net)$label <- nodes$id
     if (shape == "dot") {
         shape <- "circle"
     }
-
     V(net)$shape <- shape
     if (is.null(edges$color)) {
-      edge_color <- color[2]
+        edge_color <- "gray80"
     } else {
-      edge_color <- edges$color
+        edge_color <- edges$color
     }
-
     E(net)$width <- E(net)$weight * cex_nodes
+
     plot(
         net,
         edge.color = edge_color,
@@ -123,16 +118,13 @@ plot_network <- function(
 plot_network2 <- function(
     x,
     C = 1 - diag(length(x)),
-    title = paste0(
-        "Common rows between blocks : ",
-        length(Reduce(intersect, lapply(x, row.names)))
-    ),
+    title = "",
     cex = 1,
     cex_main = 14 * cex,
     cex_point = 3 * cex,
     cex_nodes = 2 * cex,
-    color = c("#eee685", "gray"),
-    shape = "square",
+    color = c("#eee685", "#686868"),
+    shape = "dot",
     dashes = TRUE,
     nodes = NULL,
     edges = NULL) {
@@ -140,14 +132,12 @@ plot_network2 <- function(
     if (length(color) < 2) {
         color <- c(color, "gray")
     }
-
     if (is.null(nodes)) {
         nodes <- get_nodes(x)
         nodes$label <- nodes$id
     }
     nodes$title <- nodes$id -> nodes$label
     nodes$color.background <- rep(as.vector(color[1]), nrow(nodes))
-
     if (is.null(edges)) {
         edges <- get_edges(x, C)
     }
@@ -169,8 +159,8 @@ plot_network2 <- function(
             borderWidth = 2,
             shape = shape,
             shadow = TRUE,
-            size = cex_point * 7.5,
-            font = list(size = cex * 14),
+            size = cex_point * 11,
+            font = list(size = cex * 21, color = color[2]),
             color = list(
                 border = color[2],
                 highlight = list(background = "black", border = "darkred")
@@ -208,6 +198,7 @@ plot_corr_network <- function(
     method = "spearman",
     method_adjust = "BH",
     cutoff = 0.75,
+    cex = 1,
     ...) {
     res <- get_corr1(x, method, method_adjust, cutoff)
     title <- round(mean(res$C, na.rm = TRUE), 2)
@@ -217,9 +208,7 @@ plot_corr_network <- function(
     edges$font.bold.mod <- ifelse(edges$p.adj < 0.05, paste(font, "bold"), font)
     edges$title <- round(edges[, 3], 2) -> edges$label
     nodes <- get_nodes(edges)
-
-    color_node <- ifelse(edges$weight > 0, "green", "red") -> edges$color
-    edges$weight <- abs(edges$weight)
+    color_node <- ifelse(edges$weight > 0, "#4DAF4A", "#EE6363") -> edges$color
 
     plot_network2(
         x,
@@ -228,9 +217,10 @@ plot_corr_network <- function(
         dashes = FALSE,
         nodes = nodes,
         edges = edges,
-        cex_nodes = edges$weight * 20,
-        color = c("white", "gray"),
-        title = paste("Mean correlation between variables = ", title * 2),
+        cex = cex,
+        cex_nodes = edges$weight * 20 * cex,
+        color = c("white", "#686868"),
+        title = "",
         ...
     )
 }
