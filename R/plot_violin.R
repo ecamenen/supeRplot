@@ -101,7 +101,7 @@ plot_violin <- function(
     if (isFALSE(subtitle)) {
         if (!(class(x) %in% c("data.frame", "tibble"))) {
             subtitle <- paste0(
-                print_stats(x, digits = digits),
+                print_median(x, digits = digits),
                 ", N=",
                 length(na.omit(x))
             )
@@ -130,7 +130,7 @@ plot_violin <- function(
         sub_labs <- group_by(df, name) %>%
             reframe(
                 label = paste0(
-                    print_stats(value, digits = digits),
+                    print_median(value, digits = digits),
                     ", N=",
                     length(na.omit(value))
                 )
