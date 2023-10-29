@@ -95,7 +95,7 @@ plot_venn <- function(
         i <- data@region$item %>% list.which(length(.) <= n_max & length(.) > 0)
         data@region$label[unlist(i)] <- data@region$item %>%
             list.search(length(.) <= n_max & length(.) > 0) %>%
-            list.mapv(str_trunc2(., width_text) %>% paste(., collapse = "\n"))
+            list.mapv(str_pretty(., width_text) %>% paste(., collapse = "\n"))
     }
     p <- ggplot() +
         geom_sf(aes(fill = count), data = venn_region(data)) +

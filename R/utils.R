@@ -1,12 +1,3 @@
-# @description pivot_longer0() "lengthens" data, increasing the number of rows
-# and decreasing the number of columns. This is an wrapper for the function
-# [tidyr::pivot_longer()].
-# @inherit tidyr::pivot_longer
-pivot_longer0 <- function(data) {
-    as.data.frame(data) %>%
-        pivot_longer(everything())
-}
-
 #' Color palette
 #'
 #' This is an wrapper for the function [RColorBrewer::brewer.pal()].
@@ -75,36 +66,61 @@ count_cat <- function(x, width = 20, collapse = FALSE) {
     return(df)
 }
 
+#' Capitalize  only the first letter
+#' @inherit str_trunc0 return params
+#' @examples
+#' to_title("Hi there, I'm a sentence to format.")
+#' @export
 to_title <- function(x) {
     paste0(toupper(substr(x, 1, 1)), substr(x, 2, nchar(x)))
 }
 
 
-# @export
-# Cuts a sentence to a given number of characters and leaves the words as integers
-# @example str_trunc1("Hi there, I'm a sentence to format.")
-str_trunc1 <- function(x, n = 20, w = " ") {
-    x0 <- strsplit(x, w)[[1]]
-    lapply(seq(length(x0)), function(i) str_trunc0(x, i, w)) %>%
-        detect(function(x) str_length(x) <= n, .dir = "backward")
+#' @inherit str_pretty
+#' @param sep Character to separate the terms.
+#' @examples
+#' str_trunc1("Hi there, I'm a sentence to format.")
+#' @export
+str_trunc1 <- function(x, width = 20, sep = " ") {
+    x0 <- strsplit(x, sep)[[1]]
+    lapply(seq(length(x0)), function(i) str_trunc0(x, i, sep)) %>%
+        detect(function(x) str_length(x) <= width, .dir = "backward")
 }
 
-# Cuts a sentence to a given number of words
-# @example str_trunc0("Hi there, I'm a sentence to format.")
-str_trunc0 <- function(x, n = 5, w = " ") {
-    strsplit(x, w)[[1]] %>%
+#' Truncate a string to maximum number of words.
+#'
+#' @inherit str_pretty return params
+#' @inheritParams str_trunc1
+#' @param n Maximum number of words.
+#'
+#' @examples
+#' str_trunc0("Hi there, I'm a sentence to format.")
+#' @export
+str_trunc0 <- function(x, n = 5, sep = " ") {
+    strsplit(x, sep)[[1]] %>%
         .[seq(n)] %>%
-        paste(collapse = w)
+        paste(collapse = sep)
 }
 
-str_trunc2 <- function(x, n = 20) {
+#' Truncate a string to maximum width
+#'
+#' Truncate a string to maximum width while ensuring that whole words are
+#' retained
+#' @param x String
+#' @param width Maximum width of string.
+#' @return String
+#' @export
+#'
+#' @examples
+#' str_pretty("Hi there, I'm a sentence to format.")
+str_pretty <- function(x, width = 20) {
     sapply(
         x,
         function(i) {
-            i <- str_trim(i)
-            res <- str_trunc1(i, n)
+            i <- str_trim(i) %>% to_title()
+            res <- str_trunc1(i, width)
             if (is.null(res)) {
-                res <- str_trunc1(i, n, "-")
+                res <- str_trunc1(i, width, "-")
             }
             if (is.null(res)) {
                 return(res)
