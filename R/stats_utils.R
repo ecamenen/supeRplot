@@ -75,19 +75,18 @@ print_mean_test <- function(x, digits = 1, digits_p = 2) {
     }
     paste0(index, par, " = ", statistic, ",", " p ", x$p, x$p.signif)
 }
-
-#' @inherit rstatix::add_significance
+#' @inherit rstatix::add_significance return title params
 #' @description Add p-value significance symbols into a data frame.
 #' This is an wrapper for the function [rstatix::add_significance()].
-#' @examples
-#' # Perform pairwise comparisons and adjust p-values
-#' library(magrittr)
-#' library(rstatix)
-#' data("ToothGrowth")
-#' ToothGrowth %>%
-#'     t_test(len ~ dose) %>%
-#'     adjust_pvalue() %>%
-#'     add_significance0("p.adj")
+# @examples
+# # Perform pairwise comparisons and adjust p-values
+# library(magrittr)
+# library(rstatix)
+# data("ToothGrowth")
+# ToothGrowth %>%
+#     t_test(len ~ dose) %>%
+#     adjust_pvalue() %>%
+#     add_significance0("p.adj")
 add_significance0 <- function(data, p.col = NULL, output.col = NULL) {
     add_significance(
         data,

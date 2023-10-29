@@ -19,9 +19,9 @@ palette_continuous <- function(x) {
     colorRampPalette(
         c(
             brewer.pal(9, "YlOrBr")[c(3, 5, 7)],
-            brewer.pal(9, "RdBu")[1:4],
+            brewer.pal(9, "RdBu")[seq(4)],
             brewer.pal(11, "PiYG")[4:1],
-            brewer.pal(11, "PRGn")[1:4],
+            brewer.pal(11, "PRGn")[seq(4)],
             brewer.pal(11, "RdYlBu")[7:11],
             brewer.pal(11, "BrBG")[10:8],
             brewer.pal(11, "PiYG")[7:11],
@@ -41,21 +41,21 @@ palette_continuous <- function(x) {
 #'
 #' @return Data.frame with two columns (f and n).
 #'
-#' @examples
-#' library(magrittr)
-#' # Vector of categorical variable
-#' k <- 10
-#' n <- runif(k, 1, 10) %>% round()
-#' x <- paste("Level", seq(k)) %>%
-#'     mapply(function(x, y) rep(x, y), ., n) %>%
-#'     unlist()
-#' count_cat(x)
-#'
-#' # Data.frame of categorical variable
-#' df <- sapply(seq(10), function(x) runif(10) %>% round()) %>% as.data.frame()
-#' colnames(df) <- paste("Level", seq(10))
-#' plot_bar_mcat(df)
-#' count_cat(df)
+# @examples
+# library(magrittr)
+# # Vector of categorical variable
+# k <- 10
+# n <- runif(k, 1, 10) %>% round()
+# x <- paste("Level", seq(k)) %>%
+#     mapply(function(x, y) rep(x, y), ., n) %>%
+#     unlist()
+# count_cat(x)
+#
+# # Data.frame of categorical variable
+# df <- sapply(seq(10), function(x) runif(10) %>% round()) %>% as.data.frame()
+# colnames(df) <- paste("Level", seq(10))
+# plot_bar_mcat(df)
+# count_cat(df)
 count_cat <- function(x, width = 20, collapse = FALSE) {
     x0 <- as.data.frame(x)
     if (ncol(x0) > 1) {
@@ -107,8 +107,8 @@ to_title <- function(x) {
 
 #' @inherit str_pretty
 #' @param sep Character to separate the terms.
-#' @examples
-#' str_trunc1("Hi there, I'm a sentence to format.")
+# @examples
+# str_trunc1("Hi there, I'm a sentence to format.")
 str_trunc1 <- function(x, width = 20, sep = " ") {
     x0 <- strsplit(x, sep)[[1]]
     lapply(seq(length(x0)), function(i) str_trunc0(x, i, sep)) %>%
@@ -121,8 +121,8 @@ str_trunc1 <- function(x, width = 20, sep = " ") {
 #' @inheritParams str_trunc1
 #' @param n Maximum number of words.
 #'
-#' @examples
-#' str_trunc0("Hi there, I'm a sentence to format.")
+# @examples
+# str_trunc0("Hi there, I'm a sentence to format.")
 str_trunc0 <- function(x, n = 5, sep = " ") {
     strsplit(x, sep)[[1]] %>%
         .[seq(n)] %>%
