@@ -30,6 +30,32 @@ palette_continuous <- function(x) {
     )
 }
 
+#' Frequency of categorical variable
+#'
+#' Formats a data.frame containing categorical variables and calculates the
+#' frequency of each category.
+#'
+#' @inheritParams plot_pie
+#' @inheritParams str_pretty
+#' @param x Vector or data.frame of categorical variables.
+#'
+#' @return Data.frame with two columns (f and n).
+#'
+#' @examples
+#' library(magrittr)
+#' # Vector of categorical variable
+#' k <- 10
+#' n <- runif(k, 1, 10) %>% round()
+#' x <- paste("Level", seq(k)) %>%
+#'     mapply(function(x, y) rep(x, y), ., n) %>%
+#'     unlist()
+#' count_cat(x)
+#'
+#' # Data.frame of categorical variable
+#' df <- sapply(seq(10), function(x) runif(10) %>% round()) %>% as.data.frame()
+#' colnames(df) <- paste("Level", seq(10))
+#' plot_bar_mcat(df)
+#' count_cat(df)
 count_cat <- function(x, width = 20, collapse = FALSE) {
     x0 <- as.data.frame(x)
     if (ncol(x0) > 1) {
@@ -83,7 +109,6 @@ to_title <- function(x) {
 #' @param sep Character to separate the terms.
 #' @examples
 #' str_trunc1("Hi there, I'm a sentence to format.")
-#' @export
 str_trunc1 <- function(x, width = 20, sep = " ") {
     x0 <- strsplit(x, sep)[[1]]
     lapply(seq(length(x0)), function(i) str_trunc0(x, i, sep)) %>%
@@ -98,7 +123,6 @@ str_trunc1 <- function(x, width = 20, sep = " ") {
 #'
 #' @examples
 #' str_trunc0("Hi there, I'm a sentence to format.")
-#' @export
 str_trunc0 <- function(x, n = 5, sep = " ") {
     strsplit(x, sep)[[1]] %>%
         .[seq(n)] %>%

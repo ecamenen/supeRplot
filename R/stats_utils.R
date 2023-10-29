@@ -1,4 +1,14 @@
-print_stats <- function(x, digits = 1, wrap = 10) {
+#' Print the median and standard deviation
+#'
+#' @inheritParams plot_violin
+#' @inheritParams str_pretty
+#' @param x Vector or integers.
+#'
+#' @return String
+#' @export
+#'
+#' @examples
+#' print_median(runif(10))
 print_median <- function(x, digits = 1, width = 10) {
     tmp <- paste0(
         median(x, na.rm = TRUE) %>% round(digits),
@@ -12,6 +22,27 @@ print_median <- function(x, digits = 1, width = 10) {
     }
 }
 
+
+#' Print the result of a mean comparison test
+#'
+#' @param x Mean comparison test object among `anova_test`, `kruskal_test` or
+#' `wilcox_test`.
+#' @param digits Integer for the number of decimal places of the test value.
+#' @param digits_p Integer for the number of decimal places of the p-value.
+#'
+#' @return String
+#' @export
+#'
+#' @examples
+#' library(rstatix)
+#' data("ToothGrowth")
+#' df <- ToothGrowth
+#' res <- anova_test(df, len ~ dose)
+#' print_mean_test(res)
+#' res <- kruskal_test(df, len ~ dose)
+#' print_mean_test(res)
+#' res <- wilcox_test(df, len ~ supp)
+#' print_mean_test(res)
 print_mean_test <- function(x, digits = 1, digits_p = 2) {
     method <- class(x)[2] %>% str_remove_all("_test")
     if (method == "data.frame") {
@@ -45,7 +76,18 @@ print_mean_test <- function(x, digits = 1, digits_p = 2) {
     paste0(index, par, " = ", statistic, ",", " p ", x$p, x$p.signif)
 }
 
-add_significance0 <- function(x, p.col = NULL) {
+#' @inherit rstatix::add_significance
+#' @description Add p-value significance symbols into a data frame.
+#' This is an wrapper for the function [rstatix::add_significance()].
+#' @examples
+#' # Perform pairwise comparisons and adjust p-values
+#' library(magrittr)
+#' library(rstatix)
+#' data("ToothGrowth")
+#' ToothGrowth %>%
+#'     t_test(len ~ dose) %>%
+#'     adjust_pvalue() %>%
+#'     add_significance0("p.adj")
 add_significance0 <- function(data, p.col = NULL, output.col = NULL) {
     add_significance(
         data,
@@ -56,8 +98,31 @@ add_significance0 <- function(data, p.col = NULL, output.col = NULL) {
     )
 }
 
-mcor <- function(x, pval = FALSE, method = "pearson", method_adjust = "BH") {
-mcor_test <- function(x, pval = FALSE, method = "spearman", method_adjust = "BH") {
+#' Multiple correlation
+#'
+#' Tests correlation between several variables. This is an wrapper for the
+#' function [stats::cor.test()].
+#'
+#' @inheritParams plot_violin
+#' @param x Data.frame of numerical variables.
+#' @param pval Boolean to return adjusted p-values rather than coefficients.
+#' @param method Character for the test method ('pearson' or 'spearman').
+#'
+#' @return Data.frame symmetrical containing correlation test results
+#' (coefficients and adjusted p-value) for each pair of variables.
+#' @export
+#'
+#' @examples
+#' library(magrittr)
+#' x <- runif(20)
+#' x <- lapply(
+#'     c(1, -1),
+#'     function(i) sapply(seq(10), function(j) x * i + runif(10, max = 1))
+#' ) %>%
+#'     Reduce(cbind, .) %>%
+#'     set_colnames(paste("Variable", seq(20)))
+#' mcor_test(x)
+#' mcor_test(x, pval = TRUE, method = "pearson", method_adjust = "bonferroni")
 mcor_test <- function(
     x,
     pval = FALSE,

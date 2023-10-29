@@ -5,6 +5,7 @@
 #' point. The relative position and angle of the axes is typically
 #' uninformative. The radar chart is also known as web chart, spider chart,
 #' star chart, cobweb chart, irregular polygon, polar chart, or kiviat diagram.
+#' This is an wrapper for the function [fmsb::radarchart()].
 #'
 #' @param x either a integer vector (with named elements) or a data frame
 #' containing variables in columns and samples in rows (with named columns

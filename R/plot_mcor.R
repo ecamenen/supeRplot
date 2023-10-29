@@ -12,8 +12,10 @@
 #' @param x Data.frame of double variables (with column names).
 #' @param colour Color or vector of colors for the gradient of the bars.
 #' @param method Character for the test method ('pearson' or 'spearman').
-#' @param mat Matrix of double for correlation coefficients (with column and row names).
-#' @param p_mat Matrix of double for adjusted p-values (with column and row names).
+#' @param mat Matrix of double for correlation coefficients (with column and
+#' row names).
+#' @param p_mat Matrix of double for adjusted p-values (with column and row
+#' names).
 #'
 #' @return NULL (launch a basic plot)
 #' @export

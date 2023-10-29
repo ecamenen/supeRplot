@@ -27,9 +27,11 @@ default.}
 \item{method_adjust}{Character for the multiple correction test among
 'BH', 'BY', 'bonferroni', 'fdr', 'hochberg', 'holm', 'hommel', 'none'}
 
-\item{mat}{Matrix of double for correlation coefficients (with column and row names).}
+\item{mat}{Matrix of double for correlation coefficients (with column and
+row names).}
 
-\item{p_mat}{Matrix of double for adjusted p-values (with column and row names).}
+\item{p_mat}{Matrix of double for adjusted p-values (with column and row
+names).}
 }
 \value{
 NULL (launch a basic plot)
