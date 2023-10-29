@@ -23,7 +23,7 @@ set.seed(0)
 ```
 
 ## Venn diagrams
-```{r venn}
+```{r venn, fig.width = 5}
 x <- lapply(
     seq(3),
     function(x) {
@@ -38,9 +38,7 @@ x <- lapply(
 
 # Default parameters
 plot_venn(x)
-```
 
-```{r venn_adv, fig.width = 5}
 # Advanced parameters
 plot_venn(
     x,

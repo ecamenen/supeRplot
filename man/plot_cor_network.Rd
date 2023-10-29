@@ -44,8 +44,8 @@ visNetwork object
 }
 \description{
 Plot a correlation network. The higher the number of connections, the larger
-the node. By default, negative correlations are shown in red, positive correlations in
-green.
+the node. By default, negative correlations are shown in red, positive
+correlations in green.
 }
 \examples{
 library(magrittr)
