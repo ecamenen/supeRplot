@@ -1,5 +1,9 @@
-get_melt <- function(x) {
-    as.data.frame(x) %>%
+# @description pivot_longer0() "lengthens" data, increasing the number of rows
+# and decreasing the number of columns. This is an wrapper for the function
+# [tidyr::pivot_longer()].
+# @inherit tidyr::pivot_longer
+pivot_longer0 <- function(data) {
+    as.data.frame(data) %>%
         pivot_longer(everything())
 }
 

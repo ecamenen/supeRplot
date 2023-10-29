@@ -107,7 +107,8 @@ plot_violin <- function(
             )
         } else {
             if (stats) {
-                subtitle <- get_melt(x) %>%
+                subtitle <- as.data.frame(x) %>%
+                    pivot_longer(everything()) %>%
                     get(paste0(method, "_test"))(value ~ name) %>%
                     print_mean_test(digits_p = 3)
             } else {
@@ -122,7 +123,8 @@ plot_violin <- function(
         sub_labs <- ""
         guide <- FALSE
     } else {
-        df <- get_melt(x)
+        df <- as.data.frame(x) %>%
+            pivot_longer(everything())
         colour_fill <- sort(colnames(x)) %>%
             match(., colnames(x)) %>%
             colour[.]

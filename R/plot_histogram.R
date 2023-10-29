@@ -43,7 +43,8 @@ plot_histogram <- function(
     subtitle = TRUE,
     probs = c(.25, .75),
     binwidth = 1.5) {
-    df <- data.frame(x) %>% get_melt()
+    df <- as.data.frame(x) %>%
+        pivot_longer(everything())
     quant <- quantile(x, probs, na.rm = TRUE)
     if (is.null(title)) {
         title <- deparse(substitute(x))
