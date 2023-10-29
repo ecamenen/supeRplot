@@ -1,6 +1,6 @@
 theme_violin <- function(
     p,
-    colors = get_colors(),
+    colors = palette_discrete(),
     cex = 1,
     cex_main = 15 * cex,
     cex_sub = 13 * cex,
@@ -106,7 +106,7 @@ theme_bar <- function(
 
 theme_histogram <- function(
     p,
-    colors = get_colors(),
+    colors = palette_discrete(),
     cex = 1,
     cex_main = 15 * cex,
     cex_sub = 13 * cex,

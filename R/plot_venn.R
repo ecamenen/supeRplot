@@ -62,7 +62,7 @@ plot_venn <- function(
     x,
     width_text = 30,
     width_label = 30,
-    colour = get_colors(),
+    colour = palette_discrete(),
     color_gradient = NULL,
     cex = 1,
     cex_main = cex * 6,

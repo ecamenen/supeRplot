@@ -9,7 +9,7 @@ plot_pie(
   title = NULL,
   width_text = 5,
   width_title = 20,
-  colour = get_colors(),
+  colour = palette_discrete(),
   digits = 0.1,
   cex = 15,
   cex_main = cex * 1.5,

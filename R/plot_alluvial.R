@@ -41,7 +41,7 @@
 plot_alluvial <- function(
     x,
     width_label = 20,
-    colour = get_colors(),
+    colour = palette_discrete(),
     cex = 1,
     cex_axis = 17 * cex) {
     colnames(x) <- colnames(x) %>%

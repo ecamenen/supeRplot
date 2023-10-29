@@ -46,7 +46,7 @@
 #' @export
 plot_radar <- function(
     x,
-    colour = get_colors(),
+    colour = palette_discrete(),
     cex = 1,
     n_max = NULL,
     add_percent = FALSE,

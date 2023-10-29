@@ -3,12 +3,35 @@ get_melt <- function(x) {
         pivot_longer(everything())
 }
 
-get_colors <- function() {
+#' Color palette
+#'
+#' This is an wrapper for the function [RColorBrewer::brewer.pal()].
+#' @return Color vector
+palette_discrete <- function() {
     c(
-        brewer.pal(9, "Set1")[-6],
-        brewer.pal(7, "Set2"),
-        brewer.pal(8, "Pastel1"),
-        brewer.pal(8, "Set2")[-5]
+        brewer.pal(9, "Set1")[-c(6:7, 9)],
+        rev(brewer.pal(7, "Set2")[c(6:5)]),
+        brewer.pal(8, "Pastel1")[-c(3, 6:7, 9)]
+    )
+}
+
+#' Color palette
+#'
+#' This is an wrapper for the function [RColorBrewer::brewer.pal()].
+#' @param x Integer for the length of the palette
+#' @return Color vector
+palette_continuous <- function(x) {
+    colorRampPalette(
+        c(
+            brewer.pal(9, "YlOrBr")[c(3, 5, 7)],
+            brewer.pal(9, "RdBu")[1:4],
+            brewer.pal(11, "PiYG")[4:1],
+            brewer.pal(11, "PRGn")[1:4],
+            brewer.pal(11, "RdYlBu")[7:11],
+            brewer.pal(11, "BrBG")[10:8],
+            brewer.pal(11, "PiYG")[7:11],
+            rev(brewer.pal(7, "Greys")[-1])
+        )
     )
 }
 

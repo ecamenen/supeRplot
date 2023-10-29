@@ -6,7 +6,7 @@
 \usage{
 plot_radar(
   x,
-  colour = get_colors(),
+  colour = palette_discrete(),
   cex = 1,
   n_max = NULL,
   add_percent = FALSE,
@@ -43,6 +43,7 @@ or more quantitative variables represented on axes starting from the same
 point. The relative position and angle of the axes is typically
 uninformative. The radar chart is also known as web chart, spider chart,
 star chart, cobweb chart, irregular polygon, polar chart, or kiviat diagram.
+This is an wrapper for the function \code{\link[fmsb:radarchart]{fmsb::radarchart()}}.
 }
 \examples{
 library(magrittr)
