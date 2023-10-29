@@ -87,11 +87,6 @@ plot_alluvial <- function(
         ) +
         scale_x_discrete(expand = c(.05, .05)) +
         scale_fill_manual(values = c(colour[n], "gray")) +
-        # scale_y_continuous(
-        #     breaks = seq(0, 40, 5),
-        #     minor_breaks = seq(36),
-        #     sec.axis = sec_axis(trans = ~., name = "n", breaks = seq(0, 40, 5))
-        # ) +
         labs(y = "n") +
         theme_minimal() +
         theme_custom(cex = cex * 1, cex_axis = cex_axis) +

@@ -59,7 +59,10 @@ count_cat <- function(x, width = 20, collapse = FALSE) {
         fct_count()
     if (collapse) {
         df <- group_by(df, n) %>%
-            summarise(f = paste(f, collapse = ", ") %>% str_wrap(width)) %>%
+            summarise(
+                f = paste(f, collapse = ", ") %>%
+                    str_wrap(width)
+            ) %>%
             mutate(f = factor(f))
         df$f <- reorder(df$f, df$n)
     }

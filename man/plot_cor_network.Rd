@@ -60,7 +60,10 @@ x <- lapply(
 plot_cor_network(x)
 plot_cor_network(
     x,
-    colour_edge = c(brewer.pal(3, "Pastel1")[3], brewer.pal(3, "Pastel1")[1]),
+    colour_edge = c(
+        brewer.pal(3, "Pastel1")[3],
+        brewer.pal(3, "Pastel1")[1]
+    ),
     colour_node = c("white", "black"),
     cex = 1.5,
     method = "pearson",

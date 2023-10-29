@@ -66,7 +66,12 @@ Edge <- function(x, y = NULL, digits = 2) {
                 } else {
                     d <- y[i, j]
                 }
-                res[[length(res) + 1]] <- c(colnames(x)[j], colnames(x)[i], x[i, j], d)
+                res[[length(res) + 1]] <- c(
+                    colnames(x)[j],
+                    colnames(x)[i],
+                    x[i, j],
+                    d
+                )
             }
         }
         k <- k + 1
@@ -357,7 +362,10 @@ correlate <- function(
 #' plot_cor_network(x)
 #' plot_cor_network(
 #'     x,
-#'     colour_edge = c(brewer.pal(3, "Pastel1")[3], brewer.pal(3, "Pastel1")[1]),
+#'     colour_edge = c(
+#'         brewer.pal(3, "Pastel1")[3],
+#'         brewer.pal(3, "Pastel1")[1]
+#'     ),
 #'     colour_node = c("white", "black"),
 #'     cex = 1.5,
 #'     method = "pearson",

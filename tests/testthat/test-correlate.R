@@ -47,7 +47,10 @@ test_that("correlation network default works", {
 test_that("correlation network advanced works", {
     p <- plot_cor_network(
         x,
-        colour_edge = c(brewer.pal(3, "Pastel1")[3], brewer.pal(3, "Pastel1")[1]),
+        colour_edge = c(
+            brewer.pal(3, "Pastel1")[3],
+            brewer.pal(3, "Pastel1")[1]
+        ),
         colour_node = c("white", "black"),
         cex = 1.5,
         method = "pearson",

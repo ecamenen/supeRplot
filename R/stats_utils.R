@@ -1,10 +1,11 @@
 print_stats <- function(x, digits = 1, wrap = 10) {
+print_median <- function(x, digits = 1, width = 10) {
     tmp <- paste0(
         median(x, na.rm = TRUE) %>% round(digits),
         "\u00b1",
         IQR(x, na.rm = TRUE) %>% round(digits)
     )
-    if (str_length(tmp) > wrap) {
+    if (str_length(tmp) > width) {
         str_replace_all(tmp, "\u00b1", "\n\u00b1")
     } else {
         tmp
@@ -45,9 +46,11 @@ print_mean_test <- function(x, digits = 1, digits_p = 2) {
 }
 
 add_significance0 <- function(x, p.col = NULL) {
+add_significance0 <- function(data, p.col = NULL, output.col = NULL) {
     add_significance(
-        x,
+        data,
         p.col = NULL,
+        output.col = NULL,
         cutpoints = c(0, 1e-03, 1e-02, 5e-02, 1),
         symbols = c("***", "**", "*", "ns")
     )
