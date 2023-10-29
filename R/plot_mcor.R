@@ -46,12 +46,12 @@ plot_mcor <- function(
     p_mat = NULL) {
     x <- as.data.frame(x)
     if (is.null(mat)) {
-        mat <- mcor(x, TRUE, method = method)
+        mat <- mcor_test(x, FALSE, method = method)
     }
     if (is.null(p_mat)) {
-        p_mat <- mcor(
+        p_mat <- mcor_test(
             x,
-            FALSE,
+            TRUE,
             method = method,
             method_adjust = method_adjust
         )

@@ -316,10 +316,10 @@ correlate <- function(
     method = "spearman",
     method_adjust = "BH",
     cutoff = 0.75) {
-    r <- mcor(x, TRUE, method)
+    r <- mcor_test(x, FALSE, method)
     r[abs(r) < cutoff] <- diag(r) <- 0
     r[is.na(r)] <- 0
-    p <- mcor(x, FALSE, method, method_adjust)
+    p <- mcor_test(x, TRUE, method, method_adjust)
     r[p >= 0.05] <- 0
     return(list(r = r, p = p))
 }

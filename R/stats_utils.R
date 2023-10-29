@@ -54,6 +54,12 @@ add_significance0 <- function(x, p.col = NULL) {
 }
 
 mcor <- function(x, pval = FALSE, method = "pearson", method_adjust = "BH") {
+mcor_test <- function(x, pval = FALSE, method = "spearman", method_adjust = "BH") {
+mcor_test <- function(
+    x,
+    pval = FALSE,
+    method = "spearman",
+    method_adjust = "BH") {
     x <- as.data.frame(x)
     vars <- seq(ncol(x))
     res <- sapply(
@@ -65,8 +71,13 @@ mcor <- function(x, pval = FALSE, method = "pearson", method_adjust = "BH") {
                     if (is.numeric(x[, i]) & is.numeric(x[, j])) {
                         tryCatch(
                             {
-                                res <- cor.test(x[, i], x[, j], method = method, na.rm = TRUE)
-                                if (pval) {
+                                res <- cor.test(
+                                    x[, i],
+                                    x[, j],
+                                    method = method,
+                                    na.rm = TRUE
+                                )
+                                if (!pval) {
                                     res$estimate
                                 } else {
                                     res$p.value
@@ -74,7 +85,6 @@ mcor <- function(x, pval = FALSE, method = "pearson", method_adjust = "BH") {
                             },
                             error = function(e) NA
                         )
-                        # return(res)
                     } else {
                         NA
                     }
