@@ -333,7 +333,7 @@ correlate <- function(
 #' Correlation network
 #'
 #' Plot a correlation network. The higher the number of connections, the larger
-#' the node. Negative correlations are shown in red, positive correlations in
+#' the node. By default, negative correlations are shown in red, positive correlations in
 #' green.
 #'
 #' @inheritParams plot_violin
@@ -395,8 +395,6 @@ plot_cor_network <- function(
     )
 
     plot_network_dyn(
-        x,
-        res$r,
         dashed = FALSE,
         node = node,
         edge = edge,

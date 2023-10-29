@@ -147,17 +147,17 @@ plot_mcor(
 
 ### Networks
 ```{r cor_net, fig.width = 6, fig.height = 5}
-# plot_cor_network(x)
-# plot_cor_network(
-#     x,
-#     colour_edge = c(brewer.pal(3, "Pastel1")[3], brewer.pal(3, "Pastel1")[1]),
-#     colour_node = c("white", "black"),
-#     cex = 1.5,
-#     method = "pearson",
-#     method_adjust = "none",
-#     cutoff = 0.7,
-#     digits = 1
-# )
+plot_cor_network(x)
+plot_cor_network(
+    x,
+    colour_edge = c(brewer.pal(3, "Pastel1")[3], brewer.pal(3, "Pastel1")[1]),
+    colour_node = c("white", "black"),
+    cex = 1.5,
+    method = "pearson",
+    method_adjust = "none",
+    cutoff = 0.7,
+    digits = 1
+)
 ```
 
 ## Networks
