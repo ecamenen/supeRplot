@@ -10,6 +10,9 @@
 #' @examples
 #' print_median(runif(10))
 print_median <- function(x, digits = 1, width = 10) {
+    x <- unlist(x)
+    digits <- check_integer(digits, min = 0)
+    width <- check_integer(width)
     tmp <- paste0(
         median(x, na.rm = TRUE) %>% round(digits),
         "\u00b1",
@@ -43,7 +46,13 @@ print_median <- function(x, digits = 1, width = 10) {
 #' print_mean_test(res)
 #' res <- wilcox_test(df, len ~ supp)
 #' print_mean_test(res)
-print_mean_test <- function(x, digits = 1, digits_p = 2) {
+print_mean_test <- function(x, digits = 0, digits_p = 2) {
+    check_type(x, paste0(c("anova", "kruskal", "wilcox"), "_test"))
+    if (nrow(x) > 1) {
+        stop("x must have a single row.")
+    }
+    digits <- check_integer(digits, min = 0)
+    digits_p <- check_integer(digits_p)
     method <- class(x)[2] %>% str_remove_all("_test")
     if (method == "data.frame") {
         method <- "anova"
@@ -105,7 +114,8 @@ add_significance0 <- function(data, p.col = NULL, output.col = NULL) {
 #' @inheritParams plot_violin
 #' @param x Data.frame of numerical variables.
 #' @param pval Boolean to return adjusted p-values rather than coefficients.
-#' @param method Character for the test method ('pearson' or 'spearman').
+#' @param method Character for the test method ('pearson', 'kendall', or
+#' spearman').
 #'
 #' @return Data.frame symmetrical containing correlation test results
 #' (coefficients and adjusted p-value) for each pair of variables.
@@ -128,6 +138,9 @@ mcor_test <- function(
     method = "spearman",
     method_adjust = "BH") {
     x <- as.data.frame(x)
+    pval <- check_boolean(pval)
+    check_choices(method, c("pearson", "kendall", "spearman"))
+    check_choices(method_adjust, p.adjust.methods)
     vars <- seq(ncol(x))
     res <- sapply(
         vars,
@@ -136,22 +149,17 @@ mcor_test <- function(
                 vars,
                 function(j) {
                     if (is.numeric(x[, i]) & is.numeric(x[, j])) {
-                        tryCatch(
-                            {
-                                res <- cor.test(
-                                    x[, i],
-                                    x[, j],
-                                    method = method,
-                                    na.rm = TRUE
-                                )
-                                if (!pval) {
-                                    res$estimate
-                                } else {
-                                    res$p.value
-                                }
-                            },
-                            error = function(e) NA
+                        res <- cor.test(
+                            x[, i],
+                            x[, j],
+                            method = method,
+                            na.rm = TRUE
                         )
+                        if (!pval) {
+                            res$estimate
+                        } else {
+                            res$p.value
+                        }
                     } else {
                         NA
                     }

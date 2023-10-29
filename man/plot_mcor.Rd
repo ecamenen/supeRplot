@@ -22,7 +22,8 @@ plot_mcor(
 \item{cex}{Double for the magnification factor for the text relative to the
 default.}
 
-\item{method}{Character for the test method ('pearson' or 'spearman').}
+\item{method}{Character for the test method ('pearson', 'kendall', or
+'spearman').}
 
 \item{method_adjust}{Character for the multiple correction test among
 'BH', 'BY', 'bonferroni', 'fdr', 'hochberg', 'holm', 'hommel', 'none'}

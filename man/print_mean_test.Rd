@@ -4,7 +4,7 @@
 \alias{print_mean_test}
 \title{Print the result of a mean comparison test}
 \usage{
-print_mean_test(x, digits = 1, digits_p = 2)
+print_mean_test(x, digits = 0, digits_p = 2)
 }
 \arguments{
 \item{x}{Mean comparison test object among \code{anova_test}, \code{kruskal_test} or

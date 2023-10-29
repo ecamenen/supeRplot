@@ -11,7 +11,8 @@ mcor_test(x, pval = FALSE, method = "spearman", method_adjust = "BH")
 
 \item{pval}{Boolean to return adjusted p-values rather than coefficients.}
 
-\item{method}{Character for the test method ('pearson' or 'spearman').}
+\item{method}{Character for the test method ('pearson', 'kendall', or
+spearman').}
 
 \item{method_adjust}{Character for the multiple correction test among
 'BH', 'BY', 'bonferroni', 'fdr', 'hochberg', 'holm', 'hommel', 'none'}

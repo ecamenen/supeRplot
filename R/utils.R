@@ -57,7 +57,9 @@ palette_continuous <- function(x) {
 # plot_bar_mcat(df)
 # count_cat(df)
 count_cat <- function(x, width = 20, collapse = FALSE) {
-    x0 <- as.data.frame(x)
+    x0 <- check_data_frame(x)
+    width <- check_integer(width)
+    collapse <- check_boolean(collapse)
     if (ncol(x0) > 1) {
         x <- sapply(
             colnames(x0),
@@ -111,13 +113,10 @@ to_title <- function(x) {
 # str_trunc1("Hi there, I'm a sentence to format.")
 str_trunc1 <- function(x, width = 20, sep = " ") {
     x <- check_character(x)
-    width <- check_integer(width)
     sep <- check_character(sep)
     x0 <- strsplit(x, sep)[[1]]
     n <- str_length(x0[[1]])
-    if (width < n) {
-        width <- n
-    }
+    width <- check_integer(width, min = n)
     lapply(seq(length(x0)), function(i) str_trunc0(x, i, sep)) %>%
         detect(function(x) str_length(x) <= width, .dir = "backward")
 }
@@ -132,15 +131,9 @@ str_trunc1 <- function(x, width = 20, sep = " ") {
 # str_trunc0("Hi there, I'm a sentence to format.")
 str_trunc0 <- function(x, n = 5, sep = " ") {
     x <- check_character(x)
-    n <- check_integer(n)
     sep <- check_character(sep)
-    if (n < 1) {
-        n <- 1
-    }
     res <- strsplit(x, sep)[[1]]
-    if (n > length(res)) {
-        n <- length(res)
-    }
+    n <- check_integer(n, max = length(res))
     res[seq(n)] %>%
         paste(collapse = sep)
 }
@@ -186,7 +179,7 @@ check_length <- function(par, val, l = 1) {
     return(res)
 }
 
-check_integer <- function(x, l = 1) {
+check_integer <- function(x, l = 1, min = 1, max = Inf) {
     par <- deparse(substitute(x))
     x <- check_length(par, x, l)
     if (!is.numeric(x)) {
@@ -195,22 +188,31 @@ check_integer <- function(x, l = 1) {
             stop(paste(par, "is not an integer."))
         }
     }
+    if (x < min) {
+        x <- min
+        warning(paste0(par, " must be greater than ", min, "."))
+    }
+    if (x > max) {
+        x <- max
+        warning(paste0(par, " must be lower than ", max, "."))
+    }
+
     round(x)
 }
 
-check_colors <- function(x, l = .Machine$integer.max) {
+check_colors <- function(x, l = Inf) {
     par <- deparse(substitute(x))
     x <- check_length(par, x, l)
     f <- function() {
-      stop(paste(par, "must be in colors() or in an hexadecimal format."))
+        stop(paste(par, "must be in colors() or in an hexadecimal format."))
     }
     if (!is.null(x)) {
         for (i in x) {
-            if (is.na(i) | (
-              !(i %in% colors()) &&
-              (as.numeric(i) %>% suppressWarnings() %>% is.na()) &&
-                !grepl("^#{1}[a-zA-Z0-9]{6,8}$", i))
-              ) {
+            if (is.na(i) || (
+                !(i %in% colors()) &&
+                    (as.numeric(i) %>% suppressWarnings() %>% is.na()) &&
+                    !grepl("^#{1}[a-zA-Z0-9]{6,8}$", i))
+            ) {
                 f()
             }
         }
@@ -237,5 +239,37 @@ check_boolean <- function(x, l = 1) {
 }
 
 check_character <- function(x, l = 1) {
-    check_length(deparse(substitute(x)), x, l) %>% paste()
+    x <- check_length(deparse(substitute(x)), x, l) %>% paste()
+    if (length(x) < 1) {
+        stop(paste(deparse(substitute(x), "is NULL.")))
+    }
+    return(x)
+}
+
+# y <- 0.05
+# check_type(y, "numeric")
+# check_type(y, "logical")
+# "y must be a bool."
+check_type <- function(x, y) {
+    if (length(y) == 1) {
+        y0 <- paste("a", y)
+    } else {
+        y0 <- paste("among", paste(y, collapse = ", "))
+    }
+    if (!any(class(x) %in% y)) {
+        stop(paste0(deparse(substitute(x)), " must be ", y0, "."))
+    }
+}
+
+check_choices <- function(x, y) {
+    if (is.null(x) || !x %in% y) {
+        stop(
+            paste0(
+                deparse(substitute(x)),
+                " must be among ",
+                paste(y, collapse = ", "),
+                "."
+            )
+        )
+    }
 }

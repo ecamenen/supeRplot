@@ -16,5 +16,5 @@ String
 Capitalize  only the first letter
 }
 \examples{
-to_title("Hi there, I'm a sentence to format.")
+to_title("hi there, I'm a sentence to format.")
 }
