@@ -98,7 +98,7 @@ count_cat <- function(x, width = 20, collapse = FALSE) {
 #' Capitalize  only the first letter
 #' @inherit str_trunc0 return params
 #' @examples
-#' to_title("Hi there, I'm a sentence to format.")
+#' to_title("hi there, I'm a sentence to format.")
 #' @export
 to_title <- function(x) {
     paste0(toupper(substr(x, 1, 1)), substr(x, 2, nchar(x)))
@@ -110,7 +110,14 @@ to_title <- function(x) {
 # @examples
 # str_trunc1("Hi there, I'm a sentence to format.")
 str_trunc1 <- function(x, width = 20, sep = " ") {
+    x <- check_character(x)
+    width <- check_integer(width)
+    sep <- check_character(sep)
     x0 <- strsplit(x, sep)[[1]]
+    n <- str_length(x0[[1]])
+    if (width < n) {
+        width <- n
+    }
     lapply(seq(length(x0)), function(i) str_trunc0(x, i, sep)) %>%
         detect(function(x) str_length(x) <= width, .dir = "backward")
 }
@@ -124,8 +131,17 @@ str_trunc1 <- function(x, width = 20, sep = " ") {
 # @examples
 # str_trunc0("Hi there, I'm a sentence to format.")
 str_trunc0 <- function(x, n = 5, sep = " ") {
-    strsplit(x, sep)[[1]] %>%
-        .[seq(n)] %>%
+    x <- check_character(x)
+    n <- check_integer(n)
+    sep <- check_character(sep)
+    if (n < 1) {
+        n <- 1
+    }
+    res <- strsplit(x, sep)[[1]]
+    if (n > length(res)) {
+        n <- length(res)
+    }
+    res[seq(n)] %>%
         paste(collapse = sep)
 }
 
@@ -159,4 +175,67 @@ str_pretty <- function(x, width = 20) {
             }
         }
     ) %>% unname()
+}
+
+check_length <- function(par, val, l = 1) {
+    res <- unlist(val)
+    if (length(res) > l) {
+        res <- res[seq(l)]
+        warning(paste0(par, " must be of length ", l, "."))
+    }
+    return(res)
+}
+
+check_integer <- function(x, l = 1) {
+    par <- deparse(substitute(x))
+    x <- check_length(par, x, l)
+    if (!is.numeric(x)) {
+        x <- as.numeric(x) %>% suppressWarnings()
+        if (any(is.na(x))) {
+            stop(paste(par, "is not an integer."))
+        }
+    }
+    round(x)
+}
+
+check_colors <- function(x, l = .Machine$integer.max) {
+    par <- deparse(substitute(x))
+    x <- check_length(par, x, l)
+    f <- function() {
+      stop(paste(par, "must be in colors() or in an hexadecimal format."))
+    }
+    if (!is.null(x)) {
+        for (i in x) {
+            if (is.na(i) | (
+              !(i %in% colors()) &&
+              (as.numeric(i) %>% suppressWarnings() %>% is.na()) &&
+                !grepl("^#{1}[a-zA-Z0-9]{6,8}$", i))
+              ) {
+                f()
+            }
+        }
+    } else {
+        f()
+    }
+    return(x)
+}
+
+check_data_frame <- function(x) {
+    if (is.null(x)) {
+        stop(paste(deparse(substitute(x)), "is NULL."))
+    }
+    as.data.frame(x)
+}
+
+check_boolean <- function(x, l = 1) {
+    par <- deparse(substitute(x))
+    x <- check_length(par, x, l)
+    if (any(!is(x, "logical") | is.na(x))) {
+        stop(paste(par, "is not a boolean."))
+    }
+    return(x)
+}
+
+check_character <- function(x, l = 1) {
+    check_length(deparse(substitute(x)), x, l) %>% paste()
 }
