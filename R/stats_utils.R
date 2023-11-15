@@ -198,7 +198,7 @@ print_chi2_test <- function(x, dec = 3) {
 
 
 # x <- c(A = 100, B = 78, C = 25)
-# x <- c(rep("A", 10), rep("B", 8), rep("C", 3))
+# x <- c(rep("A", 100), rep("B", 78), rep("C", 25))
 # file_path <- "http://www.sthda.com/sthda/RDoc/data/housetasks.txt"
 # housetasks <- read.delim(file_path, row.names = 1)
 post_hoc_chi2 <- function(
@@ -208,20 +208,26 @@ post_hoc_chi2 <- function(
     dec = 3,
     count = FALSE) {
   df0 <- as.data.frame(x)
-  if (ncol(df0) > 1 && !count) {
+  if (ncol(df0) > 1) {
     # df0 <- set_colnames(x0, c("var1", "var2"))
-    x <- pull(df0, 2)
+    if (count) {
+      x <- colnames(df0)
+    } else {
+      x <- pull(df0, 2)
+    }
   }
+  comb <- combn(x %>% unique() %>% length() %>% seq(), 2)
   res <- lapply(
     seq(ncol(comb)),
     function(i) {
       if (ncol(df0) > 1) {
-        if (!count) {
-          df <- table(df0)[, comb[, i]]
-          dimn <- colnames(df)
+        if(!count) {
+          x0 <- table(df0)
         } else {
-          ;
+          x0 <- df0
         }
+        df <- x0[, comb[, i]]
+        dimn <- colnames(df)
       } else {
         if (!count) {
           x0 <- table(x)
@@ -238,13 +244,13 @@ post_hoc_chi2 <- function(
     }
   ) %>%
     Reduce(rbind, .) %>%
-    mutate(FDR = round(p.adjust(p, method_adjust), dec)) %>%
-    add_significance(p.col = "FDR", output = "fdr.signif") %>%
-    mutate(
-      p = ifelse(p < 0.001, "< 0.001", round(p, dec)),
-      FDR = ifelse(FDR < 0.001, "< 0.001", FDR)
-    ) %>%
-    select(-matches(c("method")))
+  mutate(FDR = round(p.adjust(p, method_adjust), dec)) %>%
+  add_significance(p.col = "FDR", output = "fdr.signif") %>%
+  mutate(
+    p = ifelse(p < 0.001, "< 0.001", round(p, dec)),
+    FDR = ifelse(FDR < 0.001, "< 0.001", FDR)
+  ) %>%
+  select(-matches(c("method")))
   res[res == "****"] <- "***"
   if (method == "chisq")
     relocate(res, df, .before = p)
