@@ -179,6 +179,7 @@ mcor_test <- function(
 print_chi2_test <- function(x, dec = 3) {
     if ("chisq_test" %in% class(x)) {
         x$statistic <- paste0("X²(", x$df, ") = ", round(x$statistic, 1), ", ")
+        x$method <- paste0(x$method, ", ")
     } else {
         x$method <- "" # Fisher's Exact test"
         x$statistic <- ""
@@ -191,31 +192,62 @@ print_chi2_test <- function(x, dec = 3) {
     } else {
         x$p <- paste("=", round(x$p, dec))
     }
-    # paste0(x$method, ", ", x$statistic, "p ", x$p, x$p.signif, ", N = ", x$n)
-    paste0("P ", x$p, x$p.signif)
+    x$p.signif[x$p.signif == "****"] <- "***"
+    paste0(x$statistic, "p ", x$p, x$p.signif, ", N = ", x$n)
 }
 
-post_hoc_chi2 <- function(x, method = "chisq", method_adjust = "BH", dec = 3) {
-    df0 <- set_colnames(x, c("var1", "var2"))
-    comb <- combn(pull(df0, var2) %>% unique() %>% length() %>% seq(), 2)
-    lapply(
-        seq(ncol(comb)),
-        function(i) {
-            count <- table(df0)[, comb[, i]]
-            get(paste0(method, "_test"))(count) %>%
-                mutate(groups = colnames(count) %>% paste(collapse = " vs ")) %>%
-                relocate(groups, .before = n)
+
+# x <- c(A = 100, B = 78, C = 25)
+# x <- c(rep("A", 10), rep("B", 8), rep("C", 3))
+# file_path <- "http://www.sthda.com/sthda/RDoc/data/housetasks.txt"
+# housetasks <- read.delim(file_path, row.names = 1)
+post_hoc_chi2 <- function(
+    x,
+    method = "chisq",
+    method_adjust = "BH",
+    dec = 3,
+    count = FALSE) {
+  df0 <- as.data.frame(x)
+  if (ncol(df0) > 1 && !count) {
+    # df0 <- set_colnames(x0, c("var1", "var2"))
+    x <- pull(df0, 2)
+  }
+  res <- lapply(
+    seq(ncol(comb)),
+    function(i) {
+      if (ncol(df0) > 1) {
+        if (!count) {
+          df <- table(df0)[, comb[, i]]
+          dimn <- colnames(df)
+        } else {
+          ;
         }
+      } else {
+        if (!count) {
+          x0 <- table(x)
+        } else {
+          x0 <- x
+        }
+        df <- x0[comb[, i]]
+        dimn <- names(df)
+      }
+      get(paste0(method, "_test"))(df) %>%
+        mutate(group1 = dimn[1], group2 = dimn[2])
+      # mutate(groups = colnames(df) %>% paste(collapse = " vs ")) %>%
+      # relocate(groups, .before = n)
+    }
+  ) %>%
+    Reduce(rbind, .) %>%
+    mutate(FDR = round(p.adjust(p, method_adjust), dec)) %>%
+    add_significance(p.col = "FDR", output = "fdr.signif") %>%
+    mutate(
+      p = ifelse(p < 0.001, "< 0.001", round(p, dec)),
+      FDR = ifelse(FDR < 0.001, "< 0.001", FDR)
     ) %>%
-        Reduce(rbind, .) %>%
-        mutate(
-            p = ifelse(p < 0.001, "< 0.001", round(p, dec)),
-            FDR = round(p.adjust(p, method_adjust), dec)
-        ) %>%
-        rename(` ` = p.signif) %>%
-        mutate() %>%
-        add_significance0(p.col = "FDR", output.col = "  ") %>%
-        set_colnames(colnames(.) %>% str_to_sentence()) %>%
-        select(-matches(c("method"))) %>%
-        relocate(Df, .before = P)
+    select(-matches(c("method")))
+  res[res == "****"] <- "***"
+  if (method == "chisq")
+    relocate(res, df, .before = p)
+  else
+    res
 }
