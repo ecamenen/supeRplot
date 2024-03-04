@@ -119,11 +119,9 @@ add_significance0 <- function(data, p.col = NULL, output.col = NULL) {
 #'
 #' @return Data.frame symmetrical containing correlation test results
 #' (coefficients and adjusted p-value) for each pair of variables.
-#' @export
 #'
 #' @examples
 #' library(magrittr)
-#' x <- runif(20)
 #' x <- lapply(
 #'     c(1, -1),
 #'     function(i) sapply(seq(10), function(j) x * i + runif(10, max = 1))
@@ -131,35 +129,36 @@ add_significance0 <- function(data, p.col = NULL, output.col = NULL) {
 #'     Reduce(cbind, .) %>%
 #'     set_colnames(paste("Variable", seq(20)))
 #' mcor_test(x)
-#' mcor_test(x, pval = TRUE, method = "pearson", method_adjust = "bonferroni")
+#' mcor_test(x, p.value = TRUE, method = "pearson", method_adjust = "bonferroni")
 mcor_test <- function(
     x,
-    pval = FALSE,
+    estimate = TRUE,
+    p.value = FALSE,
     method = "spearman",
     method_adjust = "BH") {
     x <- as.data.frame(x)
-    pval <- check_boolean(pval)
+    p.value <- check_boolean(p.value)
     check_choices(method, c("pearson", "kendall", "spearman"))
     check_choices(method_adjust, p.adjust.methods)
     vars <- seq(ncol(x))
-    res <- sapply(
+    res <- lapply(
         vars,
         function(i) {
-            sapply(
+            lapply(
                 vars,
                 function(j) {
                     if (is.numeric(x[, i]) & is.numeric(x[, j])) {
-                        res <- cor.test(
-                            x[, i],
-                            x[, j],
-                            method = method,
-                            na.rm = TRUE
+                        tryCatch(
+                            {
+                                cor.test(
+                                    x[, i],
+                                    x[, j],
+                                    method = method,
+                                    na.rm = TRUE
+                                )
+                            },
+                            error = function(e) NA
                         )
-                        if (!pval) {
-                            res$estimate
-                        } else {
-                            res$p.value
-                        }
                     } else {
                         NA
                     }
@@ -167,13 +166,29 @@ mcor_test <- function(
             )
         }
     )
-    if (!pval && method_adjust != "none") {
-        as.vector(res) %>%
+
+    if (estimate) {
+        rho <- sapply(res, function(i) sapply(i, function(j) j$estimate))
+        colnames(rho) <- rownames(rho) <- colnames(x)
+    }
+    if (p.value) {
+       p <- sapply(res, function(i) sapply(i, function(j) j$p.value))
+    }
+
+    if (p.value && method_adjust != "none") {
+        p <- as.vector(p) %>%
             p.adjust(method_adjust) %>%
             matrix(nrow = sqrt(length(.)), ncol = sqrt(length(.)))
     }
-    colnames(res) <- rownames(res) <- colnames(x)
-    return(res)
+    colnames(p) <- rownames(p) <- colnames(x)
+
+    if (estimate && p.value) {
+        return(list(estimate = rho, p.value = p))
+    } else if (estimate) {
+        return(rho)
+    } else {
+        return(p)
+    }
 }
 
 print_chi2_test <- function(x, dec = 3) {

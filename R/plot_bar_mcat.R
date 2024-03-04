@@ -60,7 +60,8 @@ plot_bar_mcat <- function(
     ratio = 5,
     n_collapse = 5,
     n_max = Inf,
-    threshold = 1,
+    threshold = 2,
+    format = TRUE,
     hjust_title = -0.5,
     hjust_text = -0.1,
     vjust_text = 0.5) {
@@ -71,7 +72,8 @@ plot_bar_mcat <- function(
     df <- count_cat(
         x0,
         width = width_text,
-        collapse = collapse
+        collapse = collapse,
+        format = format
     ) %>%
         data.frame(., order = as.numeric(rownames(.))) %>%
         tail(n_max)
@@ -79,10 +81,9 @@ plot_bar_mcat <- function(
         sample_size <- nrow(x0)
     }
     colour <- colorRampPalette(tail(colour, n_max))(nrow(df))
-    x_lab <- (round(df$n, 2) / sample_size * 100) %>%
-        round(digits) %>%
-        paste0("%")
-    df$x_lab <- x_lab
+    x_lab0 <- mapply(function(x, y) x / y, df$n * 100, sample_size) %>%
+      round(digits)
+    df$x_lab <- paste0(x_lab0, "%")
     df$y_lab <- df$n / 2
     y_lab0 <- as.character(df$f)
     y_lab0[(str_count(y_lab0, "\\,") + 1) >= n_collapse] <- "..."

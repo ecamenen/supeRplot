@@ -71,7 +71,7 @@
 #' @export
 plot_violin <- function(
     x,
-    method = "anova",
+    method = "kruskal",
     method_adjust = "BH",
     title = NULL,
     width_text = 20,
@@ -89,7 +89,7 @@ plot_violin <- function(
     digits = 0,
     alpha = 0.3,
     coef = 1.5,
-    hjust = 0.5,
+    hjust = 1,
     lwd = 1,
     probs = c(.25, .75),
     subtitle = FALSE,
@@ -101,7 +101,7 @@ plot_violin <- function(
     if (isFALSE(subtitle)) {
         if (!(class(x) %in% c("data.frame", "tibble"))) {
             subtitle <- paste0(
-                print_median(x, digits = digits),
+                print_median(x, digits = digits, width = width_text),
                 ", N=",
                 length(na.omit(x))
             )
@@ -124,7 +124,10 @@ plot_violin <- function(
         guide <- FALSE
     } else {
         df <- as.data.frame(x) %>%
-            pivot_longer(everything())
+            pivot_longer(everything()) %>%
+          mutate(name = factor(name, levels = colnames(x)))
+        if (length(colour) == 1)
+          colour <- rep(colour, ncol(x))
         colour_fill <- sort(colnames(x)) %>%
             match(., colnames(x)) %>%
             colour[.]
@@ -177,7 +180,7 @@ plot_violin <- function(
             as.character() %>%
             as.numeric()
     }
-    p <- ggplot(df, aes(x = as.character(name), y = as.numeric(value))) +
+    p <- ggplot(df, aes(x = name, y = as.numeric(value))) +
         geom_errorbar(
             width = .1,
             lwd = lwd,
@@ -203,8 +206,7 @@ plot_violin <- function(
         ) +
         scale_fill_manual(values = colour_fill) +
         scale_x_discrete(limits = colnames(x), labels = sub_labs) +
-        scale_y_continuous(breaks = pretty_breaks(n = 3)) +
-        xlab("")
+        scale_y_continuous(breaks = pretty_breaks(n = 3))
     if ((class(x) %in% c("data.frame", "tibble")) && ncol(x) > 2 && stats) {
         post_hoc <- dunn_test(
             df,
@@ -213,21 +215,28 @@ plot_violin <- function(
         ) %>%
             filter(p.adj.signif <= 0.05) %>%
             mutate(
-                y.position = max(value, na.rm = TRUE) +
-                    as.numeric(rownames(.)) *
-                        max(value, na.rm = TRUE) / 7
-            )
-        p <- p + ggpubr::stat_pvalue_manual(
+               p.adj.signif = str_replace_all(
+                     p.adj.signif,
+                     "\\*\\*\\*\\*",
+                     "***"
+                 ),
+                 y.position = max(df$value, na.rm = TRUE) +
+                   as.numeric(rownames(.)) *
+                   max(df$value, na.rm = TRUE) / 7
+               )
+        p <- p +
+          stat_pvalue_manual(
             post_hoc,
             label = "p.adj.signif",
             color = "gray50",
-            bracket.size = lwd * 0.7,
+            bracket.size = lwd,
             size = cex * 6,
             hide.ns = TRUE,
             tip.length = 0
         )
     }
-    p <- p + geom_sina(
+    p <- p +
+      geom_sina(
         size = pch_size,
         colour = pch_colour,
         alpha = pch_alpha,
@@ -243,5 +252,6 @@ plot_violin <- function(
         color_title = color_title,
         hjust = hjust,
         color_subtitle = color_subtitle
-    ) %>% suppressWarnings()
+    ) %>% suppressWarnings() +
+      theme(plot.margin = margin(l = 0 + margin_spacer(sub_labs)))
 }
