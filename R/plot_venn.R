@@ -9,7 +9,7 @@
 #' @param x List (with names).
 #' @param width_label Integer for the maximum length of the labels.
 #' @param color_gradient Vector of colors for the gradient of number of
-#' elements.
+#' elements. If FALSE, hide the color.
 #' @param n_max Integer for the maximum number of element to show.
 #' After this threshold, only their statistics will be visible.
 #' @param vjust_label Double for the vertical justification of the labels
