@@ -44,7 +44,6 @@ plot_venn(
     x,
     width_label = 5,
     colour = brewer.pal(3, "Reds"),
-    color_gradient = c("white", "red"),
     cex = 1.2,
     cex_main = 1.2 * 6,
     n_max = 2,
@@ -57,8 +56,10 @@ plot_venn(
     width_text = 8,
     width_label = 5,
     colour = brewer.pal(3, "Reds"),
+    color_gradient = FALSE,
     cex = 1.2,
     cex_main = 1.2 * 6,
+    cex_line = 2,
     n_max = 2,
     vjust_label = 0.75,
     ratio = 0.5,
@@ -91,7 +92,9 @@ plot_radar(
     n_max = 100,
     digits = 1,
     n_interval = 4,
-    alpha = 0.5
+    alpha = 0,
+    legend_position = 1.5,
+    y = -0.7
 )
 ```
 

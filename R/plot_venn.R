@@ -48,12 +48,13 @@
 #'     color_gradient = c("white", "red"),
 #'     cex = 1.2,
 #'     cex_main = 1.2 * 6,
+#'     cex_line = 1.5,
 #'     n_max = 2,
 #'     vjust_label = 0.75,
 #'     ratio = 0.5,
 #'     label = FALSE,
 #'     element = FALSE,
-#'     percent = FALSE
+#'     percent = FALSE,
 #' )
 #'
 #' @return A ggplot object.
@@ -63,9 +64,10 @@ plot_venn <- function(
     width_text = 30,
     width_label = 30,
     colour = palette_discrete(),
-    color_gradient = NULL,
+    color_gradient = c("white", "red"),
     cex = 1,
     cex_main = cex * 6,
+    cex_line = cex * 2,
     n_max = 4,
     vjust_label = 0.5,
     ratio = 0.1,
@@ -103,7 +105,7 @@ plot_venn <- function(
             aes(colour = id),
             data = venn_setedge(data),
             show.legend = FALSE,
-            lwd = 1.5
+            lwd = cex_line
         ) +
         geom_sf_label(
             aes(label = to_title(label)),
@@ -130,7 +132,7 @@ plot_venn <- function(
         )
     }
     p$labels$fill <- "N"
-    if (!is.null(color_gradient)) {
+    if (!isFALSE(color_gradient)) {
         p <- p +
             scale_fill_gradientn(colors = color_gradient, na.value = "black")
     } else {
