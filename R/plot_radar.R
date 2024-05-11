@@ -5,8 +5,9 @@
 #' point. The relative position and angle of the axes is typically
 #' uninformative. The radar chart is also known as web chart, spider chart,
 #' star chart, cobweb chart, irregular polygon, polar chart, or kiviat diagram.
-#' This is an wrapper for the function [fmsb::radarchart()].
+#' This is a wrapper for the function [fmsb::radarchart()].
 #'
+#' @inheritParams plot_violin
 #' @param x either a integer vector (with named elements) or a data frame
 #' containing variables in columns and samples in rows (with named columns
 #'  and rows).
@@ -16,7 +17,12 @@
 #' @param add_percent Boolean to include percentage values in the axis labels.
 #' @param digits Integer for the number of digits to be displayed.
 #' @param n_interval Integer for the number of intervals for the axis.
-#' @param alpha Double for the transparency.
+#' @param alpha Double for the transparency of the polygons.
+#' @param legend_position Character for the position of the legend among
+#' 'bottomright', 'bottom', 'bottomleft', 'left', 'topleft', 'top', 'topright',
+#' 'right' and 'center'
+#' @param width_text Integer for the maximum length of the labels.
+#' @param ... Additional parameters for [graphics::legend ()].
 #'
 #' @examples
 #' library(magrittr)
@@ -40,7 +46,9 @@
 #'     n_max = 100,
 #'     digits = 1,
 #'     n_interval = 4,
-#'     alpha = 0.5
+#'     alpha = 0,
+#'     legend_position = 1.5,
+#'     y = -0.7
 #' )
 #'
 #' @return NULL (launch a basic plot)
@@ -49,11 +57,19 @@ plot_radar <- function(
     x,
     colour = palette_discrete(),
     cex = 1,
+    cex_axis = 1.25 * cex,
+    cex_main = 2 * cex,
+    cex_sub = 1.5 * cex,
     n_max = NULL,
     add_percent = FALSE,
     digits = 0,
     n_interval = 2,
-    alpha = 0.25) {
+    alpha = 0.25,
+    legend_position = "bottomright",
+    width_text = 30,
+    width_title = 30,
+    title = NULL,
+    ...) {
     if (!is.null(ncol(x))) {
         x <- t(x)
         n <- ncol(x)
@@ -85,6 +101,7 @@ plot_radar <- function(
 
     apply(x0, 2, as.numeric) %>%
         as.data.frame() %>%
+        set_colnames(colnames(.) %>% str_wrap(width_text)) %>%
         radarchart(
             cglwd = 3,
             cglty = 2,
@@ -97,20 +114,26 @@ plot_radar <- function(
             axislabcol = colors[1],
             caxislabels = c("", caxislabels),
             seg = n_interval,
-            vlcex = cex * 1.5,
-            calcex = cex * 1.25,
+            vlcex = cex_sub,
+            calcex = cex_axis,
             centerzero = TRUE
         )
+    title(
+        main = str_wrap(title, width_title),
+        col.main = colors[1],
+        cex.main = cex_main
+    )
     if (!is.null(ncol(x))) {
         legend(
-            "bottomleft",
+            legend_position,
             legend = rownames(x),
             bty = "n",
             pch = 15,
             col = colors,
             text.col = "black",
             pt.cex = cex * 2.5,
-            cex = cex * 1.5
+            cex = cex * 1.5,
+            ...
         )
     }
 }

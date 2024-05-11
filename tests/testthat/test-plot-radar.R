@@ -25,7 +25,9 @@ test_that("radar advanced works", {
         n_max = 100,
         digits = 1,
         n_interval = 4,
-        alpha = 0.5
+        alpha = 0,
+        legend_position = 1.5,
+        y = -0.7
     )
     expect_type(p, "list")
 })
