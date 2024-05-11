@@ -6,6 +6,9 @@
 #' @inheritParams plot_violin
 #' @inheritParams plot_pie
 #' @param x Data.frame of character values visualized on the plot.
+#' @param width_text Integer for the maximum length of the text.
+#' @param colour_gradient Color or vector of colors for the categories.
+#' @param colour_text Color of the text.
 #' @param ratio Double for the width scale.
 #' @param n_collapse Integer for the maximum number of merged categories to show
 #' @param n_max Integer for the maximum number of bars to show
@@ -33,7 +36,7 @@
 #'     title = "Some categorical variable",
 #'     width_text = 30,
 #'     width_title = 50,
-#'     colour = brewer.pal(9, "Reds"),
+#'     colour_gradient = brewer.pal(9, "Reds"),
 #'     color_title = "red",
 #'     cex = 8,
 #'     digits = 1,
@@ -52,7 +55,8 @@ plot_bar_mcat <- function(
     title = NULL,
     width_text = 20,
     width_title = width_text,
-    colour = c("blue", "gray", "#cd5b45"),
+    colour_gradient = c("blue", "gray", "#cd5b45"),
+    colour_text = "white",
     color_title = "black",
     cex = 10,
     digits = 0,
@@ -61,10 +65,10 @@ plot_bar_mcat <- function(
     n_collapse = 5,
     n_max = Inf,
     threshold = 2,
-    format = TRUE,
     hjust_title = -0.5,
     hjust_text = -0.1,
-    vjust_text = 0.5) {
+    vjust_text = 0.5,
+    inverse = FALSE) {
     if (is.null(title)) {
         title <- deparse(substitute(x))
     }
@@ -72,36 +76,46 @@ plot_bar_mcat <- function(
     df <- count_cat(
         x0,
         width = width_text,
-        collapse = collapse,
-        format = format
-    ) %>%
-        data.frame(., order = as.numeric(rownames(.))) %>%
-        tail(n_max)
+        collapse = collapse
+    )
     if (is.null(sample_size)) {
         sample_size <- nrow(x0)
     }
-    colour <- colorRampPalette(tail(colour, n_max))(nrow(df))
-    x_lab0 <- mapply(function(x, y) x / y, df$n * 100, sample_size) %>%
-      round(digits)
-    df$x_lab <- paste0(x_lab0, "%")
+    colour_gradient <- colorRampPalette(colour_gradient)(nrow(tail(df, n_max))) %>% tail(n_max)
+    x_lab0 <- mapply(function(x, y) x / y, df$n * 100, sample_size)
+    if (inverse) {
+      df$x_lab <- df$n
+      df$n <- x_lab0
+      df$f <- fct_reorder(df$f, df$n)
+      df <- arrange(df, n)
+    } else {
+      df$x_lab <- round(x_lab0, digits) %>% paste0("%")
+    }
     df$y_lab <- df$n / 2
+    df$n0 <- round(df$n, digits)
+    if (inverse) {
+      df$n0 <- paste0(df$n0, "%")
+    }
+    df <- df %>%
+      data.frame(., order = as.numeric(rownames(.))) %>%
+      tail(n_max)
     y_lab0 <- as.character(df$f)
     y_lab0[(str_count(y_lab0, "\\,") + 1) >= n_collapse] <- "..."
     i <- df$y_lab < threshold
     df$x_lab[i] <- ""
-    (ggplot(df, aes(f, n, fill = order, label = n)) +
+    (ggplot(df, aes(f, n, fill = order, label = n0)) +
         geom_bar(stat = "identity") +
         expand_limits(y = max(df$n) + max(df$n) / ratio) +
         coord_flip() +
         scale_x_discrete(labels = y_lab0)
     ) %>%
-        theme_bar(colors = colour, cat = FALSE) +
+        theme_bar(colors = colour_gradient, cat = FALSE) +
         geom_text(
-            aes(color = I("white"), y = y_lab),
+            aes(color = I(colour_text), y = y_lab),
             size = cex
         ) +
         geom_text(
-            aes(label = x_lab, color = colour),
+            aes(label = x_lab, color = colour_gradient),
             data = df,
             hjust = hjust_text,
             vjust = vjust_text,
@@ -116,7 +130,7 @@ plot_bar_mcat <- function(
                 face = "bold",
                 color = color_title
             ),
-            axis.text.y = element_text(colour = colour, size = cex * 3),
+            axis.text.y = element_text(colour = colour_gradient, size = cex * 3),
             axis.text.x = element_text(size = cex * 2.2),
             plot.margin = unit(c(-0, 0, 0, 0.5), "cm"),
             panel.grid.major.y = element_blank()

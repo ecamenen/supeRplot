@@ -15,7 +15,7 @@ test_that("bar_mcat advanced works", {
         title = "Some categorical variable",
         width_text = 30,
         width_title = 50,
-        colour = brewer.pal(9, "Reds"),
+        colour_gradient = brewer.pal(9, "Reds"),
         color_title = "red",
         cex = 8,
         digits = 1,
