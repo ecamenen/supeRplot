@@ -125,13 +125,20 @@ plot_alluvial(
 ## Multiple correlation
 ### Heatmaps
 ```{r mcor, fig.width = 6, fig.height = 5}
-x <- runif(20)
+x0 <- runif(20)
 x <- lapply(
     c(1, -1),
-    function(i) sapply(seq(10), function(j) x * i + runif(10, max = 1))
+    function(i) sapply(seq(10), function(j) x0 * i + runif(10, max = 1))
 ) %>%
     Reduce(cbind, .) %>%
     set_colnames(paste("Variable", seq(20)))
+y <- lapply(
+    c(1, -1),
+    function(i) sapply(seq(10), function(j) x0 * i + runif(10, max = 1))
+) %>%
+    Reduce(cbind, .) %>%
+    set_colnames(paste("Variable", seq(20))) %>%
+    .[, seq(5)]
 
 # Default parameters
 plot_mcor(x)
@@ -139,8 +146,9 @@ plot_mcor(x)
 # Advanced parameters
 plot_mcor(
     x,
+    y,
     colour = c("black", brewer.pal(n = 6, name = "RdBu"), 1),
-    method = "spearman",
+    method = "pearson",
     method_adjust = "none",
     cex = 0.8
 )
