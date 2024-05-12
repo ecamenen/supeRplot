@@ -35,10 +35,15 @@ palette_continuous <- function(x) {
 #' Formats a data.frame containing categorical variables and calculates the
 #' frequency of each category.
 #'
-#' @inheritParams plot_pie
 #' @inheritParams str_pretty
 #' @param x Vector or data.frame of categorical variables.
-#'
+#' @param collapse Boolean to merge categories with identical proportions.
+#' @param sort Boolean to order the categories by value. If set to false,
+#' the categories are ranked by their names. Alternatively, it could be
+#' a character vector of the same length as the number of categories,
+#' allowing for renaming.
+#' @param format Boolean to format the names of the categories if the input is
+#' a vector.
 #' @return Data.frame with two columns (f and n).
 #'
 # @examples
@@ -54,37 +59,50 @@ palette_continuous <- function(x) {
 # # Data.frame of categorical variable
 # df <- sapply(seq(10), function(x) runif(10) %>% round()) %>% as.data.frame()
 # colnames(df) <- paste("Level", seq(10))
-# plot_bar_mcat(df)
 # count_cat(df)
-count_cat <- function(x, width = 20, collapse = FALSE) {
-    x0 <- check_data_frame(x)
+count_cat <- function(
+    x,
+    width = 20,
+    collapse = FALSE,
+    sort = TRUE,
+    format = TRUE) {
+    x <- check_data_frame(x)
+    col_name <- colnames(x)
     width <- check_integer(width)
     collapse <- check_boolean(collapse)
-    if (ncol(x0) > 1) {
+    if (ncol(x) > 1) {
         x <- sapply(
-            colnames(x0),
-            function(i) rep(i, pull(x0, i) %>% unlist() %>% sum(na.rm = TRUE))
+            colnames(x),
+            function(i) rep(i, pull(x, i) %>% unlist() %>% sum(na.rm = TRUE))
         )
     }
-    x <- unlist(x) %>%
+    x0 <- unlist(x) %>%
         stri_trans_general("latin-ascii") %>%
         str_replace_all("\n", " ") %>%
-        to_title()
-    df <- factor(x) %>%
-        fct_relabel(~ str_replace_all(.x, "\\s*\\([^\\)]+\\)", "")) %>%
-        fct_relabel(~ str_replace_all(.x, "\\$\\$[^\\)]+", "")) %>%
-        fct_relabel(~ str_replace_all(.x, "^0$", "No")) %>%
-        fct_relabel(
-            ~ str_replace_all(
-                .x,
-                "^1$",
-                ifelse(colnames(x0)[1] == "x", "Yes", colnames(x0)[1])
-            )
-        ) %>%
+        to_title() %>%
         str_wrap(width) %>%
-        fct_infreq() %>%
-        fct_rev() %>%
-        fct_count()
+        factor()
+    if (isTRUE(sort)) {
+        x0 <- fct_infreq(x0) %>%
+            fct_rev()
+    } else if (!isFALSE(sort)) {
+        x0 <- ordered(x0, levels = str_wrap(sort, width))
+    }
+    df <- fct_relabel(x0, ~ str_remove_all(.x, "\\s*\\([^\\)]+\\)")) %>%
+        fct_relabel(~ str_remove_all(.x, "\\$\\$[^\\)]+"))
+    if (format) {
+        df <- df %>%
+            fct_relabel(~ str_replace_all(.x, "^0$", "No")) %>%
+            fct_relabel(
+                ~ str_replace_all(
+                    .x,
+                    "^1$",
+                    ifelse(col_name[1] == "x", "Yes", col_name[1])
+                )
+            )
+    }
+
+    df <- fct_count(df)
     if (collapse) {
         df <- group_by(df, n) %>%
             summarise(
@@ -103,7 +121,16 @@ count_cat <- function(x, width = 20, collapse = FALSE) {
 #' to_title("hi there, I'm a sentence to format.")
 #' @export
 to_title <- function(x) {
-    paste0(toupper(substr(x, 1, 1)), substr(x, 2, nchar(x)))
+    lapply(
+        x,
+        function(i) {
+            if (!is.na(i) && !is.null(i)) {
+                paste0(toupper(substr(i, 1, 1)), substr(i, 2, nchar(i)))
+            } else {
+                i
+            }
+        }
+    ) %>% unlist()
 }
 
 
