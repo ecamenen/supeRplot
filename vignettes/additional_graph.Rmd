@@ -159,30 +159,39 @@ plot_cor_network(
     cutoff = 0.7,
     digits = 1
 )
+
+plot_cor_network(
+    correlate(x),
+    colour_edge = c(brewer.pal(3, "Pastel1")[3], brewer.pal(3, "Pastel1")[1]),
+    colour_node = c("white", "black"),
+    cex = 1.5,
+    is_cor = TRUE,
+    digits = 1
+)
 ```
 
 ## Networks
 ### Classic
 ```{r network, fig.width = 5, fig.height = 5}
-# Default parameters
-m <- correlate(x) %>%
+cor_mat <- correlate(x) %>%
     .[[1]] %>%
     head(10) %>%
     .[, seq(10)]
-plot_network(m)
+
+# Default parameters
+plot_network(cor_mat)
 ```
 
 ```{r network_adv, fig.width = 7, fig.height = 7}
 # Advanced parameters
-e <- Edge(m)
-n <- Node(e)
+e <- Edge(cor_mat)
 plot_network(
     cex = 1.5,
     color = c("white", "gray30"),
-    shape = "none",
+    shape = "square",
     dashed = FALSE,
     edge = e,
-    node = n,
+    node = Node(e),
     dist = 0,
     label = TRUE
 )

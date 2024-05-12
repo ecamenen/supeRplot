@@ -5,6 +5,8 @@
 #' @inheritParams plot_network
 #' @param cex Double for the magnification factor for the node width relative
 #' to the default.
+#' @param scale Boolean to scale the size of the nodes (to divide by the size of
+#' the biggest node).
 #'
 #' @return A node object in the form of a data.frame with two columns: id and
 #' size. The first column contains the node's name, the second its size.
@@ -17,15 +19,17 @@
 #' x[lower.tri(x)] <- t(x)[lower.tri(x)]
 #' e <- Edge(x)
 #' Node(e)
-Node <- function(x, cex = 12) {
+Node <- function(x, cex = 12, scale = TRUE) {
     stopifnot(is(x, "Edge"))
     res <- unlist(x[, seq(2)]) %>%
         data.frame(id = .) %>%
         group_by(id) %>%
         summarise(size = n()) %>%
         as.data.frame()
-    n <- pull(res, size) %>% max()
-    res$size <- res$size / n * cex
+    if (scale) {
+        n <- pull(res, size) %>% max()
+        res$size <- res$size / n * cex
+    }
     class(res) <- c(class(res), "Node")
     return(res)
 }
@@ -205,6 +209,7 @@ plot_network <- function(
 #'
 #' @inheritParams plot_violin
 #' @inheritParams plot_network
+#' @inheritParams plot_cor_network
 #'
 #' @return visNetwork object
 #' @export
@@ -236,13 +241,16 @@ plot_network_dyn <- function(
     shape = "dot",
     dashed = TRUE,
     node = NULL,
-    edge = NULL) {
+    edge = NULL,
+    label = FALSE,
+    digits = 2,
+    ...) {
     title <- paste0(title, collapse = " ")
     if (length(color) < 2) {
         color <- c(color, "gray")
     }
     if (is.null(edge)) {
-        edge <- Edge(x)
+        edge <- Edge(x, digits = digits)
     } else {
         stopifnot(is(edge, "Edge"))
     }
@@ -255,6 +263,9 @@ plot_network_dyn <- function(
     node$label <- node$id
     node$title <- node$label <- node$id
     node$color.background <- rep(as.vector(color[1]), nrow(node))
+    if (label) {
+      edge$label = as.character(edge$label)
+    }
 
     visNetwork(
         node,
@@ -277,12 +288,14 @@ plot_network_dyn <- function(
             color = list(
                 border = "#686868",
                 highlight = list(background = "black", border = "darkred")
-            )
+            ),
+            ...
         ) %>%
         visEdges(
             smooth = FALSE,
             shadow = TRUE,
             dashes = dashed,
+            font = list(size = cex * 18, color = color[2], strokeWidth = -1),
             color = list(color = color[2], highlight = "darkred")
         )
 }
@@ -336,6 +349,7 @@ correlate <- function(
 #' the node. By default, negative correlations are shown in red, positive
 #' correlations in green.
 #'
+#' @inheritParams plot_pie
 #' @inheritParams plot_violin
 #' @inheritParams correlate
 #' @param x Data.frame with column and row names.
@@ -344,7 +358,11 @@ correlate <- function(
 #' @param colour_node Color vector of length 2 corresponding respectively to
 #'  background and node label.
 #' @param method Character for the test method ('pearson' or 'spearman').
-#' @param ... Additional parameters in [plot_network_dyn].
+#' @param is_cor Boolean to determine if x is a already a correlation object
+#' or not.
+#' @param cex_node Double for the magnification factor for the node width relative
+#' to the default.
+#' @param ... Additional parameters in [visNetwork::visNodes].
 #'
 #' @return visNetwork object
 #' @export
@@ -373,21 +391,39 @@ correlate <- function(
 #'     cutoff = 0.7,
 #'     digits = 1
 #' )
+#' cor_obj <- correlate(x)
+#' plot_cor_network(
+#'     cor_obj,
+#'     colour_edge = c(
+#'         brewer.pal(3, "Pastel1")[3],
+#'         brewer.pal(3, "Pastel1")[1]
+#'     ),
+#'     colour_node = c("white", "black"),
+#'     cex = 1.5,
+#'     is_cor = TRUE,
+#'     digits = 1
+#' )
 plot_cor_network <- function(
-    x,
+    x = NULL,
+    width_text = 30,
     colour_edge = c("#4DAF4A", "#EE6363"),
     colour_node = c("white", "#3D3D3D"),
     cex = 1,
+    cex_node = cex * 12,
     method = "spearman",
     method_adjust = "BH",
+    is_cor = FALSE,
     cutoff = 0.75,
     digits = 2,
     ...) {
-    res <- correlate(x, method, method_adjust, cutoff)
-    edge <- Edge(res$r, res$p, digits = digits)
+    if (!is_cor) {
+        x <- x %>% set_colnames(colnames(.) %>% str_wrap(width_text))
+        x <- correlate(x, method, method_adjust, cutoff)
+    }
+    edge <- Edge(x$r, x$p, digits = digits)
     font <- "14px arial black"
     edge$font.bold.mod <- ifelse(edge$p < 0.05, paste(font, "bold"), font)
-    node <- Node(edge, cex = cex * 12)
+    node <- Node(edge, cex = cex_node)
     edge$color <- ifelse(
         edge$weight > 0,
         colour_edge[1],

@@ -29,16 +29,15 @@ test_that("correlate default works", {
     expect_gte(min(res[["p"]]), 0)
 })
 
+res <- correlate(
+    x,
+    method = "pearson",
+    method_adjust = "none",
+    cutoff = 0.7
+)
 test_that("correlate advanced works", {
-    res <- correlate(
-        x,
-        method = "pearson",
-        method_adjust = "none",
-        cutoff = 0.7
-    )
     expect_type(res, "list")
 })
-
 
 test_that("correlation network default works", {
     expect_s3_class(plot_cor_network(x), "visNetwork")
@@ -57,6 +56,12 @@ test_that("correlation network advanced works", {
         method_adjust = "none",
         cutoff = 0.7,
         digits = 1
+    )
+    expect_s3_class(p, "visNetwork")
+
+    p <- plot_cor_network(
+        res,
+        is_cor = TRUE
     )
     expect_s3_class(p, "visNetwork")
 })
