@@ -26,13 +26,26 @@
 #' library(magrittr)
 #' library(RColorBrewer)
 #'
-#' x <- sapply(seq(20), function(x) runif(20)) %>%
+#' x0 <- runif(20)
+#' x <- lapply(
+#'     c(1, -1),
+#'     function(i) sapply(seq(10), function(j) x0 * i + runif(10, max = 1))
+#' ) %>%
+#'     Reduce(cbind, .) %>%
 #'     set_colnames(paste("Variable", seq(20)))
+#' y <- lapply(
+#'     c(1, -1),
+#'     function(i) sapply(seq(10), function(j) x0 * i + runif(10, max = 1))
+#' ) %>%
+#'     Reduce(cbind, .) %>%
+#'     set_colnames(paste("Variable", seq(20))) %>%
+#'     .[, seq(5)]
 #'
 #' # Default parameters
 #' plot_mcor(x)
 #'
 #' # Advanced parameters
+#' plot_mcor(x, y)
 #' plot_mcor(
 #'     x,
 #'     colour = c("black", brewer.pal(n = 6, name = "RdBu"), 1),
