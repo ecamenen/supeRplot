@@ -3,16 +3,19 @@
 #' Visualize the proportions of a categorical variable using a piechart
 #'
 #' @inheritParams plot_violin
+#' @inheritParams count_cat
 #' @inheritParams ggplot2::margin
 #' @param x Vector of character values visualized on the plot.
 #' @param width_text Integer for the maximum length of the text.
 #' @param colour Color or vector of colors for the categories.
+#' @param cex_label Integer for the maximum length of the title.
 #' @param hsize Double for the size of the central hole in the pie chart
 #' (in \[1, 2\]).
-#' @param legend Boolean to toggle the display of the legend.
+#' @param legend Boolean to toggle the display of the legend or a vector of
+#' character to rename the legend.
+#' @param label Boolean to toggle the display of the label.
 #' @param sample_size Integer for the sample size of the dataset to calculate
 #' percentages (if different from the length of the variable).
-#' @param collapse Boolean to merge categories with identical proportions.
 #' @param threshold Double for the minimal percentage value before being
 #'  hidden on the plot.
 #'
@@ -25,6 +28,21 @@
 #' plot_pie(x)
 #'
 #' # Advanced parameters
+#' plot_pie(
+#'     x,
+#'     label = TRUE,
+#'     legend = FALSE,
+#'     sort = FALSE,
+#'     percent = FALSE
+#' )
+#' plot_pie(
+#'     x,
+#'     sort = c("A", "B"),
+#'     legend = paste("Level", seq(2)),
+#'     sample_size = 11,
+#'     threshold = 20
+#' )
+#'
 #' k <- 10
 #' n <- runif(k, 1, 10) %>% round()
 #' x <- paste("Level", seq(k)) %>%
@@ -42,7 +60,6 @@
 #'     collapse = TRUE,
 #'     b = 3
 #' )
-#'
 #' @return A ggplot object.
 #' @export
 plot_pie <- function(
@@ -54,22 +71,33 @@ plot_pie <- function(
     digits = .1,
     cex = 15,
     cex_main = cex * 1.5,
-    hsize = 1.2,
+    cex_label = cex * 1.25,
+    hsize = 1.5,
     legend = TRUE,
+    label = FALSE,
+    percent = TRUE,
     sample_size = NULL,
     collapse = FALSE,
     threshold = 5,
     t = -0.5,
     l = -1,
     r = -1,
-    b = -1) {
+    b = -1,
+    sort = TRUE,
+    angle = 0) {
     df <- count_cat(
         x,
         width = width_text,
-        collapse = collapse
+        collapse = collapse,
+        sort = sort
     )
     if (!is.null(sample_size)) {
-        df <- rbind(df, data.frame(f = NA, n = c(sample_size - sum(df$n))))
+        n0 <- c(sample_size - sum(df$n))
+        if (!any(is.na(df$f))) {
+            df <- rbind(df, data.frame(f = NA, n = n0))
+        } else {
+            df[which(is.na(df$f)), "n"] <- df$n + n0
+        }
     }
     if (!is.null(legend) && !is.logical(legend)) {
         df$f <- factor(df$f, labels = legend)
@@ -89,12 +117,11 @@ plot_pie <- function(
     i <- df$n / sum(df$n) <= threshold / 100
     df$text[i] <- ""
     df$legend <- df$f
-    colour <- sort(levels(df$f)) %>%
-        match(., levels(df$f)) %>%
-        colour[.] %>%
-        c("gray")
     df$legend0 <- paste0(df$legend, ": ", df$n)
     df$legend[df$legend == "NA"] <- NA
+    if (!percent) {
+        df$text <- df$n
+    }
     p <- ggplot(df, aes(x = hsize, y = n, fill = f)) +
         geom_col(width = 1, color = NA) +
         geom_text(
@@ -122,16 +149,28 @@ plot_pie <- function(
             ),
             axis.ticks = element_blank(),
             axis.title = element_blank(),
-            axis.text = element_blank(),
             legend.text = element_text(size = cex),
             legend.key = element_blank(),
             panel.background = element_rect(fill = "white"),
             plot.margin = unit(c(t, r, b, l), "cm")
         ) +
         xlim(0.5, hsize + 0.5)
-    if (is.null(legend) || legend == FALSE) {
-        p + theme(legend.position = "none")
+    if (is.null(legend) || isFALSE(legend)) {
+        p <- p + theme(
+            legend.position = "none",
+            axis.text = element_blank()
+        )
+    }
+    if (label) {
+        p + theme(
+            axis.text = element_text(
+                size = cex_label,
+                colour = colour,
+                vjust = .Machine$double.digits,
+                angle = angle
+            ) %>% suppressWarnings()
+        )
     } else {
-        p
+        p + theme(axis.text = element_blank())
     }
 }

@@ -115,6 +115,21 @@ plot_pie(x)
 
 ```{r pie_adv, fig.width = 7, fig.height = 5}
 # Advanced parameters
+plot_pie(
+    x,
+    label = TRUE,
+    legend = FALSE,
+    sort = FALSE,
+    percent = FALSE
+)
+plot_pie(
+    x,
+    sort = c("A", "B"),
+    legend = paste("Level", seq(2)),
+    sample_size = 11,
+    threshold = 20
+)
+
 k <- 10
 n <- runif(k, 1, 10) %>% round()
 x <- paste("Level", seq(k)) %>%

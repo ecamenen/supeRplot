@@ -183,21 +183,29 @@ check_integer <- function(x, l = 1, min = 1, max = Inf) {
     par <- deparse(substitute(x))
     x <- check_length(par, x, l)
     if (!is.numeric(x)) {
+        if (!is.character(x)) {
+            stop(paste(par, "is not an integer."))
+        }
         x <- as.numeric(x) %>% suppressWarnings()
-        if (any(is.na(x))) {
+        if (any(is.na(x)) || is.null(x)) {
             stop(paste(par, "is not an integer."))
         }
     }
-    if (x < min) {
-        x <- min
+    if (any(x < min)) {
         warning(paste0(par, " must be greater than ", min, "."))
     }
-    if (x > max) {
-        x <- max
+    if (any(x > max)) {
         warning(paste0(par, " must be lower than ", max, "."))
     }
-
-    round(x)
+    for (i in seq_along(x)) {
+        if (x[i] < min) {
+            x[i] <- min
+        }
+        if (x[i] > max) {
+            x[i] <- max
+        }
+    }
+    x
 }
 
 check_colors <- function(x, l = Inf) {
@@ -206,9 +214,9 @@ check_colors <- function(x, l = Inf) {
     f <- function() {
         stop(paste(par, "must be in colors() or in an hexadecimal format."))
     }
-    if (!is.null(x)) {
+    if (!is.null(x) && (is.vector(x) || is.character(x))) {
         for (i in x) {
-            if (is.na(i) || (
+            if (is.na(i) || is.logical(x) || (
                 !(i %in% colors()) &&
                     (as.numeric(i) %>% suppressWarnings() %>% is.na()) &&
                     !grepl("^#{1}[a-zA-Z0-9]{6,8}$", i))
@@ -232,7 +240,7 @@ check_data_frame <- function(x) {
 check_boolean <- function(x, l = 1) {
     par <- deparse(substitute(x))
     x <- check_length(par, x, l)
-    if (any(!is(x, "logical") | is.na(x))) {
+    if (any(!is(x, "logical") || any(is.na(x)))) {
         stop(paste(par, "is not a boolean."))
     }
     return(x)

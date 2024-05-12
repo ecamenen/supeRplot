@@ -1,9 +1,27 @@
+x <- c(rep("A", 5), rep("B", 4))
+
 test_that("piechart default works", {
-    x <- c(rep("A", 5), rep("B", 4))
     expect_s3_class(plot_pie(x), "ggplot")
 })
 
 test_that("piechart advanced works", {
+    p <- plot_pie(
+        x,
+        label = TRUE,
+        legend = FALSE,
+        sort = FALSE,
+        percent = FALSE
+    )
+    expect_s3_class(p, "ggplot")
+    p <- plot_pie(
+        x,
+        sort = c("A", "B"),
+        legend = paste("Level", seq(2)),
+        sample_size = 11,
+        threshold = 20
+    )
+    expect_s3_class(p, "ggplot")
+
     k <- 10
     n <- runif(k, 1, 10) %>% round()
     x <- paste("Level", seq(k)) %>%
