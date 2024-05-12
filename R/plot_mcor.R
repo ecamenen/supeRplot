@@ -9,6 +9,7 @@
 #'
 #' @inheritParams plot_violin
 #' @inheritParams plot_bar
+#' @inheritParams mcor_test
 #' @param x Data.frame of double variables (with column names).
 #' @param colour Color or vector of colors for the gradient of the bars.
 #' @param method Character for the test method ('pearson', 'kendall', or
@@ -35,25 +36,40 @@
 #' plot_mcor(
 #'     x,
 #'     colour = c("black", brewer.pal(n = 6, name = "RdBu"), 1),
-#'     method = "spearman",
+#'     method = "pearson",
 #'     method_adjust = "none",
 #'     cex = 0.8
 #' )
 plot_mcor <- function(
     x,
+    y = NULL,
     colour = brewer.pal(n = 8, name = "RdBu"),
     cex = 1,
     method = "spearman",
     method_adjust = "BH",
     mat = NULL,
-    p_mat = NULL) {
-    x <- as.data.frame(x)
+    p_mat = NULL,
+    ...) {
+    if (is.null(mat) && is.null(p_mat)) {
+        res <- mcor_test(
+            x,
+            y,
+            TRUE,
+            TRUE,
+            method = method,
+            method_adjust = method_adjust
+        )
+        mat <- res$estimate
+        p_mat = res$p.value
+    }
     if (is.null(mat)) {
-        mat <- mcor_test(x, FALSE, method = method)
+        mat <- mcor_test(x, y, TRUE, FALSE, method = method)
     }
     if (is.null(p_mat)) {
         p_mat <- mcor_test(
             x,
+            y,
+            FALSE,
             TRUE,
             method = method,
             method_adjust = method_adjust
@@ -63,7 +79,7 @@ plot_mcor <- function(
     corrplot(
         mat,
         col = colour,
-        type = "upper",
+        type = ifelse(is.null(y), "upper", "full"),
         order = "original",
         tl.col = "gray40",
         tl.srt = 45,
@@ -75,9 +91,10 @@ plot_mcor <- function(
         pch = 4,
         pch.cex = 2.5 * cex,
         pch.col = "white",
-        diag = FALSE,
+        diag = !is.null(y),
         na.label = " ",
         cl.cex = cex * 0.95,
-        cl.align.text = "l"
+        cl.align.text = "l",
+        ...
     )
 }

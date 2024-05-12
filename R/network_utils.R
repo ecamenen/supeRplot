@@ -308,7 +308,7 @@ plot_network_dyn <- function(
 #' @inheritParams plot_violin
 #' @param x Data.frame with column and row names.
 #' @param method Character for the test method ('pearson' or 'spearman').
-#' @param cutoff Double to filter correlations
+#' @param cutoff Double for the correlation threshold.
 #'
 #' @return List of data.frames containing correlation and p-value matrices.
 #' @export
@@ -334,10 +334,17 @@ correlate <- function(
     method = "spearman",
     method_adjust = "BH",
     cutoff = 0.75) {
-    r <- mcor_test(x, FALSE, method)
+    res <- mcor_test(
+        x,
+        estimate = TRUE,
+        p.value = TRUE,
+        method = method,
+        method_adjust = method_adjust
+    )
+    r <- res$estimate
     r[abs(r) < cutoff] <- diag(r) <- 0
     r[is.na(r)] <- 0
-    p <- mcor_test(x, TRUE, method, method_adjust)
+    p <- res$p.value
     r[p >= 0.05] <- 0
     return(list(r = r, p = p))
 }

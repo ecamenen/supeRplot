@@ -108,12 +108,16 @@ add_significance0 <- function(data, p.col = NULL, output.col = NULL) {
 
 #' Multiple correlation
 #'
-#' Tests correlation between several variables. This is an wrapper for the
-#' function [stats::cor.test()].
+#' Tests correlation between several variables. If y is null, calculate the
+#' correlation between each variable in x; otherwise, calculate the correlation
+#' between each variable in x and each variable in y. This is an wrapper for
+#' the function [stats::cor.test()].
 #'
 #' @inheritParams plot_violin
 #' @param x Data.frame of numerical variables.
-#' @param pval Boolean to return adjusted p-values rather than coefficients.
+#' @param y Data.frame of numerical variables.
+#' @param estimate Boolean to return the estimated measure of association.
+#' @param p.value Boolean to return adjusted p-values.
 #' @param method Character for the test method ('pearson', 'kendall', or
 #' spearman').
 #'
@@ -122,37 +126,59 @@ add_significance0 <- function(data, p.col = NULL, output.col = NULL) {
 #'
 #' @examples
 #' library(magrittr)
+#' x0 <- runif(20)
 #' x <- lapply(
 #'     c(1, -1),
-#'     function(i) sapply(seq(10), function(j) x * i + runif(10, max = 1))
+#'     function(i) sapply(seq(10), function(j) x0 * i + runif(10, max = 1))
 #' ) %>%
 #'     Reduce(cbind, .) %>%
 #'     set_colnames(paste("Variable", seq(20)))
+#' y <- lapply(
+#'     c(1, -1),
+#'     function(i) sapply(seq(10), function(j) x0 * i + runif(10, max = 1))
+#' ) %>%
+#'     Reduce(cbind, .) %>%
+#'     set_colnames(paste("Variable", seq(20))) %>%
+#'     .[, seq(5)]
 #' mcor_test(x)
-#' mcor_test(x, p.value = TRUE, method = "pearson", method_adjust = "bonferroni")
+#' mcor_test(
+#'     x,
+#'     y,
+#'     p.value = TRUE,
+#'     method = "pearson",
+#'     method_adjust = "bonferroni"
+#' )
 mcor_test <- function(
     x,
+    y = NULL,
     estimate = TRUE,
     p.value = FALSE,
     method = "spearman",
     method_adjust = "BH") {
     x <- as.data.frame(x)
+    if (!is.null(y)) {
+        y <- as.data.frame(y)
+        if (nrow(x) != nrow(y)) {
+            stop("The number of rows in x must be the same as in y.")
+        }
+    } else {
+        y <- x
+    }
     p.value <- check_boolean(p.value)
     check_choices(method, c("pearson", "kendall", "spearman"))
     check_choices(method_adjust, p.adjust.methods)
-    vars <- seq(ncol(x))
     res <- lapply(
-        vars,
+        seq(ncol(x)),
         function(i) {
             lapply(
-                vars,
+                seq(ncol(y)),
                 function(j) {
-                    if (is.numeric(x[, i]) & is.numeric(x[, j])) {
+                    if (is.numeric(x[, i]) & is.numeric(y[, j])) {
                         tryCatch(
                             {
                                 cor.test(
                                     x[, i],
-                                    x[, j],
+                                    y[, j],
                                     method = method,
                                     na.rm = TRUE
                                 )
@@ -168,19 +194,27 @@ mcor_test <- function(
     )
 
     if (estimate) {
-        rho <- sapply(res, function(i) sapply(i, function(j) j$estimate))
-        colnames(rho) <- rownames(rho) <- colnames(x)
+        rho <- lapply(res, function(i) lapply(i, function(j) j$estimate)) %>%
+            unlist() %>%
+            matrix(nrow = NCOL(y), ncol = NCOL(x))
+        colnames(rho) <- colnames(x)
+        rownames(rho) <- colnames(y)
     }
     if (p.value) {
-       p <- sapply(res, function(i) sapply(i, function(j) j$p.value))
+       p <- lapply(res, function(i) lapply(i, function(j) j$p.value)) %>%
+           unlist() %>%
+           matrix(nrow = NCOL(y), ncol = NCOL(x))
     }
 
     if (p.value && method_adjust != "none") {
         p <- as.vector(p) %>%
             p.adjust(method_adjust) %>%
-            matrix(nrow = sqrt(length(.)), ncol = sqrt(length(.)))
+            matrix(nrow = NCOL(y), ncol = NCOL(x))
     }
-    colnames(p) <- rownames(p) <- colnames(x)
+    if (p.value) {
+        colnames(p) <- colnames(x)
+        rownames(p) <- colnames(y)
+    }
 
     if (estimate && p.value) {
         return(list(estimate = rho, p.value = p))
