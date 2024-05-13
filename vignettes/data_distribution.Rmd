@@ -149,7 +149,33 @@ plot_pie(
 )
 ```
 
-### Barplots for multiple variables (or for a variable whose levels may be present simultaneously)
+### Stacked barplot for two variables
+```{r bar_2cat}
+# Default parameters
+x <- cbind(
+  mapply(function(x, y) rep(x, y), letters[seq(3)], c(7, 5, 8)) %>% unlist(),
+  mapply(function(x, y) rep(x, y), LETTERS[seq(3)], c(6, 6, 8)) %>% unlist()
+)
+plot_bar_2cat(x)
+plot_bar_2cat(x, legend = c("c", "b", "a"))
+```
+
+```{r bar_2cat_adv}
+# Advanced parameters
+file_path <- "http://www.sthda.com/sthda/RDoc/data/housetasks.txt"
+housetasks <- read.delim(file_path, row.names = 1)
+sub_housetasks <- housetasks[c(1:2, 12:13), c("Wife", "Husband")]
+plot_bar_2cat(
+    t(sub_housetasks),
+    colour = palette_discrete()[3:4],
+    sort = TRUE,
+    threshold = 10,
+    count = TRUE,
+    workspace = 1e6
+)
+```
+
+### Barplot for multiple variables (or for a variable whose levels may be present simultaneously)
 ```{r bar_mcat, fig.width = 6, fig.height = 5}
 # Default parameters
 df <- sapply(seq(10), function(x) runif(10) %>% round()) %>% as.data.frame()
