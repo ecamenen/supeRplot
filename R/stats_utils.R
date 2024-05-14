@@ -245,17 +245,47 @@ print_chi2_test <- function(x, dec = 3) {
     paste0(x$statistic, "p ", x$p, x$p.signif, ", N = ", x$n)
 }
 
-
-# x <- c(A = 100, B = 78, C = 25)
-# x <- c(rep("A", 100), rep("B", 78), rep("C", 25))
-# file_path <- "http://www.sthda.com/sthda/RDoc/data/housetasks.txt"
-# housetasks <- read.delim(file_path, row.names = 1)
+#' Post-hoc tests for chi-squared test
+#'
+#' Performs post hoc analysis following a chi-squared or a Fisher's exact test
+#' to identify specific pairwise differences between categories.
+#'
+#' @inherit plot_violin
+#' @param x Data frame or vector of characters, factors, or numbers. If the
+#' object contains only numbers, it is treated as a contingency table. In the
+#' case of a numeric vector, the names are considered as categories; otherwise,
+#' the levels of the factor or the characters are used.
+#' @param method Character indicating the type of test to be performed,
+#' choosing between "chisq" for the chi-square test or "fisher" for
+#' Fisher's exact test.
+#' @param ... Additionnal parameters for [stats::fisher.test] or
+#' [stats::chisq.test].
+#' @examples
+#' x <- c(rep("A", 100), rep("B", 78), rep("C", 25))
+#' post_hoc_chi2(x)
+#' x <- c(A = 100, B = 78, C = 25)
+#' post_hoc_chi2(x, count = TRUE, method = "chisq")
+#' file_path <- "http://www.sthda.com/sthda/RDoc/data/housetasks.txt"
+#' housetasks <- read.delim(file_path, row.names = 1)
+#' post_hoc_chi2(housetasks, count = TRUE, method = "fisher)
+#' housetasks[, c("Wife", "Husband")] %>%
+#'     t() %>%
+#'     post_hoc_chi2(count = TRUE, workspace = 1e6)
+#' x <- cbind(
+#'     mapply(function(x, y) rep(x, y), letters[seq(3)], c(7, 5, 8)) %>% unlist(),
+#'     mapply(function(x, y) rep(x, y), LETTERS[seq(3)], c(6, 6, 8)) %>% unlist()
+#' )
+#' post_hoc_chi2(x)
+#'
+#' @return Dataframe
+#' @export
 post_hoc_chi2 <- function(
     x,
-    method = "chisq",
+    method = "fisher",
     method_adjust = "BH",
-    dec = 3,
-    count = FALSE) {
+    digits = 3,
+    count = FALSE,
+    ...) {
   df0 <- as.data.frame(x)
   if (ncol(df0) > 1) {
     # df0 <- set_colnames(x0, c("var1", "var2"))
@@ -278,25 +308,32 @@ post_hoc_chi2 <- function(
         df <- x0[, comb[, i]]
         dimn <- colnames(df)
       } else {
+          method <- "chisq"
+          warning(
+              paste0(
+                  "With a single categorical data, a fisher test could not be",
+                  "perform. A chi-squared test is used instead."
+              )
+          )
         if (!count) {
-          x0 <- table(x)
+          x0 <-  as.character(x) %>% table()
         } else {
           x0 <- x
         }
         df <- x0[comb[, i]]
         dimn <- names(df)
       }
-      get(paste0(method, "_test"))(df) %>%
+      get(paste0(method, "_test"))(df, ...) %>%
         mutate(group1 = dimn[1], group2 = dimn[2])
       # mutate(groups = colnames(df) %>% paste(collapse = " vs ")) %>%
       # relocate(groups, .before = n)
     }
   ) %>%
     Reduce(rbind, .) %>%
-  mutate(FDR = round(p.adjust(p, method_adjust), dec)) %>%
+  mutate(FDR = round(p.adjust(p, method_adjust), digits)) %>%
   add_significance(p.col = "FDR", output = "fdr.signif") %>%
   mutate(
-    p = ifelse(p < 0.001, "< 0.001", round(p, dec)),
+    p = ifelse(p < 0.001, "< 0.001", round(p, digits)),
     FDR = ifelse(FDR < 0.001, "< 0.001", FDR)
   ) %>%
   select(-matches(c("method")))
